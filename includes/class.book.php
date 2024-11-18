@@ -10,7 +10,9 @@ class Book {
         $this->pdo = $pdo;
     }
 
-
+    public function displayAllBooks(){
+        
+    }
     
 
 }

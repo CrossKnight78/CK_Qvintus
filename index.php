@@ -1,30 +1,6 @@
 <?php
 include_once 'includes/functions.php';
 
-// Sample array of books, each with an image, title, and description.
-$books = [
-    [
-        "title" => "Book 1",
-        "description" => "This is a short description for Book 1.",
-        "images" => ["book1_img1.jpg", "book1_img2.jpg", "book1_img3.jpg"]
-    ],
-    [
-        "title" => "Book 2",
-        "description" => "This is a short description for Book 2.",
-        "images" => ["book2_img1.jpg", "book2_img2.jpg", "book2_img3.jpg"]
-    ],
-    [
-        "title" => "Book 3",
-        "description" => "This is a short description for Book 3.",
-        "images" => ["book3_img1.jpg", "book3_img2.jpg", "book3_img3.jpg"]
-    ],
-    [
-        "title" => "Book 3",
-        "description" => "This is a short description for Book 3.",
-        "images" => ["book3_img1.jpg", "book3_img2.jpg", "book3_img3.jpg"]
-    ]
-];
-
 include_once 'includes/header.php';
 ?>
 
@@ -59,40 +35,117 @@ include_once 'includes/header.php';
 </div>
 
 <div id="exclusive-section" class="container mt-5">
-  <h2 class="h5 text-center my-3">Most Exclusive Items</h2>
-<div class="row">
-        <?php foreach ($books as $index => $book): ?>
-            <div class="col-md-3 mb-4">
-                <div class="card">
-                    <!-- Carousel inside the Card -->
-                    <div id="carousel<?php echo $index; ?>" class="carousel slide" data-ride="carousel">
-                        <div class="carousel-inner">
-                            <?php foreach ($book["images"] as $imgIndex => $image): ?>
-                                <div class="carousel-item <?php echo $imgIndex === 0 ? 'active' : ''; ?>">
-                                    <img src="<?php echo $image; ?>" class="d-block w-100" alt="Slide <?php echo $imgIndex + 1; ?>">
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
-                        <!-- Carousel controls -->
-                        <a class="carousel-control-prev" href="#carousel<?php echo $index; ?>" role="button" data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carousel<?php echo $index; ?>" role="button" data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
-                    </div>
-                    <!-- Book Title and Description -->
-                    <div class="card-body">
-                        <h5 class="card-title"><?php echo $book["title"]; ?></h5>
-                        <p class="card-text"><?php echo $book["description"]; ?></p>
-                    </div>
-                </div>
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <div class="row">
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 1</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
             </div>
-        <?php endforeach; ?>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 2</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 3</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="carousel-item">
+      <div class="row">
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 4</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 5</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 6</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="carousel-item">
+      <div class="row">
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 7</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 8</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card">
+            <img src="..." class="card-img-top" alt="...">
+            <div class="card-body">
+              <h5 class="card-title">Card 9</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carousel Controls placed outside the carousel -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="border: none; background: transparent;">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="border: none; background: transparent;">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>
+
+</div>
+
+
 
 <div id="genres-section" class="container my-4">
   <div class="row text-center">
@@ -265,13 +318,29 @@ include_once 'includes/header.php';
 </div>
 
 <div id="customer-section" class="container">
-<div class="row text-center">
-<h2 class="h5 my-4">customer Stories</h2>
-<div class="col-6 col-md-4 col-lg-2 mb-4">
+<div class="row text-center my-5">
+<h2 class="h5 my-4">Customer Stories</h2>
+  <div class="col-3">
       <div class="card text-center">
         <img src="https://via.placeholder.com/150" alt="Genre Image" class="card-img-top">
         <div class="card-body">
-          <h5 class="card-title">Action</h5>
+          <h5 class="card-title">Pekka</h5>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="card text-center">
+        <img src="https://via.placeholder.com/150" alt="Genre Image" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Dr.William</h5>
+        </div>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="card text-center">
+        <img src="https://via.placeholder.com/150" alt="Genre Image" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Jin-din</h5>
         </div>
       </div>
     </div>
