@@ -1,0 +1,16 @@
+html, body {
+    height: 100%; /* Ensures the height covers the full viewport */
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; 
+}
+
+.wrapper {
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+}
+
+.content {
+    flex: 1; /* Takes up the remaining space */
+}

@@ -12,121 +12,144 @@ class Admin {
         $this->pdo = $pdo;
     }
 
-    /*public function insertNewCustomer(string $fname, string $lname, string $phone, string $email, string $address, string $zip, string $area) {
-
-        $stmt_insertNewCustomer = $this->pdo->prepare('INSERT INTO table_customers (customer_fname, customer_lname, customer_phone, customer_email, customer_address, customer_zip, customer_area)
-            VALUES 
-            (:fname, :lname, :phone, :email, :address, :zip, :area)');
-            $stmt_insertNewCustomer->bindParam(':fname', $fname, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->bindParam(':lname', $lname, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->bindParam(':phone', $phone, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->bindParam(':email', $email, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->bindParam(':address', $address, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->bindParam(':zip', $zip, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->bindParam(':area', $area, PDO::PARAM_STR);
-            $stmt_insertNewCustomer->execute();
-
-            if(!$stmt_insertNewCustomer->execute()) {
-                array_push($this->errorMessages, "Lyckades inte skapa kunden ");
-                $this->errorState = 1;
-            }
-
-            if ($this->errorState == 1) {
-                return $this->errorMessages;
-            } else {
-                return 1;    
-            }
+    public function cleanInput($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 
-    public function selectAllCustomers() {
-        $allCustomersArray = $this->pdo->query("SELECT * FROM table_customers ORDER BY customer_id DESC")->fetchAll();
-        return $allCustomersArray;
-    }
-
-    public function populateCustomerField(array $customersArray) {
-
-        echo "<div class='list-group list-group-flush table-responsive'>";
-
-        foreach ($customersArray as $customer) {
-			echo "<button type='button' class='list-group-item list-group-item-action px-4' aria-current='true' data-bs-dismiss='modal' value='{$customer['customer_id']}' onclick='selectProjectCustomer(this.value)'>
-                <div class='row'>
-                    <div class='col-3'>{$customer['customer_fname']} {$customer['customer_lname']}</div>
-                    <div class='col-3 text-truncate'>{$customer['customer_email']}</div>
-                    <div class='col-3 text-truncate'>{$customer['customer_phone']}</div>
-                    <div class='col-3'>{$customer['customer_address']}</div>
-                </div>
-            </button>";
+    public function editUserInfo(string $umail, string $upassold, string $upassnew, int $uid, int $role, string $ufname, string $ulname, int $status) {
+        // Clean and validate first name
+        $cleanedFname = $this->cleanInput($ufname);
+        if (empty($cleanedFname) || !preg_match("/^[a-zA-Z\s]+$/", $cleanedFname)) {
+            array_push($this->errorMessages, "Förnamn får inte vara tomt och får endast innehålla bokstäver! ");
+            return $this->errorMessages;
+            //return "Förnamn får inte vara tomt och får endast innehålla bokstäver!";
+        }
+    
+        // Clean and validate last name
+        $cleanedLname = $this->cleanInput($ulname);
+        if (empty($cleanedLname) || !preg_match("/^[a-zA-Z\s]+$/", $cleanedLname)) {
+            array_push($this->errorMessages, "Efternamn får inte vara tomt och får endast innehålla bokstäver! ");
+            return $this->errorMessages;
+            //return "Efternamn får inte vara tomt och får endast innehålla bokstäver!";
+        }
+    
+        // Get password and current email of the user
+        $stmt_getUserDetails = $this->pdo->prepare('SELECT u_password, u_email FROM table_users WHERE u_id = :uid');
+        $stmt_getUserDetails->bindParam(':uid', $uid, PDO::PARAM_INT);
+        $stmt_getUserDetails->execute();
+        $userDetails = $stmt_getUserDetails->fetch();
+        
+        // If user edits their own data (legacy)
+        if (isset($_POST['edit-user-submit'])) {
+            // Check if entered password is correct
+            if (!password_verify($upassold, $userDetails['u_password'])) {
+                array_push($this->errorMessages, "Lösenordet är inte giltigt ");
+                return $this->errorMessages;    
+                //return "The password is invalid";
+            }
+        }
+    
+        // Update fields
+        $hashedPassword = password_hash($upassnew, PASSWORD_DEFAULT);
+        
+        // Update password if new password field isn't empty
+        if (!empty($upassnew)) {
+            $updatePassword = "u_password = :upassnew, ";
+        } else {
+            $updatePassword = "";
+        }
+        // Only set u_email if it has changed
+        $updateEmail = $umail !== $userDetails['u_email'] ? ", u_email = :umail" : "";
+    
+        // Update in the database 
+        $stmt_editUserInfo = $this->pdo->prepare("
+            UPDATE table_users
+            SET $updatePassword u_role_fk = :role, u_status = :status, u_fname = :ufname, u_lname = :ulname 
+            $updateEmail
+            WHERE u_id = :uid
+        ");
+        
+        // Bind parameters
+        if (!empty($upassnew)) {
+            $stmt_editUserInfo->bindParam(':upassnew', $hashedPassword, PDO::PARAM_STR);
         }
 
-        echo "</div>";
-    }
+        if ($updateEmail) {
+            $stmt_editUserInfo->bindParam(':umail', $umail, PDO::PARAM_STR);
+        }
+        
+        $stmt_editUserInfo->bindParam(':role', $role, PDO::PARAM_INT);
+        $stmt_editUserInfo->bindParam(':status', $status, PDO::PARAM_INT);
+        $stmt_editUserInfo->bindParam(':ufname', $cleanedFname, PDO::PARAM_STR); // Use cleaned name
+        $stmt_editUserInfo->bindParam(':ulname', $cleanedLname, PDO::PARAM_STR); // Use cleaned name
+        $stmt_editUserInfo->bindParam(':uid', $uid, PDO::PARAM_INT);
+        
+        // Execute the statement
+        if ($stmt_editUserInfo->execute() && $uid == $_SESSION['user_id']) {
+            $_SESSION['user_email'] = $umail; // Update session email if changed
+        }
 
-    public function searchCustomers(string $input) {
+        if ($this->errorState == 1) {
+            return $this->errorMessages;
+        } else {
+            return 1;    
+        }
+    }
+    
+    
+
+    public function searchUsers(string $input, int $includeInactive) {
         $input = cleanInput($input);
 
         // Replace all whitespace characters with % wildcards
         $input = preg_replace('/\s+/', '%', $input);
 
         $inputJoker = "%".$input."%";
+
+        // Start building the query
+        $searchQuery = 'SELECT * FROM table_users WHERE (u_name LIKE :uname OR u_email LIKE :email OR u_fname LIKE :fname OR u_lname LIKE :lname OR CONCAT(u_fname, u_lname) LIKE :fullname)';
+
+         // Conditionally add status filter
+        if (!$includeInactive) {
+            $searchQuery .= ' AND u_status = 1';
+        }
+
+        // Add ORDER BY clause to sort by u_fname, then u_lname
+        $searchQuery .= ' ORDER BY u_fname ASC, u_lname ASC';
+
+        $stmt_searchUsers = $this->pdo->prepare($searchQuery);
+        $stmt_searchUsers->bindParam(':uname', $inputJoker, PDO::PARAM_STR);
+        $stmt_searchUsers->bindParam(':email', $inputJoker, PDO::PARAM_STR);
+        $stmt_searchUsers->bindParam(':fname', $inputJoker, PDO::PARAM_STR);
+        $stmt_searchUsers->bindParam(':lname', $inputJoker, PDO::PARAM_STR);
+        $stmt_searchUsers->bindParam(':fullname', $inputJoker, PDO::PARAM_STR);
+        $stmt_searchUsers->execute();
+        $usersList = $stmt_searchUsers->fetchAll();
         
-        $stmt_searchCustomers = $this->pdo->prepare('SELECT * FROM table_customers WHERE customer_fname LIKE :fname OR customer_lname LIKE :lname OR CONCAT(customer_fname, customer_lname) LIKE :fullname OR customer_phone LIKE :phone OR customer_email LIKE :email OR customer_address LIKE :address OR customer_zip LIKE :zip OR customer_area LIKE :area OR CONCAT(customer_address, customer_zip, customer_area) LIKE :fulladdress');
-        $stmt_searchCustomers->bindParam(':fname', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':lname', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':fullname', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':phone', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':email', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':address', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':zip', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':area', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->bindParam(':fulladdress', $inputJoker, PDO::PARAM_STR);
-        $stmt_searchCustomers->execute();
-        $customersList = $stmt_searchCustomers->fetchAll();
-        
-        return $customersList;
+        return $usersList;
     }
 
-    public function populateCustomerSearchField(array $customersArray) {
-        foreach ($customersArray as $customer) {
+    public function populateUserField(array $usersArray) {
+        foreach ($usersArray as $user) {
             echo "
-            <tr data-bs-toggle='modal' data-bs-target='#customerModal' data-id='{$customer['customer_id']}' onclick=\"selectCustomerProjects(this.getAttribute('data-id'))\">
-                <td>{$customer['customer_fname']} {$customer['customer_lname']}</td>
-                <td>{$customer['customer_phone']}</td>
-                <td>{$customer['customer_email']}</td>
-                <td>{$customer['customer_address']} {$customer['customer_zip']} {$customer['customer_area']}</td>
+            <tr " . ($user['u_status'] === 0 ? "class='table-danger'" : "") . " onclick=\"window.location.href='admin-account.php?uid={$user['u_id']}';\" style=\"cursor: pointer;\">
+                <td>{$user['u_fname']} {$user['u_lname']}</td>
+                <td>{$user['u_name']}</td>
+                <td>{$user['u_email']}</td>
             </tr>";
         }
     }
 
-    public function selectCustomerProjects(int $customerId) {
-        $stmt_selectCustomerProjects = $this->pdo->prepare('SELECT *,
-                c.*,
-                s.s_name
-            FROM 
-                table_projects p
-            JOIN 
-                table_cars c ON p.car_id_fk = c.car_id
-            JOIN 
-                table_statuses s ON p.status_id_fk = s.s_id
-            WHERE 
-                p.customer_id_fk = :cid');
-        $stmt_selectCustomerProjects->bindParam(':cid', $customerId, PDO::PARAM_INT);
-        $stmt_selectCustomerProjects->execute();
-        $customerProjects = $stmt_selectCustomerProjects->fetchAll();
-        return $customerProjects;
+    public function getUserInfo(int $uid) {
+        $stmt_selectUserData = $this->pdo->prepare('SELECT * FROM table_users WHERE u_id = :uid');
+        $stmt_selectUserData->bindParam(':uid', $uid, PDO::PARAM_INT);
+        $stmt_selectUserData->execute();
+        $userInfo = $stmt_selectUserData->fetch();
+        return $userInfo;
     }
-
-    public function populateCustomerProjectsField(array $customerProjectsArray) {
-        if (empty($customerProjectsArray)){
-             echo "<tr class='text-center fst-italic'><td colspan='2'>Inga projekt hittades för denna kund ...</td></tr>";
-        }
-        foreach ($customerProjectsArray as $project) {
-            echo "
-                <tr onclick=\"window.location.href='project.php?project_id={$project['project_id']}';\" style=\"cursor: pointer;\">
-                    <td><span class='me-3'>{$project['car_brand']} {$project['car_model']}</span> {$project['car_license']}</td>
-                    <td>{$project['s_name']}</td>
-                </tr>";
-        }
-    }*/
 
 }
 
