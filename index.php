@@ -1,35 +1,26 @@
 <?php
 include_once 'includes/functions.php';
-
 include_once 'includes/header.php';
+
+$book = new Book($pdo);
+$query = isset($_GET['q']) ? $_GET['q'] : '';
+$results = $book->searchBooks($query);
+
+
 ?>
 
 <div id="hero" class="text-center">
-    <div class="container my-5">
-        <h1>What are you Searching for?</h1>
-        <div class="input-group my-5">
-            <input type="text" class="form-control form-control-lg text-center" placeholder="Search..." data-bs-toggle="modal" data-bs-target="#searchModal">
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#searchModal">Search</button>
-        </div>
-        <!-- Search Modal -->
-        <div id="searchModal" class="modal fade" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Search</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Enter your search query.</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Search</button>
-                    </div>
-                </div>
-            </div>
-        </div>
+<div class="container my-5">
+    <h1>What are you Searching for?</h1>
+    <div class="search-container">
+    <!-- Search input field -->
+    <input type="text" class="form-control form-control-lg" placeholder="Search..." id="searchInput">
+    
+    <!-- Hidden dropdown container for search results -->
+    <div id="searchResults" class="dropdown-list" style="display: none;">
+        <!-- Search results will be dynamically populated here -->
     </div>
+</div>
 </div>
 
 <div id="exclusive-section" class="container mt-5">
@@ -346,6 +337,79 @@ include_once 'includes/header.php';
   </div>
 </div>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const searchInput = document.querySelector('#searchInput');
+    const resultsContainer = document.querySelector('#searchResults');
+
+    // Trigger search on input event in the search field
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+
+        // Hide the results container if the input is empty
+        if (query === "") {
+            resultsContainer.style.display = 'none';
+            return;
+        }
+
+        // Show loading spinner while fetching results
+        resultsContainer.innerHTML = `
+            <div class="loading">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        `;
+        resultsContainer.style.display = 'block'; // Show the results container
+
+        // Perform AJAX request to fetch search results
+        fetch(`ajax/searchBooks.php?q=${encodeURIComponent(query)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Failed to fetch results.");
+                }
+                return response.json();
+            })
+            .then(books => {
+                // If no results are found, display a message
+                if (books.length === 0) {
+                    resultsContainer.innerHTML = "<p>No books found matching your query.</p>";
+                    return;
+                }
+
+                // Populate the results container with search results
+                resultsContainer.innerHTML = books.map(book => `
+                    <div class="result-item" data-book-id="${book.book_id}">
+                        <strong>${book.book_title}</strong> <span class="text-muted">($${book.books_price})</span>
+                    </div>
+                `).join('');
+
+                // Add click events to each result item
+                const resultItems = resultsContainer.querySelectorAll('.result-item');
+                resultItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        // Optionally, you can perform an action when an item is clicked (e.g., fill the search input)
+                        searchInput.value = item.querySelector('strong').innerText;
+                        resultsContainer.style.display = 'none'; // Hide the results after selection
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching search results:', error);
+                resultsContainer.innerHTML = "<p>Failed to fetch results. Please try again later.</p>";
+            });
+    });
+
+    // Hide results if the user clicks outside the search area
+    document.addEventListener('click', (event) => {
+        if (!event.target.closest('.search-container')) {
+            resultsContainer.style.display = 'none';
+        }
+    });
+});
+
+
+</script>
 
 <?php
 include_once 'includes/footer.php';

@@ -61,6 +61,23 @@ class Book {
             return null;
         }
     }
+
+    public function searchBooks($query) {
+        // SQL query to search books by book_title with wildcards for partial matching
+        $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_title LIKE :query");
+        
+        // Adding wildcards to the query for partial matching
+        $searchQuery = '%' . $query . '%';
+        
+        // Bind the query parameter as a string (PDO::PARAM_STR) for LIKE comparison
+        $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
+        
+        // Execute the query
+        $stmt->execute();
+        
+        // Fetch all results as associative array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 
 
