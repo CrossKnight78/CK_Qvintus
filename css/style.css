@@ -47,3 +47,8 @@ html, body {
     padding: 10px;
     text-align: center;
 }
+
+.result-item-link {
+    text-decoration: none;
+    color:  black !important;
+}

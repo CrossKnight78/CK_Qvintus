@@ -10,6 +10,17 @@ class Book {
         $this->pdo = $pdo;
     }
 
+    public function getBookById($bookId) {
+        // SQL query to fetch book details by book_id
+        $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_id = :book_id");
+        $stmt->bindParam(':book_id', $bookId, PDO::PARAM_INT); // Bind as an integer
+        $stmt->execute();
+        
+        // Fetch the single book detail
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+
     public function selectAllBooks() {
         try {
             $stmt_selectAllBooks = $this->pdo->prepare('SELECT * FROM table_books');

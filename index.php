@@ -379,9 +379,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 // Populate the results container with search results
                 resultsContainer.innerHTML = books.map(book => `
-                    <div class="result-item" data-book-id="${book.book_id}">
+                    <a class="result-item-link" href=singlebook.php?id=${book.book_id}><div class="result-item" data-book-id="${book.book_id}">
                         <strong>${book.book_title}</strong> <span class="text-muted">($${book.books_price})</span>
-                    </div>
+                    </div></a>
                 `).join('');
 
                 // Add click events to each result item
