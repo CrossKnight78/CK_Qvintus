@@ -89,6 +89,38 @@ class Book {
         // Fetch all results as associative array
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function getPopularGenres() {
+        $stmt = $this->pdo->prepare("SELECT genre_name, genre_img FROM table_genres WHERE genre_status = 1");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getPopularBooks() {
+        try {
+            $stmt = $this->pdo->prepare('SELECT * FROM table_books WHERE status_fk = 5');
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return [];
+        }
+    }
+
+    public function findBook($query) {
+        // Sanitize the query to prevent SQL injection
+        $query = "%" . $query . "%";
+    
+        // SQL query to search books by book_title or author_name
+        $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_title LIKE :query OR author_name LIKE :query");
+        $stmt->bindParam(':query', $query, PDO::PARAM_STR);
+        $stmt->execute();
+    
+        // Return the results as an associative array
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
 

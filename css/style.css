@@ -52,3 +52,17 @@ html, body {
     text-decoration: none;
     color:  black !important;
 }
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    opacity: 0; /* Make the arrows invisible */
+    pointer-events: auto; /* Ensure they are still clickable */
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px; /* Adjust width if needed for easier clicking */
+    height: 100%; /* Full height to ensure usability */
+    background: none; /* Remove any background */
+    border: none; /* Remove any borders */
+}
