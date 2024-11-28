@@ -3,7 +3,7 @@ include_once 'includes/functions.php';
 include_once 'includes/header.php';
 ?>
 
-<div class="container mt-5">
+<div class="container my-5">
         <h2 class="mb-4">Contact Us</h2>
         <form>
             <div class="row mb-3">

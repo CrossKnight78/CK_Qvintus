@@ -27,7 +27,7 @@ class User {
         // START Check if user-entered username or email exists in the database
         if (isset($_POST['register-submit'])) {
             $this->errorState = 0;
-            $stmt_checkUsername = $this->pdo->prepare('SELECT * FROM table_users WHERE u_user = :uuser OR u_email = :email');
+            $stmt_checkUsername = $this->pdo->prepare('SELECT * FROM table_users WHERE u_name = :uuser OR u_email = :email');
             $stmt_checkUsername->bindParam(':uuser', $uuser, PDO::PARAM_STR);
             $stmt_checkUsername->bindParam(':email', $umail, PDO::PARAM_STR);
             $stmt_checkUsername->execute();
@@ -57,7 +57,7 @@ class User {
             }
         }
         // END Check if user-entered username or email exists in the database
-        
+    
         // START Conditionally check passwords if they are provided
         if (isset($_POST['register-submit']) || (!empty($upass) || !empty($upassrepeat))) {
             // Check if passwords match
@@ -98,7 +98,7 @@ class User {
         $lname = $this->cleanInput($lname);
 
         if(password_verify($upass, $hashedPassword)) {
-            $stmt_insertNewUser = $this->pdo->prepare('INSERT INTO table_users (u_user, u_pass, u_email, u_role_fk, u_status, u_fname, u_lname) 
+            $stmt_insertNewUser = $this->pdo->prepare('INSERT INTO table_users (u_name, u_pass, u_email, u_role_fk, u_status, u_fname, u_lname) 
             VALUES 
             (:user, :upass, :umail, 1, 1, :fname, :lname)');
             $stmt_insertNewUser->bindParam(':user', $uuser, PDO::PARAM_STR);
@@ -118,39 +118,47 @@ class User {
     }
 
     public function login(string $unamemail, string $upass) {
+        // Sanitize inputs
+        $unamemail = $this->cleanInput($unamemail);
+        $upass = $this->cleanInput($upass);
         
-        $stmt_checkUsername = $this->pdo->prepare('SELECT * FROM table_users WHERE u_user = :uname OR u_email = :email');
+        // Query to check if the username or email exists in the database
+        $stmt_checkUsername = $this->pdo->prepare('SELECT * FROM table_users WHERE u_name = :uname OR u_email = :email');
         $stmt_checkUsername->bindParam(':uname', $unamemail, PDO::PARAM_STR);
         $stmt_checkUsername->bindParam(':email', $unamemail, PDO::PARAM_STR);
         $stmt_checkUsername->execute();
-
+    
         // Check if query returns a result
-        if($stmt_checkUsername->rowCount() === 0) {
-            array_push($this->errorMessages, "Användarnamnet eller e-postadressen finns inte! ");
+        if ($stmt_checkUsername->rowCount() === 0) {
+            array_push($this->errorMessages, "Användarnamnet eller e-postadressen finns inte!");
             return $this->errorMessages;
-            
         }
+    
         // Save user data to an array
         $userData = $stmt_checkUsername->fetch();
-
-        // Check if password is correct
-        if(password_verify($upass, $userData['u_pass'])) {
-
-            // Check if user account is deactivated
-            if ($userData['u_status'] === 0) {
-                array_push($this->errorMessages, "Detta konto har inaktiverats! Kontakta administratören och be om hjälp ");
+    
+        // Check if the provided password matches the hashed password in the database
+        if (password_verify($upass, $userData['u_pass'])) {
+            // Check if the account is active
+            if ((int)$userData['u_status'] === 0) {
+                array_push($this->errorMessages, "Detta konto har inaktiverats! Kontakta administratören och be om hjälp.");
                 return $this->errorMessages;
             }
-
+    
+            // Set session variables
             $_SESSION['user_id'] = $userData['u_id'];
-            $_SESSION['user_name'] = $userData['u_name'];
+            $_SESSION['user_name'] = $userData['u_name']; // Corrected key
             $_SESSION['user_email'] = $userData['u_email'];
             $_SESSION['user_role'] = $userData['u_role_fk'];
-
+    
+            // Regenerate session ID for security
+            session_regenerate_id(true);
+    
+            // Redirect to the desired page
             header("Location: books.php");
             exit();
         } else {
-            array_push($this->errorMessages, "Lösenordet är fel! ");
+            array_push($this->errorMessages, "Lösenordet är fel!");
             return $this->errorMessages;
         }
     }
