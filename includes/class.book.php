@@ -9,7 +9,14 @@
             $this->pdo = $pdo;
         }
 
-        public function getBookById($bookId) {
+        public function cleanInput($data) {
+            $data = trim($data);
+            $data = stripslashes($data);
+            $data = htmlspecialchars($data);
+            return $data;
+        }
+
+        public function getBookById(INT $bookId) {
             $stmt = $this->pdo->prepare("
                 SELECT b.*, 
                        GROUP_CONCAT(DISTINCT g.genre_name SEPARATOR ', ') AS genres,
@@ -77,20 +84,8 @@
             echo '</div>';
         }
     
-        /*public function selectSingleBook($id) {
-            try {
-                $stmt = $this->pdo->prepare('SELECT * FROM table_books WHERE book_id = :id');
-                $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-                $stmt->execute();
-                return $stmt->fetch(PDO::FETCH_ASSOC);
-            } catch (PDOException $e) {
-                $this->errorState = 1;
-                $this->errorMessages[] = $e->getMessage();
-                return null;
-            }
-        }*/
     
-        public function searchBooks($query) {
+        public function searchBooks(STRING $query) {
             $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_title LIKE :query");
             $searchQuery = '%' . $query . '%';
             $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
@@ -116,7 +111,7 @@
             }
         }
 
-        public function getExclusiveBooks($status) {
+        public function getExclusiveBooks(INT $status) {
             try {
                 $stmt = $this->pdo->prepare('SELECT * FROM table_books WHERE status_fk = :status');
                 $stmt->bindParam(':status', $status, PDO::PARAM_INT);
@@ -131,7 +126,7 @@
 
         
 // Fetch books by the same author, excluding the current book and limiting the results to 5
-public function getBooksByAuthor($authors, $currentBookId) {
+public function getBooksByAuthor(STRING $authors, INT $currentBookId) {
     $authorList = explode(', ', $authors); // Split authors string into an array
     $authorPlaceholders = [];
     
@@ -164,7 +159,7 @@ public function getBooksByAuthor($authors, $currentBookId) {
 }
 
 // Fetch books by the same genre, excluding the current book and limiting the results to 5
-public function getBooksByGenre($genres, $currentBookId) {
+public function getBooksByGenre(STRING $genres, INT $currentBookId) {
     $genreList = explode(', ', $genres); // Split genres string into an array
     $genrePlaceholders = [];
     
@@ -195,8 +190,12 @@ public function getBooksByGenre($genres, $currentBookId) {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+public function createBook(){
     
-    }
+}
+
+}
 
 
 

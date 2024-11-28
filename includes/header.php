@@ -5,7 +5,6 @@ require_once 'includes/class.user.php';
 require_once 'includes/class.admin.php';
 require_once 'includes/class.book.php';
 require_once 'includes/class.utility.php';
-require_once 'includes/config.php';
 $user = new User($pdo);
 
 
@@ -34,8 +33,7 @@ $adminMenuLinks = array(
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	</head>
-
+</head>
 
 <body>
 <div class="wrapper d-flex flex-column min-vh-100">
@@ -63,11 +61,16 @@ $adminMenuLinks = array(
 			<li class="nav-item">
 			<a class="nav-link" href="company.php">Company</a>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="login.php">Worker Login</a>
-			</li>
 			<?php
-			if(isset($_SESSION['user_id'])) {
+			// Only show "Worker Login" if the user is not logged in
+			if (!isset($_SESSION['user_id'])) {
+				echo '<li class="nav-item">
+						<a class="nav-link" href="login.php">Worker Login</a>
+					</li>';
+			}
+
+			// Check if user is logged in and has the admin role
+			if (isset($_SESSION['user_id'])) {
 				if ($user->checkUserRole(200)) {
 					foreach ($adminMenuLinks as $menuItem) {
 						echo "<li class='nav-item'>

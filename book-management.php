@@ -18,10 +18,10 @@ include_once 'includes/header.php';
    
     <!-- Button Row: Create Book, Add Author, Add Genre, Add Illustrator -->
     <div class="d-flex justify-content-between mb-4">
-        <a href="create-book.php" class="btn btn-success mr-2">Add New Book</a>
-        <a href="create-author.php" class="btn btn-info mr-2">Add Author</a>
-        <a href="create-genre.php" class="btn btn-primary mr-2">Add Genre</a>
-        <a href="create-illustrator.php" class="btn btn-warning">Add Illustrator</a>
+        <a href="createbook.php" class="btn btn-success mr-2">Add New Book</a>
+        <a href="createauthor.php" class="btn btn-info mr-2">Add Author</a>
+        <a href="creategenre.php" class="btn btn-primary mr-2">Add Genre</a>
+        <a href="createillustrator.php" class="btn btn-warning">Add Illustrator</a>
     </div>
 
     <!-- Book List Table -->
