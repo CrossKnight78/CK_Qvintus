@@ -20,7 +20,6 @@ if (isset($_GET['query'])) {
             echo '<div class="card-body">';
             echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
             echo '<p class="card-text"><strong>Price:</strong> $' . htmlspecialchars($book['books_price']) . '</p>';
-            echo '<p class="card-text"><strong>Author:</strong> ' . htmlspecialchars($book['author']) . '</p>';
             echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary">View Details</a>';
             echo '</div></div></div>';
         }
