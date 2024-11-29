@@ -8,8 +8,8 @@ $query = isset($_GET['q']) ? $_GET['q'] : ''; // Check for search query
 
 // Fetch all books, then filter by s_id = 4
 $allBooks = $query ? $book->searchBooks($query) : $book->selectAllBooks();
-$rareBooks = array_filter($allBooks, function ($book) {
-    return $book['status_fk'] == 4; // Filter for rare books with s_id = 4
+$rareBooks = array_filter($allBooks, function ($bookItem) {
+    return $bookItem['status_fk'] == 4; // Use $bookItem instead of $book
 });
 
 // Fetch popular genres
@@ -17,9 +17,11 @@ $popularGenres = $book->getPopularGenres();
 
 // Fetch popular books dynamically
 $popularBooks = $book->getPopularBooks();
-$popularBooks = array_filter($allBooks, function ($book) {
-  return $book['status_fk'] == 5; // Filter for books with status_fk = 5
+$popularBooks = array_filter($allBooks, function ($bookItem) {
+    return $bookItem['status_fk'] == 5; // Filter for popular books
 });
+
+$reviews = $book->fetchCustomerReviews();
 
 ?>
 
@@ -137,8 +139,8 @@ $popularBooks = array_filter($allBooks, function ($book) {
 <div id="about-section" class="container my-5">
     <div class="row">
         <div class="col-md-6">
-            <h2>About Qvintus</h2>
-            <p>Nestled in the heart of Tampere, Finland, Qvintus is no ordinary bookstore. With a carefully curated collection, we cater to readers of all tastes—offering everything from beloved classics and contemporary novels to rare, exclusive treasures like the Gutenberg Bible. As a haven for book enthusiasts and collectors alike, Qvintus is proud to blend accessibility with exclusivity. With an annual revenue of €4 million, we are more than a bookstore; we are a cultural institution dedicated to preserving the timeless magic of the written word.</p>
+            <h2>Greetings</h2>
+            <p>Welcome to my book site. Here you will find Everything from classics to exclusive pieces. My Shop is in Tampere Finland. So if you find what you want or need, come on by and shop </p>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center">
             <img src="images/qvintus.webp" alt="About Us" class="img-fluid">
@@ -146,38 +148,27 @@ $popularBooks = array_filter($allBooks, function ($book) {
     </div>
 </div>
 
+
 <div id="customer-section" class="container text-center">
-  <h2 class="h5 my-4">Customer Stories</h2>
-  <div class="row text-center my-5">
-    <!-- Ensure correct spacing between cards -->
-    <div class="col-12 col-md-4 mb-4">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Pekka</h5>
-          <p class="card-text">"Qvintus is a true gem! I discovered a first-edition Finnish classic here that I never thought I’d find. The staff's knowledge and passion for books are unmatched."</p>
-        </div>
-      </div>
+        <h2 class="h5 my-4">Customer Stories</h2>
+        <?php if (!empty($reviews)): ?>
+            <div class="row text-center my-5">
+                <?php foreach ($reviews as $review): ?>
+                    <div class="col-12 col-md-4 mb-4">
+                        <div class="card text-center h-100">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= htmlspecialchars($review['review_title']); ?></h5>
+                                <p class="card-text">"<?= htmlspecialchars($review['review_desc']); ?>"</p>
+                                <p class="card-text"><strong>Rating:</strong> <?= htmlspecialchars($review['review_rating']); ?>/10</p>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="text-center">No customer reviews found.</p>
+        <?php endif; ?>
     </div>
-
-    <div class="col-12 col-md-4 mb-4">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Dr. William</h5>
-          <p class="card-text">"The rare book selection is extraordinary. Qvintus feels like stepping into a literary treasure trove. I found an original Gutenberg Bible here—simply breathtaking!"</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 col-md-4 mb-4">
-      <div class="card text-center h-100">
-        <div class="card-body">
-          <h5 class="card-title">Jin-din</h5>
-          <p class="card-text">"I love how Qvintus caters to everyone. Whether you're a casual reader or a serious collector, there's something special waiting for you. The atmosphere is warm and inviting."</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

@@ -191,6 +191,23 @@ public function getBooksByGenre(STRING $genres, INT $currentBookId) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+public function fetchCustomerReviews() {
+    try {
+        $sql = "SELECT * FROM customer_review";
+        $stmt = $this->pdo->query($sql);
+
+        if ($stmt->rowCount() > 0) {
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return []; // Return an empty array if no reviews are found
+        }
+    } catch (PDOException $e) {
+        // Log or handle the error
+        error_log("Error fetching customer reviews: " . $e->getMessage());
+        return []; // Return an empty array on failure
+    }
+}
+
 public function createBook(){
     
 }
