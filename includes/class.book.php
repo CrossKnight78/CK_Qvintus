@@ -253,6 +253,7 @@ public function createBook($bookData, $authors, $illustrators, $genres) {
             $stmtAuthor->execute([
                 ':book_id' => $bookId,
                 ':author_id' => $authorId
+            ]);
         }
 
         // Insert illustrators into the junction table
