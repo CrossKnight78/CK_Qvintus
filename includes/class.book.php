@@ -208,8 +208,184 @@ public function fetchCustomerReviews() {
     }
 }
 
-public function createBook(){
-    
+public function createBook($bookData, $authors, $illustrators, $genres, $userId) {
+    try {
+        // Begin a transaction
+        $this->pdo->beginTransaction();
+
+        // Insert into the Books table
+        $stmt = $this->pdo->prepare("
+            INSERT INTO table_books (
+                book_title, book_desc, book_language, book_release_date, 
+                book_pages, books_price, book_series_fk, age_recommendation_fk, 
+                category_fk, publisher_fk, created_by_fk, status_fk, img_url
+            ) VALUES (
+                :book_title, :book_desc, :book_language, :book_release_date, 
+                :book_pages, :books_price, :book_series_fk, :age_recommendation_fk, 
+                :category_fk, :publisher_fk, :created_by_fk, :status_fk, :img_url
+            )
+        ");
+
+        $stmt->execute([
+            ':book_title' => $this->cleanInput($bookData['book_title']),
+            ':book_desc' => $this->cleanInput($bookData['book_desc']),
+            ':book_language' => $this->cleanInput($bookData['book_language']),
+            ':book_release_date' => $bookData['book_release_date'],
+            ':book_pages' => $bookData['book_pages'],
+            ':books_price' => $bookData['books_price'],
+            ':book_series_fk' => $bookData['book_series_fk'],
+            ':age_recommendation_fk' => $bookData['age_recommendation_fk'],
+            ':category_fk' => $bookData['category_fk'],
+            ':publisher_fk' => $bookData['publisher_fk'],
+            ':created_by_fk' => $bookData['created_by_fk'],
+            ':status_fk' => $bookData['status_fk'],
+            ':img_url' => $this->cleanInput($bookData['img_url'])
+        ]);
+
+        // Get the ID of the inserted book
+        $bookId = $this->pdo->lastInsertId();
+
+        // Insert authors into the junction table
+        $stmtAuthor = $this->pdo->prepare("
+            INSERT INTO books_authors (books_id, book_author_id) VALUES (:book_id, :author_id)
+        ");
+        foreach ($authors as $authorId) {
+            $stmtAuthor->execute([
+                ':book_id' => $bookId,
+                ':author_id' => $authorId
+            ]);
+        }
+
+        // Insert illustrators into the junction table
+        $stmtIllustrator = $this->pdo->prepare("
+            INSERT INTO books_illustrators (books_id, book_illustrator_id) VALUES (:book_id, :illustrator_id)
+        ");
+        foreach ($illustrators as $illustratorId) {
+            $stmtIllustrator->execute([
+                ':book_id' => $bookId,
+                ':illustrator_id' => $illustratorId
+            ]);
+        }
+
+        // Insert genres into the junction table
+        $stmtGenre = $this->pdo->prepare("
+            INSERT INTO books_genres (books_id, book_genre_id) VALUES (:book_id, :genre_id)
+        ");
+        foreach ($genres as $genreId) {
+            $stmtGenre->execute([
+                ':book_id' => $bookId,
+                ':genre_id' => $genreId
+            ]);
+        }
+
+        // Commit the transaction
+        $this->pdo->commit();
+
+        return $bookId; // Return the ID of the newly created book
+
+    } catch (PDOException $e) {
+        // Rollback the transaction on error
+        $this->pdo->rollBack();
+        $this->errorState = 1;
+        $this->errorMessages[] = $e->getMessage();
+        return false;
+    }
+}
+// Select all genres
+public function selectAllGenres() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_genres ORDER BY genre_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+// Select all authors
+public function selectAllAuthors() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_authors ORDER BY author_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+// Select all illustrators
+public function selectAllIllustrators() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_illustrators ORDER BY illustrator_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+public function selectAllPublishers() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_publishers ORDER BY publisher_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+// Select all categories
+public function selectAllCategories() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_category ORDER BY category_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+// Select all age recommendations
+public function selectAllAgeRecommendations() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_age ORDER BY age_range");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+// Select all series
+public function selectAllSeries() {
+    try {
+        // Correcting the column names to match the database table
+        $stmt = $this->pdo->prepare("SELECT * FROM table_series ORDER BY serie_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+
+// Select all statuses
+public function selectAllStatuses() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_status ORDER BY s_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
 }
 
 }
