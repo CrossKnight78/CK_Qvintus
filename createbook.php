@@ -42,9 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $authors = $_POST['authors'] ?? [];
     $illustrators = $_POST['illustrators'] ?? [];
     $genres = $_POST['genres'] ?? [];
-
-    $newBookId = $book->createBook($bookData, $userId, $authors, $illustrators, $genres);
-
+    $newBookId = $book->createBook($bookData, $authors, $illustrators, $genres);
+    
     if ($newBookId) {
         echo "<div class='alert alert-success'>Book created successfully with ID: $newBookId</div>";
     } else {

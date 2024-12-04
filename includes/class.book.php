@@ -208,7 +208,7 @@ public function fetchCustomerReviews() {
     }
 }
 
-public function createBook($bookData, $authors, $illustrators, $genres, $userId) {
+public function createBook($bookData, $authors, $illustrators, $genres) {
     try {
         // Begin a transaction
         $this->pdo->beginTransaction();
@@ -253,7 +253,6 @@ public function createBook($bookData, $authors, $illustrators, $genres, $userId)
             $stmtAuthor->execute([
                 ':book_id' => $bookId,
                 ':author_id' => $authorId
-            ]);
         }
 
         // Insert illustrators into the junction table
@@ -291,6 +290,8 @@ public function createBook($bookData, $authors, $illustrators, $genres, $userId)
         return false;
     }
 }
+
+
 // Select all genres
 public function selectAllGenres() {
     try {
