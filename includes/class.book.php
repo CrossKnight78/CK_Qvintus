@@ -292,6 +292,20 @@ public function createBook($bookData, $authors, $illustrators, $genres) {
     }
 }
 
+public function validateBookData($bookData) {
+    $requiredFields = [
+        'book_title', 'book_desc', 'book_language', 'book_release_date',
+        'book_pages', 'books_price', 'book_series_fk', 'age_recommendation_fk',
+        'category_fk', 'publisher_fk', 'status_fk', 'img_url'
+    ];
+
+    foreach ($requiredFields as $field) {
+        if (empty($bookData[$field])) {
+            return false;
+        }
+    }
+    return true;
+}
 
 // Select all genres
 public function selectAllGenres() {

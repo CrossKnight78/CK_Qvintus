@@ -36,24 +36,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'publisher_fk' => $_POST['publisher_fk'],
         'created_by_fk' => $userId, // Add this
         'status_fk' => $_POST['status_fk'],
-        'img_url' => isset($uniqueFileName) ? $uniqueFileName : '',
+        'img_url' => isset($_SESSION['uploaded_image']) ? $_SESSION['uploaded_image'] : '',
     ];
 
     $authors = $_POST['authors'] ?? [];
     $illustrators = $_POST['illustrators'] ?? [];
     $genres = $_POST['genres'] ?? [];
-    $newBookId = $book->createBook($bookData, $authors, $illustrators, $genres);
-    
-    if ($newBookId) {
-        echo "<div class='alert alert-success'>Book created successfully with ID: $newBookId</div>";
+
+    if ($book->validateBookData($bookData)) {
+        $newBookId = $book->createBook($bookData, $authors, $illustrators, $genres);
+        if ($newBookId) {
+            echo "<div class='alert alert-success'>Book created successfully with ID: $newBookId</div>";
+        } else {
+            echo "<div class='alert alert-danger'>Failed to create book.</div>";
+        }
     } else {
-        echo "<div class='alert alert-danger'>Failed to create book.</div>";
+        echo "<div class='alert alert-danger'>Please fill in all required fields.</div>";
     }
 }
 ?>
 
 <div class="container mt-4">
     <h2>Create a New Book</h2>
+    <?php
+    if (isset($_SESSION['upload_error'])) {
+        echo "<div class='alert alert-danger'>{$_SESSION['upload_error']}</div>";
+        unset($_SESSION['upload_error']);
+    }
+    ?>
     <form method="POST" action="createbook.php" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="book_title" class="form-label">Book Title</label>
@@ -129,31 +139,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="img_url" class="form-label">Image URL</label>
             <input type="file" class="form-control" id="img_url" name="book-img">
         </div>
-        <div class="mb-3">
-            <label for="authors" class="form-label">Authors</label>
-            <select class="form-select select2-multiple" id="authors" name="authors[]" multiple>
-                <?php foreach ($authors as $author): ?>
-                    <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
+        <div class="row">
+            <div class="col-sm-4">
+                <label for="authors" class="form-label">Authors</label><br>
+                <select class="form-select select2-multiple" style="width: 100%" id="authors" name="authors[]" multiple>
+                    <?php foreach ($authors as $author): ?>
+                        <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label for="illustrators" class="form-label">Illustrators</label><br>
+                <select class="form-select select2-multiple" style="width: 100%" id="illustrators" name="illustrators[]" multiple>
+                    <?php foreach ($illustrators as $illustrator): ?>
+                        <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <label for="genres" class="form-label">Genres</label><br>
+                <select class="form-select select2-multiple" style="width: 100%" id="genres" name="genres[]" multiple>
+                    <?php foreach ($genres as $genre): ?>
+                        <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="illustrators" class="form-label">Illustrators</label>
-            <select class="form-select select2-multiple" id="illustrators" name="illustrators[]" multiple>
-                <?php foreach ($illustrators as $illustrator): ?>
-                    <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="genres" class="form-label">Genres</label>
-            <select class="form-select select2-multiple" id="genres" name="genres[]" multiple>
-                <?php foreach ($genres as $genre): ?>
-                    <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Create Book</button>
+        <button type="submit" class="btn btn-primary my-3">Create Book</button>
     </form>
 </div>
 
