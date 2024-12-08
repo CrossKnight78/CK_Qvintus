@@ -671,5 +671,110 @@ public function updateGenre($genreId, $genreData) {
         return false;
     }
     }
+
+    public function createSeries($seriesName) {
+        $stmt = $this->pdo->prepare("INSERT INTO table_series (serie_name) VALUES (:serie_name)");
+        $stmt->bindParam(':serie_name', $seriesName, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function createAgeRecommendation($ageRange) {
+        $stmt = $this->pdo->prepare("INSERT INTO table_age (age_range) VALUES (:age_range)");
+        $stmt->bindParam(':age_range', $ageRange, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function createCategory($categoryName) {
+        $stmt = $this->pdo->prepare("INSERT INTO table_category (category_name) VALUES (:category_name)");
+        $stmt->bindParam(':category_name', $categoryName, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function createPublisher($publisherName) {
+        $stmt = $this->pdo->prepare("INSERT INTO table_publishers (publisher_name) VALUES (:publisher_name)");
+        $stmt->bindParam(':publisher_name', $publisherName, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function createStatus($statusName) {
+        $stmt = $this->pdo->prepare("INSERT INTO table_status (s_name) VALUES (:s_name)");
+        $stmt->bindParam(':s_name', $statusName, PDO::PARAM_STR);
+        return $stmt->execute();
+    }
+
+    public function deleteSeries($seriesId) {
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare("DELETE FROM table_series WHERE serie_id = :series_id");
+            $stmt->bindParam(':series_id', $seriesId, PDO::PARAM_INT);
+            $stmt->execute();
+            $this->pdo->commit();
+            return "Series deleted successfully.";
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            $this->errorMessages[] = $e->getMessage();
+            return "Failed to delete series.";
+        }
+    }
+
+    public function deleteAgeRecommendation($ageId) {
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare("DELETE FROM table_age WHERE age_id = :age_id");
+            $stmt->bindParam(':age_id', $ageId, PDO::PARAM_INT);
+            $stmt->execute();
+            $this->pdo->commit();
+            return "Age recommendation deleted successfully.";
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            $this->errorMessages[] = $e->getMessage();
+            return "Failed to delete age recommendation.";
+        }
+    }
+
+    public function deleteCategory($categoryId) {
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare("DELETE FROM table_category WHERE category_id = :category_id");
+            $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+            $stmt->execute();
+            $this->pdo->commit();
+            return "Category deleted successfully.";
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            $this->errorMessages[] = $e->getMessage();
+            return "Failed to delete category.";
+        }
+    }
+
+    public function deletePublisher($publisherId) {
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare("DELETE FROM table_publishers WHERE publisher_id = :publisher_id");
+            $stmt->bindParam(':publisher_id', $publisherId, PDO::PARAM_INT);
+            $stmt->execute();
+            $this->pdo->commit();
+            return "Publisher deleted successfully.";
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            $this->errorMessages[] = $e->getMessage();
+            return "Failed to delete publisher.";
+        }
+    }
+
+    public function deleteStatus($statusId) {
+        try {
+            $this->pdo->beginTransaction();
+            $stmt = $this->pdo->prepare("DELETE FROM table_status WHERE status_id = :status_id");
+            $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
+            $stmt->execute();
+            $this->pdo->commit();
+            return "Status deleted successfully.";
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            $this->errorMessages[] = $e->getMessage();
+            return "Failed to delete status.";
+        }
+    }
 }
 ?>

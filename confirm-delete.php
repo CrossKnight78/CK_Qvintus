@@ -26,6 +26,21 @@ if (isset($_POST['delete-submit'])) {
         case 'genre':
             $deleteFeedback = $book->deleteGenre($id);
             break;
+        case 'series':
+            $deleteFeedback = $book->deleteSeries($id);
+            break;
+        case 'age':
+            $deleteFeedback = $book->deleteAgeRecommendation($id);
+            break;
+        case 'category':
+            $deleteFeedback = $book->deleteCategory($id);
+            break;
+        case 'publisher':
+            $deleteFeedback = $book->deletePublisher($id);
+            break;
+        case 'status':
+            $deleteFeedback = $book->deleteStatus($id);
+            break;
         default:
             $deleteFeedback = "Invalid delete type.";
     }

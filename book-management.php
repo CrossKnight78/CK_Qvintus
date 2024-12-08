@@ -20,11 +20,20 @@ $statuses = $book->selectAllStatuses();
     <h2 class="text-center mb-4">Book Management</h2>
 
     <!-- Button Row: Create Book, Add Author, Add Genre, Add Illustrator -->
-    <div class="d-flex justify-content-between mb-4">
-        <a href="createbook.php" class="btn btn-success">Add New Book</a>
-        <a href="createauthor.php" class="btn btn-info">Add Author</a>
-        <a href="creategenre.php" class="btn btn-primary">Add Genre</a>
-        <a href="createillustrator.php" class="btn btn-warning">Add Illustrator</a>
+    <div class="d-flex flex-wrap justify-content-between mb-4">
+        <div class="d-flex flex-wrap justify-content-between w-100 mb-2">
+            <a href="createbook.php" class="btn btn-success mb-2">Add New Book</a>
+            <a href="createauthor.php" class="btn btn-info mb-2">Add Author</a>
+            <a href="creategenre.php" class="btn btn-primary mb-2">Add Genre</a>
+            <a href="createillustrator.php" class="btn btn-warning mb-2">Add Illustrator</a>
+            <a href="createseries.php" class="btn btn-secondary mb-2">Add Series</a>
+        </div>
+        <div class="d-flex flex-wrap justify-content-between w-100">
+            <a href="createage.php" class="btn btn-dark mb-2">Add Age Recommendation</a>
+            <a href="createcategory.php" class="btn btn-light mb-2">Add Category</a>
+            <a href="createpublisher.php" class="btn btn-danger mb-2">Add Publisher</a>
+            <a href="createstatus.php" class="btn btn-success mb-2">Add Status</a>
+        </div>
     </div>
 
     <!-- Searchable Dropdown Lists -->
@@ -37,7 +46,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $book['book_id'] ?>"><?= htmlspecialchars($book['book_title']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="editbook.php?id=" class="btn btn-warning btn-sm edit-book">Edit</a>
                 <a href="confirm-delete.php?type=book&id=" class="btn btn-danger btn-sm delete-book">Delete</a>
             </div>
@@ -51,7 +60,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-author.php?id=" class="btn btn-warning btn-sm edit-author">Edit</a>
                 <a href="confirm-delete.php?type=author&id=" class="btn btn-danger btn-sm delete-author">Delete</a>
             </div>
@@ -65,7 +74,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-illustrator.php?id=" class="btn btn-warning btn-sm edit-illustrator">Edit</a>
                 <a href="confirm-delete.php?type=illustrator&id=" class="btn btn-danger btn-sm delete-illustrator">Delete</a>
             </div>
@@ -79,7 +88,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-genre.php?id=" class="btn btn-warning btn-sm edit-genre">Edit</a>
                 <a href="confirm-delete.php?type=genre&id=" class="btn btn-danger btn-sm delete-genre">Delete</a>
             </div>
@@ -93,7 +102,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $serie['serie_id'] ?>"><?= htmlspecialchars($serie['serie_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-series.php?id=" class="btn btn-warning btn-sm edit-series">Edit</a>
                 <a href="confirm-delete.php?type=series&id=" class="btn btn-danger btn-sm delete-series">Delete</a>
             </div>
@@ -107,7 +116,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $age['age_id'] ?>"><?= htmlspecialchars($age['age_range']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-age.php?id=" class="btn btn-warning btn-sm edit-age">Edit</a>
                 <a href="confirm-delete.php?type=age&id=" class="btn btn-danger btn-sm delete-age">Delete</a>
             </div>
@@ -121,7 +130,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $category['category_id'] ?>"><?= htmlspecialchars($category['category_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-category.php?id=" class="btn btn-warning btn-sm edit-category">Edit</a>
                 <a href="confirm-delete.php?type=category&id=" class="btn btn-danger btn-sm delete-category">Delete</a>
             </div>
@@ -135,7 +144,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $publisher['publisher_id'] ?>"><?= htmlspecialchars($publisher['publisher_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-publisher.php?id=" class="btn btn-warning btn-sm edit-publisher">Edit</a>
                 <a href="confirm-delete.php?type=publisher&id=" class="btn btn-danger btn-sm delete-publisher">Delete</a>
             </div>
@@ -149,7 +158,7 @@ $statuses = $book->selectAllStatuses();
                     <option value="<?= $status['status_id'] ?>"><?= htmlspecialchars($status['s_name']) ?></option>
                 <?php endforeach; ?>
             </select>
-            <div class="mt-2">
+            <div class="mt-2 d-flex justify-content-between">
                 <a href="edit-status.php?id=" class="btn btn-warning btn-sm edit-status">Edit</a>
                 <a href="confirm-delete.php?type=status&id=" class="btn btn-danger btn-sm delete-status">Delete</a>
             </div>
