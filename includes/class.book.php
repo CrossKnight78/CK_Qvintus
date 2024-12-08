@@ -776,5 +776,115 @@ public function updateGenre($genreId, $genreData) {
             return "Failed to delete status.";
         }
     }
+
+    public function updateSeries($seriesId, $seriesData) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE table_series SET serie_name = :serie_name WHERE serie_id = :serie_id");
+            $stmt->execute([
+                ':serie_name' => $this->cleanInput($seriesData['serie_name']),
+                ':serie_id' => $seriesId
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateAgeRecommendation($ageId, $ageData) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE table_age SET age_range = :age_range WHERE age_id = :age_id");
+            $stmt->execute([
+                ':age_range' => $this->cleanInput($ageData['age_range']),
+                ':age_id' => $ageId
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateCategory($categoryId, $categoryData) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE table_category SET category_name = :category_name WHERE category_id = :category_id");
+            $stmt->execute([
+                ':category_name' => $this->cleanInput($categoryData['category_name']),
+                ':category_id' => $categoryId
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updatePublisher($publisherId, $publisherData) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE table_publishers SET publisher_name = :publisher_name WHERE publisher_id = :publisher_id");
+            $stmt->execute([
+                ':publisher_name' => $this->cleanInput($publisherData['publisher_name']),
+                ':publisher_id' => $publisherId
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function updateStatus($statusId, $statusData) {
+        try {
+            $stmt = $this->pdo->prepare("UPDATE table_status SET s_name = :s_name WHERE status_id = :status_id");
+            $stmt->execute([
+                ':s_name' => $this->cleanInput($statusData['s_name']),
+                ':status_id' => $statusId
+            ]);
+            return true;
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function getSeriesById($seriesId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_series WHERE serie_id = :serie_id");
+        $stmt->bindParam(':serie_id', $seriesId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getAgeById($ageId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_age WHERE age_id = :age_id");
+        $stmt->bindParam(':age_id', $ageId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getCategoryById($categoryId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_category WHERE category_id = :category_id");
+        $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getPublisherById($publisherId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_publishers WHERE publisher_id = :publisher_id");
+        $stmt->bindParam(':publisher_id', $publisherId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function getStatusById($statusId) {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_status WHERE status_id = :status_id");
+        $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
 ?>
