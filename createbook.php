@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $illustrators = $_POST['illustrators'] ?? [];
     $genres = $_POST['genres'] ?? [];
 
-    if ($book->validateBookData($bookData)) {
+    if ($book->validateBookData($bookData) && !empty($authors) && !empty($illustrators) && !empty($genres)) {
         $newBookId = $book->createBook($bookData, $authors, $illustrators, $genres);
         if ($newBookId) {
             echo "<div class='alert alert-success'>Book created successfully with ID: $newBookId</div>";
@@ -51,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo "<div class='alert alert-danger'>Failed to create book.</div>";
         }
     } else {
-        echo "<div class='alert alert-danger'>Please fill in all required fields.</div>";
+        echo "<div class='alert alert-danger'>Please fill in all required fields, including authors, illustrators, and genres.</div>";
     }
 }
 ?>
@@ -142,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="row">
             <div class="col-sm-4">
                 <label for="authors" class="form-label">Authors</label><br>
-                <select class="form-select select2-multiple" style="width: 100%" id="authors" name="authors[]" multiple>
+                <select class="form-select select2-multiple" style="width: 100%" id="authors" name="authors[]" multiple required>
                     <?php foreach ($authors as $author): ?>
                         <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
                     <?php endforeach; ?>
@@ -150,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="col-sm-4">
                 <label for="illustrators" class="form-label">Illustrators</label><br>
-                <select class="form-select select2-multiple" style="width: 100%" id="illustrators" name="illustrators[]" multiple>
+                <select class="form-select select2-multiple" style="width: 100%" id="illustrators" name="illustrators[]" multiple required>
                     <?php foreach ($illustrators as $illustrator): ?>
                         <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
                     <?php endforeach; ?>
@@ -158,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
             <div class="col-sm-4">
                 <label for="genres" class="form-label">Genres</label><br>
-                <select class="form-select select2-multiple" style="width: 100%" id="genres" name="genres[]" multiple>
+                <select class="form-select select2-multiple" style="width: 100%" id="genres" name="genres[]" multiple required>
                     <?php foreach ($genres as $genre): ?>
                         <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
                     <?php endforeach; ?>
