@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     // Handle image upload
-    if (isset($_FILES['genre-img']) && $_FILES['genre-img']['error'] == UPLOAD_ERR_OK) {
+    if (isset($_FILES['genre_img']) && $_FILES['genre_img']['error'] == UPLOAD_ERR_OK) {
         include 'uploadgenre.php';
         if (isset($_SESSION['uploaded_image'])) {
             $genreData['genre_img'] = $_SESSION['uploaded_image'];
@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
         </div>
         <div class="mb-3">
-            <label for="genre-img" class="form-label">Genre Image</label>
-            <input type="file" class="form-control" id="genre-img" name="genre-img">
+            <label for="genre_img" class="form-label">Genre Image</label>
+            <input type="file" class="form-control" id="genre_img" name="genre_img">
             <?php if (!empty($genre['genre_img'])): ?>
                 <img src="<?= htmlspecialchars($genre['genre_img']) ?>" alt="Genre Image" class="img-thumbnail mt-2" style="max-width: 200px;">
             <?php endif; ?>

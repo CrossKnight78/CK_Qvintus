@@ -444,9 +444,11 @@ public function deleteAuthor($authorId) {
     }
 }
 
-public function createGenre($genreName) {
-    $stmt = $this->pdo->prepare("INSERT INTO table_genres (genre_name) VALUES (:genre_name)");
+public function createGenre($genreName, $genreStatus, $genreImg) {
+    $stmt = $this->pdo->prepare("INSERT INTO table_genres (genre_name, genre_status, genre_img) VALUES (:genre_name, :genre_status, :genre_img)");
     $stmt->bindParam(':genre_name', $genreName, PDO::PARAM_STR);
+    $stmt->bindParam(':genre_status', $genreStatus, PDO::PARAM_INT);
+    $stmt->bindParam(':genre_img', $genreImg, PDO::PARAM_STR);
     return $stmt->execute();
 }
 
