@@ -3,8 +3,21 @@ include_once 'includes/header.php';
 include_once 'includes/class.book.php';
 
 $book = new Book($pdo);
-$bookId = $_GET['id'];
+
+if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+    header('Location: book-management.php');
+    exit();
+}
+
+$bookId = (int)$_GET['id'];
 $bookData = $book->getBookById($bookId);
+
+// Fetch all necessary data for dropdowns
+$series = $book->selectAllSeries();
+$ageRecommendations = $book->selectAllAgeRecommendations();
+$categories = $book->selectAllCategories();
+$publishers = $book->selectAllPublishers();
+$statuses = $book->selectAllStatuses();
 ?>
 
 <div class="container mt-5">
@@ -37,23 +50,43 @@ $bookData = $book->getBookById($bookId);
         </div>
         <div class="mb-3">
             <label for="bookSeries" class="form-label">Book Series</label>
-            <input type="number" class="form-control" id="bookSeries" name="book_series_fk" value="<?= htmlspecialchars($bookData['book_series_fk']) ?>" required>
+            <select class="form-select" id="bookSeries" name="book_series_fk" required>
+                <?php foreach ($series as $serie): ?>
+                    <option value="<?= $serie['serie_id'] ?>" <?= $bookData['book_series_fk'] == $serie['serie_id'] ? 'selected' : '' ?>><?= htmlspecialchars($serie['serie_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <div class="mb-3">
             <label for="ageRecommendation" class="form-label">Age Recommendation</label>
-            <input type="number" class="form-control" id="ageRecommendation" name="age_recommendation_fk" value="<?= htmlspecialchars($bookData['age_recommendation_fk']) ?>" required>
+            <select class="form-select" id="ageRecommendation" name="age_recommendation_fk" required>
+                <?php foreach ($ageRecommendations as $age): ?>
+                    <option value="<?= $age['age_id'] ?>" <?= $bookData['age_recommendation_fk'] == $age['age_id'] ? 'selected' : '' ?>><?= htmlspecialchars($age['age_range']) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <div class="mb-3">
             <label for="category" class="form-label">Category</label>
-            <input type="number" class="form-control" id="category" name="category_fk" value="<?= htmlspecialchars($bookData['category_fk']) ?>" required>
+            <select class="form-select" id="category" name="category_fk" required>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['category_id'] ?>" <?= $bookData['category_fk'] == $category['category_id'] ? 'selected' : '' ?>><?= htmlspecialchars($category['category_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <div class="mb-3">
             <label for="publisher" class="form-label">Publisher</label>
-            <input type="number" class="form-control" id="publisher" name="publisher_fk" value="<?= htmlspecialchars($bookData['publisher_fk']) ?>" required>
+            <select class="form-select" id="publisher" name="publisher_fk" required>
+                <?php foreach ($publishers as $publisher): ?>
+                    <option value="<?= $publisher['publisher_id'] ?>" <?= $bookData['publisher_fk'] == $publisher['publisher_id'] ? 'selected' : '' ?>><?= htmlspecialchars($publisher['publisher_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <div class="mb-3">
             <label for="status" class="form-label">Status</label>
-            <input type="number" class="form-control" id="status" name="status_fk" value="<?= htmlspecialchars($bookData['status_fk']) ?>" required>
+            <select class="form-select" id="status" name="status_fk" required>
+                <?php foreach ($statuses as $status): ?>
+                    <option value="<?= $status['s_id'] ?>" <?= $bookData['status_fk'] == $status['s_id'] ? 'selected' : '' ?>><?= htmlspecialchars($status['s_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
         </div>
         <div class="mb-3">
             <label for="bookImg" class="form-label">Book Image</label>

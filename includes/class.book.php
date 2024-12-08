@@ -418,9 +418,30 @@ public function editAuthor($authorId, $authorName) {
 }
 
 public function deleteAuthor($authorId) {
-    $stmt = $this->pdo->prepare("DELETE FROM table_authors WHERE author_id = :author_id");
-    $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
-    return $stmt->execute();
+    try {
+        // Begin a transaction
+        $this->pdo->beginTransaction();
+
+        // Delete related records from junction tables
+        $stmt = $this->pdo->prepare("DELETE FROM books_authors WHERE book_author_id = :author_id");
+        $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Delete the author record
+        $stmt = $this->pdo->prepare("DELETE FROM table_authors WHERE author_id = :author_id");
+        $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Commit the transaction
+        $this->pdo->commit();
+
+        return "Author deleted successfully.";
+    } catch (PDOException $e) {
+        // Rollback the transaction on error
+        $this->pdo->rollBack();
+        $this->errorMessages[] = $e->getMessage();
+        return "Failed to delete author.";
+    }
 }
 
 public function createGenre($genreName) {
@@ -437,9 +458,30 @@ public function editGenre($genreId, $genreName) {
 }
 
 public function deleteGenre($genreId) {
-    $stmt = $this->pdo->prepare("DELETE FROM table_genres WHERE genre_id = :genre_id");
-    $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
-    return $stmt->execute();
+    try {
+        // Begin a transaction
+        $this->pdo->beginTransaction();
+
+        // Delete related records from junction tables
+        $stmt = $this->pdo->prepare("DELETE FROM books_genres WHERE book_genre_id = :genre_id");
+        $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Delete the genre record
+        $stmt = $this->pdo->prepare("DELETE FROM table_genres WHERE genre_id = :genre_id");
+        $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Commit the transaction
+        $this->pdo->commit();
+
+        return "Genre deleted successfully.";
+    } catch (PDOException $e) {
+        // Rollback the transaction on error
+        $this->pdo->rollBack();
+        $this->errorMessages[] = $e->getMessage();
+        return "Failed to delete genre.";
+    }
 }
 
 public function createIllustrator($illustratorName) {
@@ -456,9 +498,30 @@ public function editIllustrator($illustratorId, $illustratorName) {
 }
 
 public function deleteIllustrator($illustratorId) {
-    $stmt = $this->pdo->prepare("DELETE FROM table_illustrators WHERE illustrator_id = :illustrator_id");
-    $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
-    return $stmt->execute();
+    try {
+        // Begin a transaction
+        $this->pdo->beginTransaction();
+
+        // Delete related records from junction tables
+        $stmt = $this->pdo->prepare("DELETE FROM books_illustrators WHERE book_illustrator_id = :illustrator_id");
+        $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Delete the illustrator record
+        $stmt = $this->pdo->prepare("DELETE FROM table_illustrators WHERE illustrator_id = :illustrator_id");
+        $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
+        $stmt->execute();
+
+        // Commit the transaction
+        $this->pdo->commit();
+
+        return "Illustrator deleted successfully.";
+    } catch (PDOException $e) {
+        // Rollback the transaction on error
+        $this->pdo->rollBack();
+        $this->errorMessages[] = $e->getMessage();
+        return "Failed to delete illustrator.";
+    }
 }
 
 public function deleteBook($bookId) {
@@ -539,6 +602,72 @@ public function updateBook($bookId, $bookData) {
     }
 }
 
+public function getAuthorById($authorId) {
+    $stmt = $this->pdo->prepare("SELECT * FROM table_authors WHERE author_id = :author_id");
+    $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+public function updateAuthor($authorId, $authorData) {
+    try {
+        $stmt = $this->pdo->prepare("UPDATE table_authors SET author_name = :author_name WHERE author_id = :author_id");
+        $stmt->execute([
+            ':author_name' => $this->cleanInput($authorData['author_name']),
+            ':author_id' => $authorId
+        ]);
+        return true;
+    } catch (PDOException $e) {
+        $this->errorState = 1;
+        $this->errorMessages[] = $e->getMessage();
+        return false;
+    }
+}
+
+public function getIllustratorById($illustratorId) {
+    $stmt = $this->pdo->prepare("SELECT * FROM table_illustrators WHERE illustrator_id = :illustrator_id");
+    $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function updateIllustrator($illustratorId, $illustratorData) {
+    try {
+        $stmt = $this->pdo->prepare("UPDATE table_illustrators SET illustrator_name = :illustrator_name WHERE illustrator_id = :illustrator_id");
+        $stmt->execute([
+            ':illustrator_name' => $this->cleanInput($illustratorData['illustrator_name']),
+            ':illustrator_id' => $illustratorId
+        ]);
+        return true;
+    } catch (PDOException $e) {
+        $this->errorState = 1;
+        $this->errorMessages[] = $e->getMessage();
+        return false;
+    }
+}
+
+public function getGenreById($genreId) {
+    $stmt = $this->pdo->prepare("SELECT * FROM table_genres WHERE genre_id = :genre_id");
+    $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function updateGenre($genreId, $genreData) {
+    try {
+        $stmt = $this->pdo->prepare("UPDATE table_genres SET genre_name = :genre_name, genre_img = :genre_img, genre_status = :genre_status WHERE genre_id = :genre_id");
+        $stmt->execute([
+            ':genre_name' => $this->cleanInput($genreData['genre_name']),
+            ':genre_img' => $genreData['genre_img'] ?? null,
+            ':genre_status' => $genreData['genre_status'],
+            ':genre_id' => $genreId
+        ]);
+        return true;
+    } catch (PDOException $e) {
+        $this->errorState = 1;
+        $this->errorMessages[] = $e->getMessage();
+        return false;
+    }
+    }
+}
 ?>

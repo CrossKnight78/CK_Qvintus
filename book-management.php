@@ -26,7 +26,7 @@ $genres = $book->selectAllGenres();
     <div class="row">
         <div class="col-md-6 mb-4">
             <label for="bookSelect" class="form-label">Books</label>
-            <select class="form-select select2" id="bookSelect">
+            <select class="form-select select2" id="bookSelect" style="width: 100%;">
                 <option value="">Select a Book</option>
                 <?php foreach ($books as $book): ?>
                     <option value="<?= $book['book_id'] ?>"><?= htmlspecialchars($book['book_title']) ?></option>
@@ -40,7 +40,7 @@ $genres = $book->selectAllGenres();
 
         <div class="col-md-6 mb-4">
             <label for="authorSelect" class="form-label">Authors</label>
-            <select class="form-select select2" id="authorSelect">
+            <select class="form-select select2" id="authorSelect" style="width: 100%;">
                 <option value="">Select an Author</option>
                 <?php foreach ($authors as $author): ?>
                     <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
@@ -54,7 +54,7 @@ $genres = $book->selectAllGenres();
 
         <div class="col-md-6 mb-4">
             <label for="illustratorSelect" class="form-label">Illustrators</label>
-            <select class="form-select select2" id="illustratorSelect">
+            <select class="form-select select2" id="illustratorSelect" style="width: 100%;">
                 <option value="">Select an Illustrator</option>
                 <?php foreach ($illustrators as $illustrator): ?>
                     <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
@@ -68,7 +68,7 @@ $genres = $book->selectAllGenres();
 
         <div class="col-md-6 mb-4">
             <label for="genreSelect" class="form-label">Genres</label>
-            <select class="form-select select2" id="genreSelect">
+            <select class="form-select select2" id="genreSelect" style="width: 100%;">
                 <option value="">Select a Genre</option>
                 <?php foreach ($genres as $genre): ?>
                     <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
@@ -114,6 +114,38 @@ $genres = $book->selectAllGenres();
             var genreId = $(this).val();
             $('.edit-genre').attr('href', 'edit-genre.php?id=' + genreId);
             $('.delete-genre').attr('href', 'confirm-delete.php?type=genre&id=' + genreId);
+        });
+
+        // Add click event to check if a book is selected before editing or deleting
+        $('.edit-book, .delete-book').on('click', function(e) {
+            if ($('#bookSelect').val() === "") {
+                e.preventDefault();
+                alert("Please select a book to edit or delete.");
+            }
+        });
+
+        // Add click event to check if an author is selected before editing or deleting
+        $('.edit-author, .delete-author').on('click', function(e) {
+            if ($('#authorSelect').val() === "") {
+                e.preventDefault();
+                alert("Please select an author to edit or delete.");
+            }
+        });
+
+        // Add click event to check if an illustrator is selected before editing or deleting
+        $('.edit-illustrator, .delete-illustrator').on('click', function(e) {
+            if ($('#illustratorSelect').val() === "") {
+                e.preventDefault();
+                alert("Please select an illustrator to edit or delete.");
+            }
+        });
+
+        // Add click event to check if a genre is selected before editing or deleting
+        $('.edit-genre, .delete-genre').on('click', function(e) {
+            if ($('#genreSelect').val() === "") {
+                e.preventDefault();
+                alert("Please select a genre to edit or delete.");
+            }
         });
     });
 </script>

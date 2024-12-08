@@ -8,6 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         mkdir($target_dir, 0777, true);
     }
 
+    // Get the book title from the POST data
+    $bookTitle = isset($_POST['book_title']) ? $_POST['book_title'] : 'book';
+    $bookTitle = preg_replace('/[^a-zA-Z0-9-_]/', '_', $bookTitle); // Sanitize the book title
+
     // Full path of the uploaded file
     $target_file = $target_dir . basename($_FILES["book-img"]["name"]);
     $uploadOk = 1;
@@ -46,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['upload_error'] = "Sorry, your file was not uploaded.";
     } else {
         // Generate a unique filename to avoid collisions
-        $uniqueFileName = $target_dir . uniqid("book_", true) . '.' . $imageFileType;
+        $uniqueFileName = $target_dir . uniqid($bookTitle . "_", true) . '.' . $imageFileType;
 
         if (move_uploaded_file($_FILES["book-img"]["tmp_name"], $uniqueFileName)) {
             $_SESSION['uploaded_image'] = $uniqueFileName;
