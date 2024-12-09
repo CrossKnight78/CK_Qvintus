@@ -12,7 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $genreStatus = $_POST['genre_status'];
         $genreImg = $_SESSION['uploaded_image'];
         $book->createGenre($genreName, $genreStatus, $genreImg);
+        echo '<div class="alert alert-success">Genre created successfully.</div>';
+    } else {
+        echo '<div class="alert alert-danger">Failed to create genre.</div>';
     }
+    echo '<div class="text-center">
+            <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
+        </div>';
 }
 ?>
 

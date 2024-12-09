@@ -10,6 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo '<div class="alert alert-danger">Failed to create illustrator.</div>';
     }
+    echo '<div class="text-center">
+            <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
+          </div>';
 }
 ?>
 

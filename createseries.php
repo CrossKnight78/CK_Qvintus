@@ -1,4 +1,3 @@
-
 <?php
 include_once 'includes/header.php';
 include_once 'includes/class.book.php';
@@ -11,6 +10,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo '<div class="alert alert-danger">Failed to create series.</div>';
     }
+    echo '<div class="text-center">
+            <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
+          </div>';
 }
 ?>
 
