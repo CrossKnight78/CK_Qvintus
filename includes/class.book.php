@@ -888,6 +888,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createAuthorOnTheFly($authorName) {
+        if (empty($authorName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_authors (author_name) VALUES (:author_name)");
             $stmt->bindParam(':author_name', $authorName, PDO::PARAM_STR);
@@ -901,6 +902,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createIllustratorOnTheFly($illustratorName) {
+        if (empty($illustratorName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_illustrators (illustrator_name) VALUES (:illustrator_name)");
             $stmt->bindParam(':illustrator_name', $illustratorName, PDO::PARAM_STR);
@@ -914,6 +916,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createGenreOnTheFly($genreName) {
+        if (empty($genreName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_genres (genre_name) VALUES (:genre_name)");
             $stmt->bindParam(':genre_name', $genreName, PDO::PARAM_STR);
@@ -927,6 +930,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createSeriesOnTheFly($seriesName) {
+        if (empty($seriesName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_series (serie_name) VALUES (:serie_name)");
             $stmt->bindParam(':serie_name', $seriesName, PDO::PARAM_STR);
@@ -940,6 +944,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createAgeRecommendationOnTheFly($ageRecommendationName) {
+        if (empty($ageRecommendationName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_age (age_range) VALUES (:age_range)");
             $stmt->bindParam(':age_range', $ageRecommendationName, PDO::PARAM_STR);
@@ -953,6 +958,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createCategoryOnTheFly($categoryName) {
+        if (empty($categoryName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_category (category_name) VALUES (:category_name)");
             $stmt->bindParam(':category_name', $categoryName, PDO::PARAM_STR);
@@ -966,6 +972,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createPublisherOnTheFly($publisherName) {
+        if (empty($publisherName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_publishers (publisher_name) VALUES (:publisher_name)");
             $stmt->bindParam(':publisher_name', $publisherName, PDO::PARAM_STR);
@@ -979,6 +986,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function createStatusOnTheFly($statusName) {
+        if (empty($statusName)) return false;
         try {
             $stmt = $this->pdo->prepare("INSERT INTO table_status (s_name) VALUES (:s_name)");
             $stmt->bindParam(':s_name', $statusName, PDO::PARAM_STR);

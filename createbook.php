@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle on-the-fly publisher creation
     if (!empty($_POST['new_publishers'])) {
         $newPublishers = explode(',', $_POST['new_publishers']);
-        foreach ($newPublishers as $newPublisher) {
+        foreach ($newPublisher as $newPublisher) {
             $newPublisherId = $book->createPublisherOnTheFly(trim($newPublisher));
             if ($newPublisherId) {
                 $publishers[] = $newPublisherId;
@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle on-the-fly status creation
     if (!empty($_POST['new_statuses'])) {
         $newStatuses = explode(',', $_POST['new_statuses']);
-        foreach ($newStatuses as $newStatus) {
+        foreach ($newStatus as $newStatus) {
             $newStatusId = $book->createStatusOnTheFly(trim($newStatus));
             if ($newStatusId) {
                 $statuses[] = $newStatusId;
@@ -199,11 +199,11 @@ function renderSelect($id, $label, $options, $multiple = false, $required = fals
             <input type="number" class="form-control" id="books_price" name="books_price" step="0.01" required>
         </div>
         <?php
-        renderSelect('book_series_fk', 'Series', $series, false, false, 'Select series', true);
-        renderSelect('age_recommendation_fk', 'Age Recommendation', $ageRecommendations, false, true, 'Select age recommendation', true);
-        renderSelect('category_fk', 'Category', $categories, false, true, 'Select category', true);
-        renderSelect('publisher_fk', 'Publisher', $publishers, false, true, 'Select publisher', true);
-        renderSelect('status_fk', 'Status', $statuses, false, true, 'Select status', true);
+        renderSelect('book series', 'Series', $series, false, false, 'Select series', true);
+        renderSelect('age recommendation', 'Age Recommendation', $ageRecommendations, false, true, 'Select age recommendation', true);
+        renderSelect('category', 'Category', $categories, false, true, 'Select category', true);
+        renderSelect('publisher', 'Publisher', $publishers, false, true, 'Select publisher', true);
+        renderSelect('status', 'Status', $statuses, false, true, 'Select status', true);
         ?>
         <div class="mb-3">
             <label for="img_url" class="form-label">Image URL</label>
