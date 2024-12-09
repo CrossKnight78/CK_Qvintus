@@ -28,6 +28,9 @@ if(isset($_POST['register-submit'])) {
 					<div class='alert alert-success text-center' role='alert'>
 						Användaren har skapats.
 					</div>
+					<div class='text-center'>
+						<a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
+					</div>
 				</div>";
 		}
 
@@ -38,6 +41,9 @@ if(isset($_POST['register-submit'])) {
 			echo 	$message;
 			echo "</div>";
 		}
+		echo "<div class='text-center'>
+				<a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
+			</div>";
 		echo "</div>";
     }
 }

@@ -4,7 +4,7 @@ include_once 'includes/header.php';
 $bookClass = new Book($pdo);
 ?>
 
-<<div class="container my-5">
+<div class="container my-5">
     <h1 class="mb-4 text-center">Books</h1>
     <div class="mb-4">
         <input 

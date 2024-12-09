@@ -4,23 +4,17 @@ include_once 'includes/class.book.php';
 
 $book = new Book($pdo);
 
-if ($user->checkLoginStatus()) {
-    if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
-    }
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $statusId = $_POST['status_id'];
-    $statusData = [
-        's_name' => $_POST['status_name']
+    $illustratorId = $_POST['illustrator_id'];
+    $illustratorData = [
+        'illustrator_name' => $_POST['illustrator_name']
     ];
 
-    if ($book->updateStatus($statusId, $statusData)) {
-        $message = "Status updated successfully!";
+    if ($book->updateIllustrator($illustratorId, $illustratorData)) {
+        $message = "Illustrator updated successfully!";
         $alertType = "success";
     } else {
-        $message = "Failed to update status.";
+        $message = "Failed to update illustrator.";
         $alertType = "danger";
     }
 }

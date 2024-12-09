@@ -4,23 +4,25 @@ include_once 'includes/class.book.php';
 
 $book = new Book($pdo);
 
-if ($user->checkLoginStatus()) {
-    if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
-    }
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $statusId = $_POST['status_id'];
-    $statusData = [
-        's_name' => $_POST['status_name']
+    $genreId = $_POST['genre_id'];
+    $genreData = [
+        'genre_name' => $_POST['genre_name']
     ];
 
-    if ($book->updateStatus($statusId, $statusData)) {
-        $message = "Status updated successfully!";
+    // Handle image upload
+    if (isset($_FILES['genre-img']) && $_FILES['genre-img']['error'] == UPLOAD_ERR_OK) {
+        include 'uploadgenre.php';
+        if (isset($_SESSION['uploaded_image'])) {
+            $genreData['genre_img'] = $_SESSION['uploaded_image'];
+        }
+    }
+
+    if ($book->updateGenre($genreId, $genreData)) {
+        $message = "Genre updated successfully!";
         $alertType = "success";
     } else {
-        $message = "Failed to update status.";
+        $message = "Failed to update genre.";
         $alertType = "danger";
     }
 }

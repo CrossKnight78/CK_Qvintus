@@ -1,7 +1,10 @@
 <?php
 include_once 'includes/header.php';
+include_once 'includes/class.book.php';
 
-$userInfoArray = $user->getUserInfo($_GET['uid']);
+$book = new Book($pdo);
+$type = $_GET['type'];
+$id = $_GET['id'];
 
 if ($user->checkLoginStatus()) {
     if(!$user->checkUserRole(200)) {
@@ -9,25 +12,54 @@ if ($user->checkLoginStatus()) {
     }
 }
 
-if (isset($_POST['delete-user-submit'])) {
-    $deleteFeedback = $user->deleteUser($_GET['uid']);
+if (isset($_POST['delete-submit'])) {
+    switch ($type) {
+        case 'book':
+            $deleteFeedback = $book->deleteBook($id);
+            break;
+        case 'author':
+            $deleteFeedback = $book->deleteAuthor($id);
+            break;
+        case 'illustrator':
+            $deleteFeedback = $book->deleteIllustrator($id);
+            break;
+        case 'genre':
+            $deleteFeedback = $book->deleteGenre($id);
+            break;
+        case 'series':
+            $deleteFeedback = $book->deleteSeries($id);
+            break;
+        case 'age':
+            $deleteFeedback = $book->deleteAgeRecommendation($id);
+            break;
+        case 'category':
+            $deleteFeedback = $book->deleteCategory($id);
+            break;
+        case 'publisher':
+            $deleteFeedback = $book->deletePublisher($id);
+            break;
+        case 'status':
+            $deleteFeedback = $book->deleteStatus($id);
+            break;
+        default:
+            $deleteFeedback = "Invalid delete type.";
+    }
 }
 ?>
 
 <div class="container justify-content-center text-center">
-
 <?php
 if (!isset($deleteFeedback)) {
-    echo "<h2 class='mb-5'>Är du säker på att du vill radera användaren <span class='fw-bold'>{$userInfoArray['u_name']}</span>?</h2>";
+    echo "<h2 class='mb-5'>Are you sure you want to delete this item?</h2>";
 
     echo "
     <div class='row flex-column justify-content-center'>
         <div class='col-4 mb-3 mx-auto'>
-            <a class='btn btn-warning w-100' href='admin-account.php?uid={$_GET['uid']}'>Nej, för mig tillbaks!</a>
+            <a class='btn btn-warning w-100' href='book-management.php'>No, take me back!</a>
         </div>
         <div class='col-4 mx-auto'>
             <form action='' method='post'>
-                <input type='submit' name='delete-user-submit' value='Radera användare' class='btn btn-danger w-100'>
+                <input type='submit' name='delete-submit' value='Delete' class='btn btn-danger w-100'>
             </form>
         </div>
     </div>";
@@ -37,13 +69,11 @@ if (!isset($deleteFeedback)) {
     echo " 
     <div class='row flex-column justify-content-center'>
         <div class='col-4 mb-3 mx-auto'>
-            <a class='btn btn-secondary w-100' href='admin.php'>Återgå till sidan Administratör</a>
+            <a class='btn btn-secondary w-100' href='book-management.php'>Return to Book Management</a>
         </div>
     </div>";
 }
 ?>
-    
-
 </div>
 
 <?php

@@ -4,23 +4,17 @@ include_once 'includes/class.book.php';
 
 $book = new Book($pdo);
 
-if ($user->checkLoginStatus()) {
-    if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
-    }
-}
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $statusId = $_POST['status_id'];
-    $statusData = [
-        's_name' => $_POST['status_name']
+    $seriesId = $_POST['series_id'];
+    $seriesData = [
+        'serie_name' => $_POST['series_name']
     ];
 
-    if ($book->updateStatus($statusId, $statusData)) {
-        $message = "Status updated successfully!";
+    if ($book->updateSeries($seriesId, $seriesData)) {
+        $message = "Series updated successfully!";
         $alertType = "success";
     } else {
-        $message = "Failed to update status.";
+        $message = "Failed to update series.";
         $alertType = "danger";
     }
 }
