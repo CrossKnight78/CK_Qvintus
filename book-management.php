@@ -160,7 +160,7 @@ $statuses = $book->selectAllStatuses();
             <select class="form-select select2" id="statusSelect" style="width: 100%;">
                 <option value="">Select a Status</option>
                 <?php foreach ($statuses as $status): ?>
-                    <option value="<?= $status['status_id'] ?>"><?= htmlspecialchars($status['s_name']) ?></option>
+                    <option value="<?= $status['s_id'] ?>"><?= htmlspecialchars($status['s_name']) ?></option>
                 <?php endforeach; ?>
             </select>
             <div class="mt-2 d-flex justify-content-between">

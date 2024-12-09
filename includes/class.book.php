@@ -765,7 +765,7 @@ public function updateGenre($genreId, $genreData) {
     public function deleteStatus($statusId) {
         try {
             $this->pdo->beginTransaction();
-            $stmt = $this->pdo->prepare("DELETE FROM table_status WHERE status_id = :status_id");
+            $stmt = $this->pdo->prepare("DELETE FROM table_status WHERE s_id = :status_id");
             $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
             $stmt->execute();
             $this->pdo->commit();
@@ -839,7 +839,7 @@ public function updateGenre($genreId, $genreData) {
 
     public function updateStatus($statusId, $statusData) {
         try {
-            $stmt = $this->pdo->prepare("UPDATE table_status SET s_name = :s_name WHERE status_id = :status_id");
+            $stmt = $this->pdo->prepare("UPDATE table_status SET s_name = :s_name WHERE s_id = :status_id");
             $stmt->execute([
                 ':s_name' => $this->cleanInput($statusData['s_name']),
                 ':status_id' => $statusId
@@ -881,7 +881,7 @@ public function updateGenre($genreId, $genreData) {
     }
 
     public function getStatusById($statusId) {
-        $stmt = $this->pdo->prepare("SELECT * FROM table_status WHERE status_id = :status_id");
+        $stmt = $this->pdo->prepare("SELECT * FROM table_status WHERE s_id = :status_id");
         $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
