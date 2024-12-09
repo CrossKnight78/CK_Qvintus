@@ -1,4 +1,3 @@
-
 <?php
 include_once 'includes/header.php';
 include_once 'includes/class.book.php';
@@ -11,8 +10,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'age_range' => $_POST['age_range']
     ];
 
-    $book->updateAgeRecommendation($ageId, $ageData);
-    header('Location: edit-age.php?id=' . $ageId . '&success=1');
-    exit;
+    if ($book->updateAgeRecommendation($ageId, $ageData)) {
+        $message = "Age recommendation updated successfully!";
+        $alertType = "success";
+    } else {
+        $message = "Failed to update age recommendation.";
+        $alertType = "danger";
+    }
 }
+?>
+
+<div class="container mt-5">
+    <div class="alert alert-<?= $alertType ?> text-center" role="alert">
+        <?= $message ?>
+    </div>
+    <div class="text-center">
+        <a href="book-management.php" class="btn btn-primary">Back to Book Management</a>
+    </div>
+</div>
+
+<?php
+include_once 'includes/footer.php';
 ?>

@@ -16,14 +16,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         's_name' => $_POST['status_name']
     ];
 
-    $book->updateStatus($statusId, $statusData);
-    header('Location: edit-status.php?id=' . $statusId . '&success=1');
-    exit;
-} else {
-    echo "<div class='container'>
-            <div class='alert alert-danger text-center' role='alert'>
-                Inte giltig förfrågan.
-            </div>
-        </div>";
+    if ($book->updateStatus($statusId, $statusData)) {
+        $message = "Status updated successfully!";
+        $alertType = "success";
+    } else {
+        $message = "Failed to update status.";
+        $alertType = "danger";
+    }
 }
+?>
+
+<div class="container mt-5">
+    <div class="alert alert-<?= $alertType ?> text-center" role="alert">
+        <?= $message ?>
+    </div>
+    <div class="text-center">
+        <a href="book-management.php" class="btn btn-primary">Back to Book Management</a>
+    </div>
+</div>
+
+<?php
+include_once 'includes/footer.php';
 ?>

@@ -1,4 +1,3 @@
-
 <?php
 include_once 'includes/header.php';
 include_once 'includes/class.book.php';
@@ -11,8 +10,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'category_name' => $_POST['category_name']
     ];
 
-    $book->updateCategory($categoryId, $categoryData);
-    header('Location: edit-category.php?id=' . $categoryId . '&success=1');
-    exit;
+    if ($book->updateCategory($categoryId, $categoryData)) {
+        $message = "Category updated successfully!";
+        $alertType = "success";
+    } else {
+        $message = "Failed to update category.";
+        $alertType = "danger";
+    }
 }
+?>
+
+<div class="container mt-5">
+    <div class="alert alert-<?= $alertType ?> text-center" role="alert">
+        <?= $message ?>
+    </div>
+    <div class="text-center">
+        <a href="book-management.php" class="btn btn-primary">Back to Book Management</a>
+    </div>
+</div>
+
+<?php
+include_once 'includes/footer.php';
 ?>

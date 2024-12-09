@@ -16,6 +16,11 @@ $statuses = $book->selectAllStatuses();
 
 <!-- Page Title -->
 <div class="container mt-5" style="max-width: 1200px;">
+    <?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+        <div class="alert alert-success text-center" role="alert">
+            Edit successful!
+        </div>
+    <?php endif; ?>
     <!-- Page Title -->
     <h2 class="text-center mb-4">Book Management</h2>
 

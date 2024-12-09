@@ -10,7 +10,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'illustrator_name' => $_POST['illustrator_name']
     ];
 
-    $book->updateIllustrator($illustratorId, $illustratorData);
-    header('Location: book-management.php');
+    if ($book->updateIllustrator($illustratorId, $illustratorData)) {
+        $message = "Illustrator updated successfully!";
+        $alertType = "success";
+    } else {
+        $message = "Failed to update illustrator.";
+        $alertType = "danger";
+    }
 }
+?>
+
+<div class="container mt-5">
+    <div class="alert alert-<?= $alertType ?> text-center" role="alert">
+        <?= $message ?>
+    </div>
+    <div class="text-center">
+        <a href="book-management.php" class="btn btn-primary">Back to Book Management</a>
+    </div>
+</div>
+
+<?php
+include_once 'includes/footer.php';
 ?>

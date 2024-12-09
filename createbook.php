@@ -23,6 +23,16 @@ $statuses = $book->selectAllStatuses(); // Add this method to fetch statuses fro
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include 'upload.php'; // Handle the image upload
 
+    if (isset($_POST['new_author_name']) && !empty($_POST['new_author_name'])) {
+        $newAuthorId = $book->createAuthor($_POST['new_author_name']);
+        if ($newAuthorId) {
+            echo json_encode(['success' => true, 'author_id' => $newAuthorId, 'author_name' => $_POST['new_author_name']]);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Failed to create author.']);
+        }
+        exit;
+    }
+
     $bookData = [
         'book_title' => $_POST['book_title'],
         'book_desc' => $_POST['book_desc'],
@@ -147,6 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
                     <?php endforeach; ?>
                 </select>
+                <input type="text" id="new_author_name" class="form-control mt-2" placeholder="New Author Name">
+                <button type="button" id="add-author-btn" class="btn btn-secondary mt-2">Add Author</button>
             </div>
             <div class="col-sm-4">
                 <label for="illustrators" class="form-label">Illustrators</label><br>
@@ -177,6 +189,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $('.select2-multiple').select2({
             placeholder: "Select options",
             allowClear: true
+        });
+
+        $('#add-author-btn').click(function() {
+            var newAuthorName = $('#new_author_name').val();
+            if (newAuthorName) {
+                $.post('createbook.php', { new_author_name: newAuthorName }, function(response) {
+                    var data = JSON.parse(response);
+                    if (data.success) {
+                        var newOption = new Option(data.author_name, data.author_id, false, true);
+                        $('#authors').append(newOption).trigger('change');
+                        $('#new_author_name').val('');
+                    } else {
+                        alert(data.message);
+                    }
+                });
+            }
         });
     });
 </script>
