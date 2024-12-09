@@ -886,5 +886,109 @@ public function updateGenre($genreId, $genreData) {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function createAuthorOnTheFly($authorName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_authors (author_name) VALUES (:author_name)");
+            $stmt->bindParam(':author_name', $authorName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createIllustratorOnTheFly($illustratorName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_illustrators (illustrator_name) VALUES (:illustrator_name)");
+            $stmt->bindParam(':illustrator_name', $illustratorName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createGenreOnTheFly($genreName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_genres (genre_name) VALUES (:genre_name)");
+            $stmt->bindParam(':genre_name', $genreName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createSeriesOnTheFly($seriesName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_series (serie_name) VALUES (:serie_name)");
+            $stmt->bindParam(':serie_name', $seriesName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createAgeRecommendationOnTheFly($ageRecommendationName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_age (age_range) VALUES (:age_range)");
+            $stmt->bindParam(':age_range', $ageRecommendationName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createCategoryOnTheFly($categoryName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_category (category_name) VALUES (:category_name)");
+            $stmt->bindParam(':category_name', $categoryName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createPublisherOnTheFly($publisherName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_publishers (publisher_name) VALUES (:publisher_name)");
+            $stmt->bindParam(':publisher_name', $publisherName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
+
+    public function createStatusOnTheFly($statusName) {
+        try {
+            $stmt = $this->pdo->prepare("INSERT INTO table_status (s_name) VALUES (:s_name)");
+            $stmt->bindParam(':s_name', $statusName, PDO::PARAM_STR);
+            $stmt->execute();
+            return $this->pdo->lastInsertId();
+        } catch (PDOException $e) {
+            $this->errorState = 1;
+            $this->errorMessages[] = $e->getMessage();
+            return false;
+        }
+    }
 }
 ?>
