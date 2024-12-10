@@ -3,6 +3,9 @@ include_once 'includes/header.php';
 include_once 'includes/class.book.php';
 $book = new Book($pdo);
 
+$source = isset($_GET['source']) ? $_GET['source'] : '';
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ageRange = $_POST['age_range'];
     if ($book->createAgeRecommendation($ageRange)) {
@@ -10,9 +13,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo '<div class="alert alert-danger">Failed to create age recommendation.</div>';
     }
-    echo '<div class="text-center">
-            <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
-          </div>';
+        if ($source === 'createbook') {
+            echo '<div class="text-center">
+                    <a href="createbook.php" class="btn btn-primary">Resume Book Creation</a>
+                  </div>';
+        } else {
+            echo '<div class="text-center">
+                    <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
+                  </div>';
+        }
 }
 ?>
 
@@ -25,6 +34,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
         <button type="submit" class="btn btn-primary">Create Age Recommendation</button>
     </form>
+    <div class="text-center mt-3">
+        <?php if ($source === 'createbook'): ?>
+            <a href="createbook.php" class="btn btn-secondary">Resume Book Creation</a>
+        <?php else: ?>
+            <a href="book-management.php" class="btn btn-secondary">Go to Book Management</a>
+        <?php endif; ?>
+    </div>
 </div>
 
 <?php

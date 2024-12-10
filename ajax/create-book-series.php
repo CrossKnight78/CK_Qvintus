@@ -1,4 +1,3 @@
-
 <?php
 include_once '../includes/config.php';
 
@@ -15,5 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (PDOException $e) {
         echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
     }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
 }
 ?>
