@@ -307,19 +307,6 @@ public function validateBookData($bookData) {
     return true;
 }
 
-// Select all genres
-public function selectAllGenres() {
-    try {
-        $stmt = $this->pdo->prepare("SELECT * FROM table_genres ORDER BY genre_name");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-        $this->errorMessages[] = $e->getMessage();
-        return [];
-    }
-}
-
-// Select all authors
 public function selectAllAuthors() {
     try {
         $stmt = $this->pdo->prepare("SELECT * FROM table_authors ORDER BY author_name");
@@ -331,10 +318,20 @@ public function selectAllAuthors() {
     }
 }
 
-// Select all illustrators
 public function selectAllIllustrators() {
     try {
         $stmt = $this->pdo->prepare("SELECT * FROM table_illustrators ORDER BY illustrator_name");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        $this->errorMessages[] = $e->getMessage();
+        return [];
+    }
+}
+
+public function selectAllGenres() {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM table_genres ORDER BY genre_name");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
@@ -885,118 +882,6 @@ public function updateGenre($genreId, $genreData) {
         $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function createAuthorOnTheFly($authorName) {
-        if (empty($authorName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_authors (author_name) VALUES (:author_name)");
-            $stmt->bindParam(':author_name', $authorName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createIllustratorOnTheFly($illustratorName) {
-        if (empty($illustratorName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_illustrators (illustrator_name) VALUES (:illustrator_name)");
-            $stmt->bindParam(':illustrator_name', $illustratorName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createGenreOnTheFly($genreName) {
-        if (empty($genreName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_genres (genre_name) VALUES (:genre_name)");
-            $stmt->bindParam(':genre_name', $genreName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createSeriesOnTheFly($seriesName) {
-        if (empty($seriesName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_series (serie_name) VALUES (:serie_name)");
-            $stmt->bindParam(':serie_name', $seriesName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createAgeRecommendationOnTheFly($ageRecommendationName) {
-        if (empty($ageRecommendationName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_age (age_range) VALUES (:age_range)");
-            $stmt->bindParam(':age_range', $ageRecommendationName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createCategoryOnTheFly($categoryName) {
-        if (empty($categoryName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_category (category_name) VALUES (:category_name)");
-            $stmt->bindParam(':category_name', $categoryName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createPublisherOnTheFly($publisherName) {
-        if (empty($publisherName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_publishers (publisher_name) VALUES (:publisher_name)");
-            $stmt->bindParam(':publisher_name', $publisherName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
-    }
-
-    public function createStatusOnTheFly($statusName) {
-        if (empty($statusName)) return false;
-        try {
-            $stmt = $this->pdo->prepare("INSERT INTO table_status (s_name) VALUES (:s_name)");
-            $stmt->bindParam(':s_name', $statusName, PDO::PARAM_STR);
-            $stmt->execute();
-            return $this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            $this->errorMessages[] = $e->getMessage();
-            return false;
-        }
     }
 }
 ?>

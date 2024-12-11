@@ -1,7 +1,5 @@
 <?php
 include_once 'includes/header.php';
-
-// Assume $pdo is already instantiated and passed to this script
 $book = new Book($pdo);
 
 if (!isset($_SESSION['user_id'])) {
@@ -47,6 +45,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $newBookId = $book->createBook($bookData, $authors, $illustrators, $genres);
         if ($newBookId) {
             echo "<div class='alert alert-success'>Book created successfully with ID: $newBookId</div>";
+            // Clear session data related to image upload
+            unset($_SESSION['uploaded_image']);
         } else {
             echo "<div class='alert alert-danger'>Failed to create book.</div>";
         }
@@ -54,8 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='alert alert-danger'>Please fill in all required fields, including authors, illustrators, and genres.</div>";
     }
 }
-
 ?>
+
 <div class="container mt-4">
     <h2>Create a New Book</h2>
     <?php
@@ -134,43 +134,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
             <a href="createstatus.php?source=createbook" class="btn btn-secondary mt-2">Add New Status</a>
         </div>
+        
         <div class="mb-3">
             <label for="authors" class="form-label">Authors</label>
-            <select class="form-control selectpicker" id="authors" name="authors[]" multiple data-live-search="true">
+            <select class="form-control" id="authors" name="authors[]" multiple>
                 <?php foreach ($authors as $author): ?>
                     <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
                 <?php endforeach; ?>
             </select>
             <a href="createauthor.php?source=createbook" class="btn btn-secondary mt-2">Add New Author</a>
         </div>
+
         <div class="mb-3">
             <label for="illustrators" class="form-label">Illustrators</label>
-            <select class="form-control selectpicker" id="illustrators" name="illustrators[]" multiple data-live-search="true">
+            <select class="form-control" id="illustrators" name="illustrators[]" multiple>
                 <?php foreach ($illustrators as $illustrator): ?>
                     <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
                 <?php endforeach; ?>
             </select>
             <a href="createillustrator.php?source=createbook" class="btn btn-secondary mt-2">Add New Illustrator</a>
         </div>
+
         <div class="mb-3">
             <label for="genres" class="form-label">Genres</label>
-            <select class="form-control selectpicker" id="genres" name="genres[]" multiple data-live-search="true">
+            <select class="form-control" id="genres" name="genres[]" multiple>
                 <?php foreach ($genres as $genre): ?>
                     <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
                 <?php endforeach; ?>
             </select>
             <a href="creategenre.php?source=createbook" class="btn btn-secondary mt-2">Add New Genre</a>
         </div>
+
+        <div class="mb-3">
+            <label for="book-img" class="form-label">Book Image</label>
+            <input type="file" class="form-control" id="book-img" name="book-img" accept="image/*">
+        </div>
+
         <button type="submit" class="btn btn-primary my-3">Create Book</button>
     </form>
 </div>
 
-<!-- Include jQuery, Bootstrap, and Bootstrap Select CSS and JS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/css/bootstrap-select.min.css">
+<!-- Include jQuery and Select2 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.18/js/bootstrap-select.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script>
     // Save form data to session storage
@@ -187,6 +194,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $('[name="' + field.name + '"]').val(field.value);
             });
         }
+
+        // Initialize Select2
+        $('#authors').select2({
+            placeholder: "Select authors",
+            allowClear: true,
+            dropdownAutoWidth: true,
+            width: '100%'
+        });
+        $('#illustrators').select2({
+            placeholder: "Select illustrators",
+            allowClear: true,
+            dropdownAutoWidth: true,
+            width: '100%'
+        });
+        $('#genres').select2({
+            placeholder: "Select genres",
+            allowClear: true,
+            dropdownAutoWidth: true,
+            width: '100%'
+        });
+
+        // Clear session storage on form submission
+        $('#createBookForm').on('submit', function() {
+            sessionStorage.removeItem('createBookFormData');
+        });
     });
 </script>
 
