@@ -72,9 +72,9 @@
             }
             echo '<div class="row">';
             foreach ($books as $book) {
-                echo '<div class="col-md-4 mb-4">';
-                echo '<div class="card">';
-                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                echo '<div class="col-md-4 mb-4 d-flex justify-content-center">';
+                echo '<div class="card text-center" style="width: 16rem; padding: 10px;">';
+                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top thumbnail-img mx-auto d-block" alt="' . htmlspecialchars($book['book_title']) . '">';
                 echo '<div class="card-body">';
                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                 echo '<p class="card-text"><strong>Price:</strong> $' . htmlspecialchars($book['books_price']) . '</p>';

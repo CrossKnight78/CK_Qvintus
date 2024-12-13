@@ -32,7 +32,7 @@ if (isset($_GET['id'])) {
 <div class="container my-5">
     <?php if (!empty($book)): ?>
         <div class="card">
-            <img src="<?= htmlspecialchars($book['img_url']); ?>" class="card-img-top" alt="<?= htmlspecialchars($book['book_title']); ?>">
+            <img src="<?= htmlspecialchars($book['img_url']); ?>" class="card-img-top" alt="<?= htmlspecialchars($book['book_title']); ?>" style="width: 300px; height: 300px;">
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($book['book_title']); ?></h5>
                 <p class="card-text"><strong>Description:</strong> <?= htmlspecialchars($book['book_desc']); ?></p>
@@ -72,7 +72,7 @@ if (isset($_GET['id'])) {
                             foreach ($chunk as $book) {
                                 echo '<div class="col-md-4">';
                                 echo '<div class="card">';
-                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '" style="width: 150px; height: 150px;">';
                                 echo '<div class="card-body">';
                                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                                 echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary">View Details</a>';
@@ -114,7 +114,7 @@ if (isset($_GET['id'])) {
                             foreach ($chunk as $book) {
                                 echo '<div class="col-md-4">';
                                 echo '<div class="card">';
-                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '" style="width: 150px; height: 150px;">';
                                 echo '<div class="card-body">';
                                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                                 echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary">View Details</a>';
