@@ -7,16 +7,26 @@ if (isset($_GET['id'])) {
     $bookId = intval($_GET['id']);
     $book = $bookClass->getBookById($bookId);
 
-// Assuming $book contains the current book details
-$currentBookId = $book['book_id'];
+    // Assuming $book contains the current book details
+    $currentBookId = $book['book_id'];
+    $bookCreatorId = $book['created_by_fk'];
 
-// Fetch books by the same author
-$authorBooks = $bookClass->getBooksByAuthor($book['authors'], $currentBookId);
+    // Fetch books by the same author
+    $authorBooks = $bookClass->getBooksByAuthor($book['authors'], $currentBookId);
 
-// Fetch books in the same genre
-$genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
+    // Fetch books in the same genre
+    $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
+
+    // Check if user is logged in
+    if (isset($_SESSION['user_role']) && isset($_SESSION['user_id'])) {
+        $userRole = $_SESSION['user_role'];
+        $userId = $_SESSION['user_id'];
+    } else {
+        // Default values for non-logged-in users
+        $userRole = 0;
+        $userId = 0;
+    }
 }
-
 ?>
 
 <div class="container my-5">
@@ -37,6 +47,10 @@ $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
                 <p class="card-text"><strong>Category:</strong> <?= htmlspecialchars($book['category_name']); ?></p>
                 <p class="card-text"><strong>Age Recommendation:</strong> <?= htmlspecialchars($book['age_range']); ?></p>
                 <p class="card-text"><strong>Series:</strong> <?= htmlspecialchars($book['serie_name']); ?></p>
+
+                <?php if ($userId == $bookCreatorId || $userRole >= 50): ?>
+                    <a href="editbook.php?id=<?= $bookId ?>" class="btn btn-warning">Edit Book</a>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -128,7 +142,6 @@ $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
         <div class="alert alert-danger">Book not found or an error occurred.</div>
     <?php endif; ?>
 </div>
-
 
 <?php
 include_once 'includes/footer.php';
