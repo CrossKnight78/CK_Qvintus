@@ -147,9 +147,9 @@ class User {
     
             // Set session variables
             $_SESSION['user_id'] = $userData['u_id'];
-            $_SESSION['user_name'] = $userData['u_name']; // Corrected key
+            $_SESSION['user_name'] = $userData['u_name'];
             $_SESSION['user_email'] = $userData['u_email'];
-            $_SESSION['user_role'] = $userData['u_role_fk'];
+            $_SESSION['user_role'] = $userData['u_role_fk']; // Ensure this is set correctly
     
             // Regenerate session ID for security
             session_regenerate_id(true);

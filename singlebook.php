@@ -7,22 +7,32 @@ if (isset($_GET['id'])) {
     $bookId = intval($_GET['id']);
     $book = $bookClass->getBookById($bookId);
 
-// Assuming $book contains the current book details
-$currentBookId = $book['book_id'];
+    // Assuming $book contains the current book details
+    $currentBookId = $book['book_id'];
+    $bookCreatorId = $book['created_by_fk'];
 
-// Fetch books by the same author
-$authorBooks = $bookClass->getBooksByAuthor($book['authors'], $currentBookId);
+    // Fetch books by the same author
+    $authorBooks = $bookClass->getBooksByAuthor($book['authors'], $currentBookId);
 
-// Fetch books in the same genre
-$genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
+    // Fetch books in the same genre
+    $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
+
+    // Check if user is logged in
+    if (isset($_SESSION['user_role']) && isset($_SESSION['user_id'])) {
+        $userRole = $_SESSION['user_role'];
+        $userId = $_SESSION['user_id'];
+    } else {
+        // Default values for non-logged-in users
+        $userRole = 0;
+        $userId = 0;
+    }
 }
-
 ?>
 
 <div class="container my-5">
     <?php if (!empty($book)): ?>
         <div class="card">
-            <img src="<?= htmlspecialchars($book['img_url']); ?>" class="card-img-top" alt="<?= htmlspecialchars($book['book_title']); ?>">
+            <img src="<?= htmlspecialchars($book['img_url']); ?>" class="card-img-top" alt="<?= htmlspecialchars($book['book_title']); ?>" style="width: 300px; height: 300px;">
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($book['book_title']); ?></h5>
                 <p class="card-text"><strong>Description:</strong> <?= htmlspecialchars($book['book_desc']); ?></p>
@@ -37,6 +47,10 @@ $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
                 <p class="card-text"><strong>Category:</strong> <?= htmlspecialchars($book['category_name']); ?></p>
                 <p class="card-text"><strong>Age Recommendation:</strong> <?= htmlspecialchars($book['age_range']); ?></p>
                 <p class="card-text"><strong>Series:</strong> <?= htmlspecialchars($book['serie_name']); ?></p>
+
+                <?php if ($userId == $bookCreatorId || $userRole >= 50): ?>
+                    <a href="editbook.php?id=<?= $bookId ?>" class="btn btn-warning">Edit Book</a>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -58,7 +72,7 @@ $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
                             foreach ($chunk as $book) {
                                 echo '<div class="col-md-4">';
                                 echo '<div class="card">';
-                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '" style="width: 150px; height: 150px;">';
                                 echo '<div class="card-body">';
                                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                                 echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary">View Details</a>';
@@ -100,7 +114,7 @@ $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
                             foreach ($chunk as $book) {
                                 echo '<div class="col-md-4">';
                                 echo '<div class="card">';
-                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '" style="width: 150px; height: 150px;">';
                                 echo '<div class="card-body">';
                                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                                 echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary">View Details</a>';
@@ -128,7 +142,6 @@ $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
         <div class="alert alert-danger">Book not found or an error occurred.</div>
     <?php endif; ?>
 </div>
-
 
 <?php
 include_once 'includes/footer.php';

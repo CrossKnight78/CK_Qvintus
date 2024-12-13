@@ -1,11 +1,10 @@
 <?php
 include_once 'includes/header.php';
-
-// Assume $pdo is already instantiated and passed to this script
 $book = new Book($pdo);
 
 if (!isset($_SESSION['user_id'])) {
-    die("Error: User is not logged in. Please log in to create a book.");
+    header("Location: index.php");
+    exit();
 }
 
 $userId = $_SESSION['user_id'];
@@ -43,98 +42,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $illustrators = $_POST['illustrators'] ?? [];
     $genres = $_POST['genres'] ?? [];
 
-    // Handle on-the-fly author creation
-    if (!empty($_POST['new_authors'])) {
-        $newAuthors = explode(',', $_POST['new_authors']);
-        foreach ($newAuthors as $newAuthor) {
-            $newAuthorId = $book->createAuthorOnTheFly(trim($newAuthor));
-            if ($newAuthorId) {
-                $authors[] = $newAuthorId;
-            }
-        }
-    }
-
-    // Handle on-the-fly illustrator creation
-    if (!empty($_POST['new_illustrators'])) {
-        $newIllustrators = explode(',', $_POST['new_illustrators']);
-        foreach ($newIllustrators as $newIllustrator) {
-            $newIllustratorId = $book->createIllustratorOnTheFly(trim($newIllustrator));
-            if ($newIllustratorId) {
-                $illustrators[] = $newIllustratorId;
-            }
-        }
-    }
-
-    // Handle on-the-fly genre creation
-    if (!empty($_POST['new_genres'])) {
-        $newGenres = explode(',', $_POST['new_genres']);
-        foreach ($newGenres as $newGenre) {
-            $newGenreId = $book->createGenreOnTheFly(trim($newGenre));
-            if ($newGenreId) {
-                $genres[] = $newGenreId;
-            }
-        }
-    }
-
-    // Handle on-the-fly series creation
-    if (!empty($_POST['new_series'])) {
-        $newSeries = explode(',', $_POST['new_series']);
-        foreach ($newSeries as $newSerie) {
-            $newSerieId = $book->createSeriesOnTheFly(trim($newSerie));
-            if ($newSerieId) {
-                $series[] = $newSerieId;
-            }
-        }
-    }
-
-    // Handle on-the-fly age recommendation creation
-    if (!empty($_POST['new_age_recommendations'])) {
-        $newAgeRecommendations = explode(',', $_POST['new_age_recommendations']);
-        foreach ($newAgeRecommendations as $newAgeRecommendation) {
-            $newAgeRecommendationId = $book->createAgeRecommendationOnTheFly(trim($newAgeRecommendation));
-            if ($newAgeRecommendationId) {
-                $ageRecommendations[] = $newAgeRecommendationId;
-            }
-        }
-    }
-
-    // Handle on-the-fly category creation
-    if (!empty($_POST['new_categories'])) {
-        $newCategories = explode(',', $_POST['new_categories']);
-        foreach ($newCategories as $newCategory) {
-            $newCategoryId = $book->createCategoryOnTheFly(trim($newCategory));
-            if ($newCategoryId) {
-                $categories[] = $newCategoryId;
-            }
-        }
-    }
-
-    // Handle on-the-fly publisher creation
-    if (!empty($_POST['new_publishers'])) {
-        $newPublishers = explode(',', $_POST['new_publishers']);
-        foreach ($newPublisher as $newPublisher) {
-            $newPublisherId = $book->createPublisherOnTheFly(trim($newPublisher));
-            if ($newPublisherId) {
-                $publishers[] = $newPublisherId;
-            }
-        }
-    }
-
-    // Handle on-the-fly status creation
-    if (!empty($_POST['new_statuses'])) {
-        $newStatuses = explode(',', $_POST['new_statuses']);
-        foreach ($newStatus as $newStatus) {
-            $newStatusId = $book->createStatusOnTheFly(trim($newStatus));
-            if ($newStatusId) {
-                $statuses[] = $newStatusId;
-            }
-        }
-    }
-
     if ($book->validateBookData($bookData) && !empty($authors) && !empty($illustrators) && !empty($genres)) {
         $newBookId = $book->createBook($bookData, $authors, $illustrators, $genres);
         if ($newBookId) {
             echo "<div class='alert alert-success'>Book created successfully with ID: $newBookId</div>";
+            // Clear session data related to image upload
+            unset($_SESSION['uploaded_image']);
         } else {
             echo "<div class='alert alert-danger'>Failed to create book.</div>";
         }
@@ -142,27 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "<div class='alert alert-danger'>Please fill in all required fields, including authors, illustrators, and genres.</div>";
     }
 }
-
-function renderSelect($id, $label, $options, $multiple = false, $required = false, $placeholder = '', $newField = false) {
-    $multipleAttr = $multiple ? 'multiple' : '';
-    $requiredAttr = $required ? 'required' : '';
-    echo "<div class='mb-3'>
-            <label for='$id' class='form-label'>$label</label>
-            <select class='form-select select2-multiple' style='width: 100%' id='$id' name='{$id}[]' $multipleAttr $requiredAttr>
-                <option value=''>$placeholder</option>";
-    foreach ($options as $option) {
-        $value = htmlspecialchars($option["{$id}_id"]);
-        $name = htmlspecialchars($option["{$id}_name"]);
-        echo "<option value='$value'>$name</option>";
-    }
-    echo "</select>";
-    if ($newField) {
-        echo "<input type='text' class='form-control mt-2' id='new_$id' name='new_$id' placeholder='Add new $id, separated by commas'>
-              <button type='button' class='btn btn-secondary mt-2' id='add-$id-btn'>Add $label</button>";
-    }
-    echo "</div>";
-}
-
 ?>
 
 <div class="container mt-4">
@@ -173,7 +65,7 @@ function renderSelect($id, $label, $options, $multiple = false, $required = fals
         unset($_SESSION['upload_error']);
     }
     ?>
-    <form method="POST" action="createbook.php" enctype="multipart/form-data">
+    <form method="POST" action="createbook.php" enctype="multipart/form-data" id="createBookForm">
         <div class="mb-3">
             <label for="book_title" class="form-label">Book Title</label>
             <input type="text" class="form-control" id="book_title" name="book_title" required>
@@ -198,227 +90,135 @@ function renderSelect($id, $label, $options, $multiple = false, $required = fals
             <label for="books_price" class="form-label">Price</label>
             <input type="number" class="form-control" id="books_price" name="books_price" step="0.01" required>
         </div>
-        <?php
-        renderSelect('book series', 'Series', $series, false, false, 'Select series', true);
-        renderSelect('age recommendation', 'Age Recommendation', $ageRecommendations, false, true, 'Select age recommendation', true);
-        renderSelect('category', 'Category', $categories, false, true, 'Select category', true);
-        renderSelect('publisher', 'Publisher', $publishers, false, true, 'Select publisher', true);
-        renderSelect('status', 'Status', $statuses, false, true, 'Select status', true);
-        ?>
         <div class="mb-3">
-            <label for="img_url" class="form-label">Image URL</label>
-            <input type="file" class="form-control" id="img_url" name="book-img">
+            <label for="book_series_fk" class="form-label">Series</label>
+            <select class="form-control" id="book_series_fk" name="book_series_fk">
+                <?php foreach ($series as $serie): ?>
+                    <option value="<?= $serie['serie_id'] ?>"><?= htmlspecialchars($serie['serie_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createseries.php?source=createbook" class="btn btn-secondary mt-2">Add New Series</a>
         </div>
-        <?php
-        renderSelect('authors', 'Authors', $authors, true, true, 'Select authors', true);
-        renderSelect('illustrators', 'Illustrators', $illustrators, true, true, 'Select illustrators', true);
-        renderSelect('genres', 'Genres', $genres, true, true, 'Select genres', true);
-        ?>
+        <div class="mb-3">
+            <label for="age_recommendation_fk" class="form-label">Age Recommendation</label>
+            <select class="form-control" id="age_recommendation_fk" name="age_recommendation_fk">
+                <?php foreach ($ageRecommendations as $age): ?>
+                    <option value="<?= $age['age_id'] ?>"><?= htmlspecialchars($age['age_range']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createage.php?source=createbook" class="btn btn-secondary mt-2">Add New Age Recommendation</a>
+        </div>
+        <div class="mb-3">
+            <label for="category_fk" class="form-label">Category</label>
+            <select class="form-control" id="category_fk" name="category_fk">
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?= $category['category_id'] ?>"><?= htmlspecialchars($category['category_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createcategory.php?source=createbook" class="btn btn-secondary mt-2">Add New Category</a>
+        </div>
+        <div class="mb-3">
+            <label for="publisher_fk" class="form-label">Publisher</label>
+            <select class="form-control" id="publisher_fk" name="publisher_fk">
+                <?php foreach ($publishers as $publisher): ?>
+                    <option value="<?= $publisher['publisher_id'] ?>"><?= htmlspecialchars($publisher['publisher_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createpublisher.php?source=createbook" class="btn btn-secondary mt-2">Add New Publisher</a>
+        </div>
+        <div class="mb-3">
+            <label for="status_fk" class="form-label">Status</label>
+            <select class="form-control" id="status_fk" name="status_fk">
+                <?php foreach ($statuses as $status): ?>
+                    <option value="<?= $status['s_id'] ?>"><?= htmlspecialchars($status['s_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createstatus.php?source=createbook" class="btn btn-secondary mt-2">Add New Status</a>
+        </div>
+        
+        <div class="mb-3">
+            <label for="authors" class="form-label">Authors</label>
+            <select class="form-control" id="authors" name="authors[]" multiple>
+                <?php foreach ($authors as $author): ?>
+                    <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createauthor.php?source=createbook" class="btn btn-secondary mt-2">Add New Author</a>
+        </div>
+
+        <div class="mb-3">
+            <label for="illustrators" class="form-label">Illustrators</label>
+            <select class="form-control" id="illustrators" name="illustrators[]" multiple>
+                <?php foreach ($illustrators as $illustrator): ?>
+                    <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="createillustrator.php?source=createbook" class="btn btn-secondary mt-2">Add New Illustrator</a>
+        </div>
+
+        <div class="mb-3">
+            <label for="genres" class="form-label">Genres</label>
+            <select class="form-control" id="genres" name="genres[]" multiple>
+                <?php foreach ($genres as $genre): ?>
+                    <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
+                <?php endforeach; ?>
+            </select>
+            <a href="creategenre.php?source=createbook" class="btn btn-secondary mt-2">Add New Genre</a>
+        </div>
+
+        <div class="mb-3">
+            <label for="book-img" class="form-label">Book Image</label>
+            <input type="file" class="form-control" id="book-img" name="book-img" accept="image/*">
+        </div>
+
         <button type="submit" class="btn btn-primary my-3">Create Book</button>
     </form>
 </div>
 
-<!-- Include jQuery and Select2 JavaScript and CSS -->
+<!-- Include jQuery and Select2 CSS and JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
+    // Save form data to session storage
     $(document).ready(function() {
-        $('.select2-multiple').select2({
-            placeholder: "Select options",
-            allowClear: true
+        $('#createBookForm').on('change', 'input, select, textarea', function() {
+            let formData = $('#createBookForm').serializeArray();
+            sessionStorage.setItem('createBookFormData', JSON.stringify(formData));
         });
 
-        $('#add-author-btn').on('click', function() {
-            var newAuthors = $('#new_authors').val().split(',');
-            newAuthors.forEach(function(author) {
-                $.ajax({
-                    url: 'ajax/create-book-author.php',
-                    type: 'POST',
-                    data: { authorName: author.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(author.trim(), data.author_id, false, true);
-                            $('#authors').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the author.');
-                    }
-                });
+        // Load form data from session storage
+        if (sessionStorage.getItem('createBookFormData')) {
+            let formData = JSON.parse(sessionStorage.getItem('createBookFormData'));
+            $.each(formData, function(i, field) {
+                $('[name="' + field.name + '"]').val(field.value);
             });
-            $('#new_authors').val('');
+        }
+
+        // Initialize Select2
+        $('#authors').select2({
+            placeholder: "Select authors",
+            allowClear: true,
+            dropdownAutoWidth: true,
+            width: '100%'
+        });
+        $('#illustrators').select2({
+            placeholder: "Select illustrators",
+            allowClear: true,
+            dropdownAutoWidth: true,
+            width: '100%'
+        });
+        $('#genres').select2({
+            placeholder: "Select genres",
+            allowClear: true,
+            dropdownAutoWidth: true,
+            width: '100%'
         });
 
-        $('#add-illustrator-btn').on('click', function() {
-            var newIllustrators = $('#new_illustrators').val().split(',');
-            newIllustrators.forEach(function(illustrator) {
-                $.ajax({
-                    url: 'ajax/create-book-illustrator.php',
-                    type: 'POST',
-                    data: { illustratorName: illustrator.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(illustrator.trim(), data.illustrator_id, false, true);
-                            $('#illustrators').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the illustrator.');
-                    }
-                });
-            });
-            $('#new_illustrators').val('');
-        });
-
-        $('#add-genre-btn').on('click', function() {
-            var newGenres = $('#new_genres').val().split(',');
-            newGenres.forEach(function(genre) {
-                $.ajax({
-                    url: 'ajax/create-book-genre.php',
-                    type: 'POST',
-                    data: { genreName: genre.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(genre.trim(), data.genre_id, false, true);
-                            $('#genres').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the genre.');
-                    }
-                });
-            });
-            $('#new_genres').val('');
-        });
-
-        $('#add-series-btn').on('click', function() {
-            var newSeries = $('#new_series').val().split(',');
-            newSeries.forEach(function(serie) {
-                $.ajax({
-                    url: 'ajax/create-book-series.php',
-                    type: 'POST',
-                    data: { seriesName: serie.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(serie.trim(), data.series_id, false, true);
-                            $('#series').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the series.');
-                    }
-                });
-            });
-            $('#new_series').val('');
-        });
-
-        $('#add-age-recommendation-btn').on('click', function() {
-            var newAgeRecommendations = $('#new_age_recommendations').val().split(',');
-            newAgeRecommendations.forEach(function(ageRecommendation) {
-                $.ajax({
-                    url: 'ajax/create-book-age-recommendation.php',
-                    type: 'POST',
-                    data: { ageRecommendationName: ageRecommendation.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(ageRecommendation.trim(), data.age_recommendation_id, false, true);
-                            $('#age_recommendations').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the age recommendation.');
-                    }
-                });
-            });
-            $('#new_age_recommendations').val('');
-        });
-
-        $('#add-category-btn').on('click', function() {
-            var newCategories = $('#new_categories').val().split(',');
-            newCategories.forEach(function(category) {
-                $.ajax({
-                    url: 'ajax/create-book-category.php',
-                    type: 'POST',
-                    data: { categoryName: category.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(category.trim(), data.category_id, false, true);
-                            $('#categories').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the category.');
-                    }
-                });
-            });
-            $('#new_categories').val('');
-        });
-
-        $('#add-publisher-btn').on('click', function() {
-            var newPublishers = $('#new_publishers').val().split(',');
-            newPublishers.forEach(function(publisher) {
-                $.ajax({
-                    url: 'ajax/create-book-publisher.php',
-                    type: 'POST',
-                    data: { publisherName: publisher.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(publisher.trim(), data.publisher_id, false, true);
-                            $('#publishers').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the publisher.');
-                    }
-                });
-            });
-            $('#new_publishers').val('');
-        });
-
-        $('#add-status-btn').on('click', function() {
-            var newStatuses = $('#new_statuses').val().split(',');
-            newStatuses.forEach(function(status) {
-                $.ajax({
-                    url: 'ajax/create-book-status.php',
-                    type: 'POST',
-                    data: { statusName: status.trim() },
-                    success: function(response) {
-                        var data = JSON.parse(response);
-                        if (data.status === 'success') {
-                            var newOption = new Option(status.trim(), data.status_id, false, true);
-                            $('#status_fk').append(newOption).trigger('change');
-                        } else {
-                            alert('Error: ' + data.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred while adding the status.');
-                    }
-                });
-            });
-            $('#new_statuses').val('');
+        // Clear session storage on form submission
+        $('#createBookForm').on('submit', function() {
+            sessionStorage.removeItem('createBookFormData');
         });
     });
 </script>

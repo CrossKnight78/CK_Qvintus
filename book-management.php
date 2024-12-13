@@ -3,6 +3,12 @@ include_once 'includes/header.php';
 include_once 'includes/class.book.php';
 $book = new Book($pdo);
 
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
 $books = $book->selectAllBooks();
 $authors = $book->selectAllAuthors();
 $illustrators = $book->selectAllIllustrators();
@@ -28,16 +34,16 @@ $statuses = $book->selectAllStatuses();
     <div class="d-flex flex-wrap justify-content-between mb-4">
         <div class="d-flex flex-wrap justify-content-between w-100 mb-2">
             <a href="createbook.php" class="btn btn-success mb-2">Add New Book</a>
-            <a href="createauthor.php" class="btn btn-info mb-2">Add Author</a>
-            <a href="creategenre.php" class="btn btn-primary mb-2">Add Genre</a>
-            <a href="createillustrator.php" class="btn btn-warning mb-2">Add Illustrator</a>
-            <a href="createseries.php" class="btn btn-secondary mb-2">Add Series</a>
+            <a href="createauthor.php?source=book-management" class="btn btn-info mb-2">Add Author</a>
+            <a href="creategenre.php?source=book-management" class="btn btn-primary mb-2">Add Genre</a>
+            <a href="createillustrator.php?source=book-management" class="btn btn-warning mb-2">Add Illustrator</a>
+            <a href="createseries.php?source=book-management" class="btn btn-secondary mb-2">Add Series</a>
         </div>
         <div class="d-flex flex-wrap justify-content-between w-100">
-            <a href="createage.php" class="btn btn-dark mb-2">Add Age Recommendation</a>
-            <a href="createcategory.php" class="btn btn-light mb-2">Add Category</a>
-            <a href="createpublisher.php" class="btn btn-danger mb-2">Add Publisher</a>
-            <a href="createstatus.php" class="btn btn-success mb-2">Add Status</a>
+            <a href="createage.php?source=book-management" class="btn btn-dark mb-2">Add Age Recommendation</a>
+            <a href="createcategory.php?source=book-management" class="btn btn-light mb-2">Add Category</a>
+            <a href="createpublisher.php?source=book-management" class="btn btn-danger mb-2">Add Publisher</a>
+            <a href="createstatus.php?source=book-management" class="btn btn-success mb-2">Add Status</a>
         </div>
     </div>
 

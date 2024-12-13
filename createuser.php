@@ -1,11 +1,17 @@
 <?php	
 include_once 'includes/header.php';
 
-/*if ($user->checkLoginStatus()) {
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+if ($user->checkLoginStatus()) {
     if(!$user->checkUserRole(200)) {
         header("Location: home.php");
     }
-}*/
+}
 
 if(isset($_POST['register-submit'])) {
 	$feedbackMessages = $user->checkUserRegisterInput(

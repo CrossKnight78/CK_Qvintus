@@ -1,6 +1,7 @@
 <?php
 include_once '../includes/config.php';
 include_once '../includes/class.book.php';
+include_once '../css/style.css';
 
 if (isset($_GET['query'])) {
     $query = $_GET['query'];
@@ -16,7 +17,7 @@ if (isset($_GET['query'])) {
         foreach ($results as $book) {
             echo '<div class="col-md-4 mb-4">';
             echo '<div class="card">';
-            echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+            echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top thumbnail-img" alt="' . htmlspecialchars($book['book_title']) . '">';
             echo '<div class="card-body">';
             echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
             echo '<p class="card-text"><strong>Price:</strong> $' . htmlspecialchars($book['books_price']) . '</p>';
