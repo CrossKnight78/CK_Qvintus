@@ -8,7 +8,7 @@ $id = $_GET['id'];
 
 if ($user->checkLoginStatus()) {
     if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
+        header("Location: book-management.php");
     }
 }
 

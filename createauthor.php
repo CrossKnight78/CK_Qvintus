@@ -3,6 +3,11 @@ include_once 'includes/header.php';
 include_once 'includes/class.book.php';
 $book = new Book($pdo);
 
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
 $source = isset($_GET['source']) ? $_GET['source'] : '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

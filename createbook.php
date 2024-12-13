@@ -3,7 +3,8 @@ include_once 'includes/header.php';
 $book = new Book($pdo);
 
 if (!isset($_SESSION['user_id'])) {
-    die("Error: User is not logged in. Please log in to create a book.");
+    header("Location: index.php");
+    exit();
 }
 
 $userId = $_SESSION['user_id'];
