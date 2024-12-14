@@ -1,5 +1,4 @@
 <?php
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Directory to upload images
     $target_dir = "uploads/";
@@ -24,25 +23,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $uploadOk = 1;
         } else {
             $uploadOk = 0;
+            $_SESSION['upload_error'] = "File is not an image.";
         }
     } else {
         $uploadOk = 0;
+        $_SESSION['upload_error'] = "No file was uploaded.";
     }
 
     // Check if file already exists
     if (file_exists($target_file)) {
         $uploadOk = 0;
+        $_SESSION['upload_error'] = "File already exists.";
     }
 
     // Check file size (5MB max)
     if ($_FILES["book-img"]["size"] > 5000000) {
         $uploadOk = 0;
+        $_SESSION['upload_error'] = "File is too large.";
     }
 
     // Allow certain file formats
     $allowedFormats = ["jpg", "jpeg", "png", "gif", "webp"];
     if (!in_array($imageFileType, $allowedFormats)) {
         $uploadOk = 0;
+        $_SESSION['upload_error'] = "Invalid file format.";
     }
 
     // Check if everything is ok and upload file
