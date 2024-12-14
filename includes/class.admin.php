@@ -15,7 +15,7 @@ class Admin {
     public function cleanInput($data) {
         $data = trim($data);
         $data = stripslashes($data);
-        $data = htmlspecialchars($data);
+        $data = htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
         return $data;
     }
 
@@ -25,7 +25,6 @@ class Admin {
         if (empty($cleanedFname) || !preg_match("/^[a-zA-Z\s]+$/", $cleanedFname)) {
             array_push($this->errorMessages, "Förnamn får inte vara tomt och får endast innehålla bokstäver! ");
             return $this->errorMessages;
-            //return "Förnamn får inte vara tomt och får endast innehålla bokstäver!";
         }
     
         // Clean and validate last name
@@ -33,7 +32,6 @@ class Admin {
         if (empty($cleanedLname) || !preg_match("/^[a-zA-Z\s]+$/", $cleanedLname)) {
             array_push($this->errorMessages, "Efternamn får inte vara tomt och får endast innehålla bokstäver! ");
             return $this->errorMessages;
-            //return "Efternamn får inte vara tomt och får endast innehålla bokstäver!";
         }
     
         // Get password and current email of the user
@@ -48,7 +46,6 @@ class Admin {
             if (!password_verify($upassold, $userDetails['u_password'])) {
                 array_push($this->errorMessages, "Lösenordet är inte giltigt ");
                 return $this->errorMessages;    
-                //return "The password is invalid";
             }
         }
     
@@ -102,7 +99,7 @@ class Admin {
     
 
     public function searchUsers(string $input, int $includeInactive) {
-        $input = cleanInput($input);
+        $input = $this->cleanInput($input);
 
         // Replace all whitespace characters with % wildcards
         $input = preg_replace('/\s+/', '%', $input);
@@ -127,7 +124,7 @@ class Admin {
         $stmt_searchUsers->bindParam(':lname', $inputJoker, PDO::PARAM_STR);
         $stmt_searchUsers->bindParam(':fullname', $inputJoker, PDO::PARAM_STR);
         $stmt_searchUsers->execute();
-        $usersList = $stmt_searchUsers->fetchAll();
+        $usersList = $stmt_searchUsers->fetchAll(PDO::FETCH_ASSOC);
         
         return $usersList;
     }
@@ -135,10 +132,10 @@ class Admin {
     public function populateUserField(array $usersArray) {
         foreach ($usersArray as $user) {
             echo "
-            <tr " . ($user['u_status'] === 0 ? "class='table-danger'" : "") . " onclick=\"window.location.href='admin-account.php?uid={$user['u_id']}';\" style=\"cursor: pointer;\">
-                <td>{$user['u_fname']} {$user['u_lname']}</td>
-                <td>{$user['u_name']}</td>
-                <td>{$user['u_email']}</td>
+            <tr " . ($user['u_status'] === 0 ? "class='table-danger'" : "") . " onclick=\"window.location.href='admin-account.php?uid=" . htmlspecialchars($user['u_id'], ENT_QUOTES, 'UTF-8') . "';\" style=\"cursor: pointer;\">
+                <td>" . htmlspecialchars($user['u_fname'], ENT_QUOTES, 'UTF-8') . " " . htmlspecialchars($user['u_lname'], ENT_QUOTES, 'UTF-8') . "</td>
+                <td>" . htmlspecialchars($user['u_name'], ENT_QUOTES, 'UTF-8') . "</td>
+                <td>" . htmlspecialchars($user['u_email'], ENT_QUOTES, 'UTF-8') . "</td>
             </tr>";
         }
     }
@@ -147,7 +144,7 @@ class Admin {
         $stmt_selectUserData = $this->pdo->prepare('SELECT * FROM table_users WHERE u_id = :uid');
         $stmt_selectUserData->bindParam(':uid', $uid, PDO::PARAM_INT);
         $stmt_selectUserData->execute();
-        $userInfo = $stmt_selectUserData->fetch();
+        $userInfo = $stmt_selectUserData->fetch(PDO::FETCH_ASSOC);
         return $userInfo;
     }
 
