@@ -7,7 +7,6 @@ class Admin {
     private $errorMessages = [];
     private $errorState = 0;
 
-
     function __construct($pdo) {
         $this->pdo = $pdo;
     }
@@ -19,18 +18,109 @@ class Admin {
         return $data;
     }
 
+    public function checkUserRegisterInput(string $uuser, string $umail, string $upass, string $upassrepeat, int $uid = null) {
+        // START Check if user-entered username or email exists in the database
+        if (isset($_POST['register-submit'])) {
+            $this->errorState = 0;
+            $stmt_checkUsername = $this->pdo->prepare('SELECT * FROM table_users WHERE u_name = :uuser OR u_email = :email');
+            $stmt_checkUsername->bindParam(':uuser', $uuser, PDO::PARAM_STR);
+            $stmt_checkUsername->bindParam(':email', $umail, PDO::PARAM_STR);
+            $stmt_checkUsername->execute();
+    
+            // Check if query returns any result
+            if ($stmt_checkUsername->rowCount() > 0) {
+                array_push($this->errorMessages, "Username or email address is already taken!");
+                $this->errorState = 1;
+            }
+        } else {
+            // Only check for email if user ID is not provided or the email has changed
+            if ($uid !== null) {
+                $stmt_checkUserEmail = $this->pdo->prepare('SELECT * FROM table_users WHERE u_email = :email AND u_id != :uid');
+                $stmt_checkUserEmail->bindParam(':email', $umail, PDO::PARAM_STR);
+                $stmt_checkUserEmail->bindParam(':uid', $uid, PDO::PARAM_INT);
+                $stmt_checkUserEmail->execute();
+            } else {
+                $stmt_checkUserEmail = $this->pdo->prepare('SELECT * FROM table_users WHERE u_email = :email');
+                $stmt_checkUserEmail->bindParam(':email', $umail, PDO::PARAM_STR);
+                $stmt_checkUserEmail->execute();
+            }
+    
+            // Check if query returns any result
+            if ($stmt_checkUserEmail->rowCount() > 0) {
+                array_push($this->errorMessages, "Email address is already taken!");
+                $this->errorState = 1;
+            }
+        }
+        // END Check if user-entered username or email exists in the database
+    
+        // START Conditionally check passwords if they are provided
+        if (isset($_POST['register-submit']) || (!empty($upass) || !empty($upassrepeat))) {
+            // Check if passwords match
+            if ($upass !== $upassrepeat) {
+                array_push($this->errorMessages, "Passwords do not match!");
+                $this->errorState = 1;
+            } else {
+                // Check if password length is at least 8 characters
+                if (strlen($upass) < 8) {
+                    array_push($this->errorMessages, "Password is too short!");
+                    $this->errorState = 1;
+                }
+            }
+        }
+        // END Conditionally check passwords if they are provided
+    
+        // START Check if user-entered email is a proper email address
+        if (!filter_var($umail, FILTER_VALIDATE_EMAIL)) {
+            array_push($this->errorMessages, "Email address is not in the correct format!");
+            $this->errorState = 1;
+        }
+        // END Check if user-entered email is a proper email address
+    
+        if ($this->errorState == 1) {
+            return $this->errorMessages;
+        } else {
+            return 1;    
+        }
+    }
+
+    public function register(string $uuser, string $umail, string $upass, string $fname, string $lname) {
+        // Hash password and clean inputs
+        $hashedPassword = password_hash($upass, PASSWORD_DEFAULT);
+        $uname = $this->cleanInput($uuser);
+        $fname = $this->cleanInput($fname);
+        $lname = $this->cleanInput($lname);
+
+        if(password_verify($upass, $hashedPassword)) {
+            $stmt_insertNewUser = $this->pdo->prepare('INSERT INTO table_users (u_name, u_pass, u_email, u_role_fk, u_status, u_fname, u_lname) 
+            VALUES 
+            (:user, :upass, :umail, 1, 1, :fname, :lname)');
+            $stmt_insertNewUser->bindParam(':user', $uuser, PDO::PARAM_STR);
+            $stmt_insertNewUser->bindParam(':upass', $hashedPassword, PDO::PARAM_STR);
+            $stmt_insertNewUser->bindParam(':umail', $umail, PDO::PARAM_STR);
+            $stmt_insertNewUser->bindParam(':fname', $fname, PDO::PARAM_STR);
+            $stmt_insertNewUser->bindParam(':lname', $lname, PDO::PARAM_STR);
+        }
+        
+        if($stmt_insertNewUser->execute()) {
+            return 1;
+        } else {
+            array_push($this->errorMessages, "Failed to register the user! Contact support!");
+            return $this->errorMessages;
+        }
+    }
+
     public function editUserInfo(string $umail, string $upassold, string $upassnew, int $uid, int $role, string $ufname, string $ulname, int $status) {
         // Clean and validate first name
         $cleanedFname = $this->cleanInput($ufname);
         if (empty($cleanedFname) || !preg_match("/^[a-zA-Z\s]+$/", $cleanedFname)) {
-            array_push($this->errorMessages, "Förnamn får inte vara tomt och får endast innehålla bokstäver! ");
+            array_push($this->errorMessages, "First name cannot be empty and must contain only letters!");
             return $this->errorMessages;
         }
     
         // Clean and validate last name
         $cleanedLname = $this->cleanInput($ulname);
         if (empty($cleanedLname) || !preg_match("/^[a-zA-Z\s]+$/", $cleanedLname)) {
-            array_push($this->errorMessages, "Efternamn får inte vara tomt och får endast innehålla bokstäver! ");
+            array_push($this->errorMessages, "Last name cannot be empty and must contain only letters!");
             return $this->errorMessages;
         }
     
@@ -44,7 +134,7 @@ class Admin {
         if (isset($_POST['edit-user-submit'])) {
             // Check if entered password is correct
             if (!password_verify($upassold, $userDetails['u_password'])) {
-                array_push($this->errorMessages, "Lösenordet är inte giltigt ");
+                array_push($this->errorMessages, "Password is not valid!");
                 return $this->errorMessages;    
             }
         }
@@ -95,8 +185,6 @@ class Admin {
             return 1;    
         }
     }
-    
-    
 
     public function searchUsers(string $input, int $includeInactive) {
         $input = $this->cleanInput($input);
@@ -107,7 +195,7 @@ class Admin {
         $inputJoker = "%".$input."%";
 
         // Start building the query
-        $searchQuery = 'SELECT * FROM table_users WHERE (u_name LIKE :uname OR u_email LIKE :email OR u_fname LIKE :fname OR u_lname LIKE :lname OR CONCAT(u_fname, u_lname) LIKE :fullname)';
+        $searchQuery = 'SELECT * FROM table_users WHERE (u_id LIKE :uid OR u_name LIKE :uname OR u_email LIKE :email OR u_fname LIKE :fname OR u_lname LIKE :lname OR CONCAT(u_fname, u_lname) LIKE :fullname)';
 
          // Conditionally add status filter
         if (!$includeInactive) {
@@ -118,6 +206,7 @@ class Admin {
         $searchQuery .= ' ORDER BY u_fname ASC, u_lname ASC';
 
         $stmt_searchUsers = $this->pdo->prepare($searchQuery);
+        $stmt_searchUsers->bindParam(':uid', $inputJoker, PDO::PARAM_STR);
         $stmt_searchUsers->bindParam(':uname', $inputJoker, PDO::PARAM_STR);
         $stmt_searchUsers->bindParam(':email', $inputJoker, PDO::PARAM_STR);
         $stmt_searchUsers->bindParam(':fname', $inputJoker, PDO::PARAM_STR);
@@ -136,6 +225,7 @@ class Admin {
                 <td>" . htmlspecialchars($user['u_fname'], ENT_QUOTES, 'UTF-8') . " " . htmlspecialchars($user['u_lname'], ENT_QUOTES, 'UTF-8') . "</td>
                 <td>" . htmlspecialchars($user['u_name'], ENT_QUOTES, 'UTF-8') . "</td>
                 <td>" . htmlspecialchars($user['u_email'], ENT_QUOTES, 'UTF-8') . "</td>
+                <td>" . htmlspecialchars($user['u_id'], ENT_QUOTES, 'UTF-8') . "</td>
             </tr>";
         }
     }
@@ -148,6 +238,16 @@ class Admin {
         return $userInfo;
     }
 
-}
+    public function deleteUser(int $uid) {
+        $stmt_deleteUser = $this->pdo->prepare('DELETE FROM table_users WHERE u_id = :uid');
+        $stmt_deleteUser->bindParam(':uid', $uid, PDO::PARAM_INT);
 
+        if($stmt_deleteUser->execute()) {
+            return "User has been deleted";
+        } else {
+            return "Something went wrong... Please try again.";
+        }
+    }
+
+}
 ?>

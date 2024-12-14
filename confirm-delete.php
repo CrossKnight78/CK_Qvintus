@@ -1,16 +1,34 @@
 <?php
 include_once 'includes/header.php';
 include_once 'includes/class.book.php';
+include_once 'includes/class.admin.php';
 
 $book = new Book($pdo);
-$type = $_GET['type'];
-$id = $_GET['id'];
+$admin = new Admin($pdo);
 
+// Check if the user is logged in and has the admin role
 if ($user->checkLoginStatus()) {
     if(!$user->checkUserRole(200)) {
         header("Location: book-management.php");
+        exit();
     }
 }
+
+// Check if 'type' and 'id' parameters are set
+if (!isset($_GET['type']) || !isset($_GET['id'])) {
+    echo "<div class='container'>
+            <div class='alert alert-danger text-center' role='alert'>
+                Invalid request. Missing parameters.
+            </div>
+            <div class='text-center'>
+                <a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
+            </div>
+          </div>";
+    exit();
+}
+
+$type = $_GET['type'];
+$id = $_GET['id'];
 
 if (isset($_POST['delete-submit'])) {
     switch ($type) {
@@ -40,6 +58,9 @@ if (isset($_POST['delete-submit'])) {
             break;
         case 'status':
             $deleteFeedback = $book->deleteStatus($id);
+            break;
+        case 'user':
+            $deleteFeedback = $admin->deleteUser($id);
             break;
         default:
             $deleteFeedback = "Invalid delete type.";

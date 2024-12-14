@@ -1,45 +1,54 @@
 <?php
 include_once 'includes/header.php';
+include_once 'includes/class.admin.php';
 
-if ($user->checkLoginStatus()) {
-    if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
-    }
+$admin = new Admin($pdo);
+
+// Check if the user is logged in
+if (!$user->checkLoginStatus()) {
+    header("Location: login.php");
+    exit();
 }
 
+// Check if the user has the admin role
+if (!$user->checkUserRole(200)) {
+    header("Location: home.php");
+    exit();
+}
 
 if (isset($_POST['search-users-submit']) && !empty($_POST['search'])) {
-    $usersArray = $user->searchUsers($_POST['search']);
+    $usersArray = $admin->searchUsers($_POST['search'], isset($_POST['include-inactive']) ? 1 : 0);
 }
 ?>
 
 <div class="container">
     <div class="mw-500 mx-auto">
 
-        <h1 class="my-5">Administratör</h1>
+        <h1 class="my-5">Administrator</h1>
 
-        <a class="btn btn-primary mb-2" href="newuser.php">Skapa ny användare</a>
+        <a class="btn btn-primary mb-2" href="createuser.php">Create New User</a>
 
         <div class="card rounded-4 text-start shadow-sm px-3 py-4 mt-2">
             <div class="mb-3">
-                <label for="search" class="form-label">Sök bland användare (namn, användarnamn eller e-post)</label><br>
+                <label for="search" class="form-label">Search Users (ID, name, username, or email)</label><br>
                 <input class="form-control mb-2" type="text" name="search" id="search" onkeyup="searchUsers(this.value)">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="include-inactive" name="include-inactive" onchange="searchUsers(this.value)">
+                    <input class="form-check-input" type="checkbox" id="include-inactive" name="include-inactive" onchange="searchUsers(document.getElementById('search').value)">
                     <label class="form-check-label" for="include-inactive">
-                        Inkludera inaktiverade användare
+                        Include Inactive Users
                     </label>
                 </div>
             </div>
 
-            <p class="mt-4 mb-2 fst-italic">Tryck på valfri användare för att redigera dess uppgifter.</p>
+            <p class="mt-4 mb-2 fst-italic">Click on any user to edit their details.</p>
             <div class="table-responsive">
                 <table class='table table-striped table-hover'>
                     <thead>
                         <tr>
-                        <th scope='col'>Namn</th>
-                        <th scope='col'>Användarnamn</th>
-                        <th scope='col'>E-post</th>
+                        <th scope='col'>Name</th>
+                        <th scope='col'>Username</th>
+                        <th scope='col'>Email</th>
+                        <th scope='col'>User ID</th>
                         </tr>
                     </thead>
                     <tbody id="user-field">
@@ -57,11 +66,6 @@ if (isset($_POST['search-users-submit']) && !empty($_POST['search'])) {
         searchUsers();
     });
 
-    document.getElementById("include-inactive").addEventListener("change", function() {
-        var str = document.getElementById("search").value;
-        searchUsers(str);
-    });
-
     function searchUsers(str) {
         if (str === undefined || str === null || str.length === 0) {
             str = " ";
@@ -76,7 +80,7 @@ if (isset($_POST['search-users-submit']) && !empty($_POST['search'])) {
                 document.getElementById("user-field").innerHTML = this.responseText;
             }
         };
-        xmlhttp.open("GET", "ajax/search_users.php?q=" + str + "&includeInactive=" + includeInactive, true);
+        xmlhttp.open("GET", "ajax/search_users.php?q=" + encodeURIComponent(str) + "&includeInactive=" + includeInactive, true);
         xmlhttp.send();
     }
 </script>
