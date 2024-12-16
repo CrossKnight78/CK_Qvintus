@@ -25,16 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo '<div class="alert alert-danger">Failed to create genre.</div>';
     }
-        if ($source === 'createbook') {
-            echo '<div class="text-center">
-                    <a href="createbook.php" class="btn btn-primary">Resume Book Creation</a>
-                  </div>';
-        } else {
-            echo '<div class="text-center">
-                    <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
-                  </div>';
-        }
+    if ($source === 'createbook') {
+        echo '<div class="text-center">
+                <a href="createbook.php" class="btn btn-primary">Resume Book Creation</a>
+              </div>';
+    } else {
+        echo '<div class="text-center">
+                <a href="book-management.php" class="btn btn-primary">Go to Book Management</a>
+              </div>';
     }
+}
 
 ?>
 

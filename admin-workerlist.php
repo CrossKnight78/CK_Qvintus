@@ -28,7 +28,7 @@ if (isset($_POST['search-users-submit']) && !empty($_POST['search'])) {
 
         <a class="btn btn-primary mb-2" href="createuser.php">Create New User</a>
 
-        <div class="card rounded-4 text-start shadow-sm px-3 py-4 mt-2">
+        <div class="card rounded-4 text-start shadow-sm px-3 py-4 mt-2 mb-3">
             <div class="mb-3">
                 <label for="search" class="form-label">Search Users (ID, name, username, or email)</label><br>
                 <input class="form-control mb-2" type="text" name="search" id="search" onkeyup="searchUsers(this.value)">

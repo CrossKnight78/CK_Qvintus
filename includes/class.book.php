@@ -124,7 +124,8 @@ class Book {
     }
 
     public function getBooksByAuthor(STRING $authors, INT $currentBookId) {
-        $authorList = explode(', ', $this->cleanInput($authors)); // Split authors string into an array
+        $cleanedAuthors = $this->cleanInput($authors); // Clean the input first
+        $authorList = explode(', ', $cleanedAuthors); // Split authors string into an array
         $authorPlaceholders = [];
         
         // Create named placeholders for each author
@@ -150,13 +151,14 @@ class Book {
         
         // Bind the current book ID to the query
         $stmt->bindValue(':currentBookId', $currentBookId, PDO::PARAM_INT);
-
+    
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    
     public function getBooksByGenre(STRING $genres, INT $currentBookId) {
-        $genreList = explode(', ', $this->cleanInput($genres)); // Split genres string into an array
+        $cleanedGenres = $this->cleanInput($genres); // Clean the input first
+        $genreList = explode(', ', $cleanedGenres); // Split genres string into an array
         $genrePlaceholders = [];
         
         // Create named placeholders for each genre
@@ -179,14 +181,14 @@ class Book {
         foreach ($genreList as $index => $genre) {
             $stmt->bindValue(":genre_$index", $genre, PDO::PARAM_STR);
         }
-
+    
         // Bind the current book ID to the query
         $stmt->bindValue(':currentBookId', $currentBookId, PDO::PARAM_INT);
-
+    
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
+    
     public function fetchCustomerReviews() {
         try {
             $sql = "SELECT * FROM customer_review";
@@ -397,14 +399,16 @@ class Book {
     }
     
     public function createAuthor($authorName) {
+        $cleanedAuthorName = $this->cleanInput($authorName);
         $stmt = $this->pdo->prepare("INSERT INTO table_authors (author_name) VALUES (:author_name)");
-        $stmt->bindParam(':author_name', $this->cleanInput($authorName), PDO::PARAM_STR);
+        $stmt->bindParam(':author_name', $cleanedAuthorName, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
     public function editAuthor($authorId, $authorName) {
+        $cleanedAuthorName = $this->cleanInput($authorName);
         $stmt = $this->pdo->prepare("UPDATE table_authors SET author_name = :author_name WHERE author_id = :author_id");
-        $stmt->bindParam(':author_name', $this->cleanInput($authorName), PDO::PARAM_STR);
+        $stmt->bindParam(':author_name', $cleanedAuthorName, PDO::PARAM_STR);
         $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
         return $stmt->execute();
     }
@@ -437,16 +441,21 @@ class Book {
     }
     
     public function createGenre($genreName, $genreStatus, $genreImg) {
+        $cleanedGenreName = $this->cleanInput($genreName);
+        
         $stmt = $this->pdo->prepare("INSERT INTO table_genres (genre_name, genre_status, genre_img) VALUES (:genre_name, :genre_status, :genre_img)");
-        $stmt->bindParam(':genre_name', $this->cleanInput($genreName), PDO::PARAM_STR);
+        $stmt->bindParam(':genre_name', $cleanedGenreName, PDO::PARAM_STR);
         $stmt->bindParam(':genre_status', $genreStatus, PDO::PARAM_INT);
-        $stmt->bindParam(':genre_img', $this->cleanInput($genreImg), PDO::PARAM_STR);
+        $stmt->bindParam(':genre_img', $genreImg, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
-    public function editGenre($genreId, $genreName) {
-        $stmt = $this->pdo->prepare("UPDATE table_genres SET genre_name = :genre_name WHERE genre_id = :genre_id");
-        $stmt->bindParam(':genre_name', $this->cleanInput($genreName), PDO::PARAM_STR);
+    public function editGenre($genreId, $genreName, $genreImg) {
+        $cleanedGenreName = $this->cleanInput($genreName);
+        
+        $stmt = $this->pdo->prepare("UPDATE table_genres SET genre_name = :genre_name, genre_img = :genre_img WHERE genre_id = :genre_id");
+        $stmt->bindParam(':genre_name', $cleanedGenreName, PDO::PARAM_STR);
+        $stmt->bindParam(':genre_img', $genreImg, PDO::PARAM_STR);
         $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
         return $stmt->execute();
     }
@@ -479,14 +488,16 @@ class Book {
     }
     
     public function createIllustrator($illustratorName) {
+        $cleanedIllustratorName = $this->cleanInput($illustratorName);
         $stmt = $this->pdo->prepare("INSERT INTO table_illustrators (illustrator_name) VALUES (:illustrator_name)");
-        $stmt->bindParam(':illustrator_name', $this->cleanInput($illustratorName), PDO::PARAM_STR);
+        $stmt->bindParam(':illustrator_name', $cleanedIllustratorName, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
     public function editIllustrator($illustratorId, $illustratorName) {
+        $cleanedIllustratorName = $this->cleanInput($illustratorName);
         $stmt = $this->pdo->prepare("UPDATE table_illustrators SET illustrator_name = :illustrator_name WHERE illustrator_id = :illustrator_id");
-        $stmt->bindParam(':illustrator_name', $this->cleanInput($illustratorName), PDO::PARAM_STR);
+        $stmt->bindParam(':illustrator_name', $cleanedIllustratorName, PDO::PARAM_STR);
         $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
         return $stmt->execute();
     }
@@ -665,32 +676,37 @@ class Book {
     }
     
     public function createSeries($seriesName) {
+        $cleanedSeriesName = $this->cleanInput($seriesName);
         $stmt = $this->pdo->prepare("INSERT INTO table_series (serie_name) VALUES (:serie_name)");
-        $stmt->bindParam(':serie_name', $this->cleanInput($seriesName), PDO::PARAM_STR);
+        $stmt->bindParam(':serie_name', $cleanedSeriesName, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
     public function createAgeRecommendation($ageRange) {
+        $cleanedAgeRange = $this->cleanInput($ageRange);
         $stmt = $this->pdo->prepare("INSERT INTO table_age (age_range) VALUES (:age_range)");
-        $stmt->bindParam(':age_range', $this->cleanInput($ageRange), PDO::PARAM_STR);
+        $stmt->bindParam(':age_range', $cleanedAgeRange, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
     public function createCategory($categoryName) {
+        $cleanedCategoryName = $this->cleanInput($categoryName);
         $stmt = $this->pdo->prepare("INSERT INTO table_category (category_name) VALUES (:category_name)");
-        $stmt->bindParam(':category_name', $this->cleanInput($categoryName), PDO::PARAM_STR);
+        $stmt->bindParam(':category_name', $cleanedCategoryName, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
     public function createPublisher($publisherName) {
+        $cleanedPublisherName = $this->cleanInput($publisherName);
         $stmt = $this->pdo->prepare("INSERT INTO table_publishers (publisher_name) VALUES (:publisher_name)");
-        $stmt->bindParam(':publisher_name', $this->cleanInput($publisherName), PDO::PARAM_STR);
+        $stmt->bindParam(':publisher_name', $cleanedPublisherName, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
     public function createStatus($statusName) {
+        $cleanedStatusName = $this->cleanInput($statusName);
         $stmt = $this->pdo->prepare("INSERT INTO table_status (s_name) VALUES (:s_name)");
-        $stmt->bindParam(':s_name', $this->cleanInput($statusName), PDO::PARAM_STR);
+        $stmt->bindParam(':s_name', $cleanedStatusName, PDO::PARAM_STR);
         return $stmt->execute();
     }
     
@@ -769,79 +785,45 @@ class Book {
         }
     }
     
+
     public function updateSeries($seriesId, $seriesData) {
-        try {
-            $stmt = $this->pdo->prepare("UPDATE table_series SET serie_name = :serie_name WHERE serie_id = :serie_id");
-            $stmt->execute([
-                ':serie_name' => $this->cleanInput($seriesData['serie_name']),
-                ':serie_id' => $seriesId
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            error_log($e->getMessage());
-            return false;
-        }
+        $cleanedSeriesName = $this->cleanInput($seriesData['serie_name']);
+        $stmt = $this->pdo->prepare("UPDATE table_series SET serie_name = :serie_name WHERE serie_id = :serie_id");
+        $stmt->bindParam(':serie_name', $cleanedSeriesName, PDO::PARAM_STR);
+        $stmt->bindParam(':serie_id', $seriesId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
     
     public function updateAgeRecommendation($ageId, $ageData) {
-        try {
-            $stmt = $this->pdo->prepare("UPDATE table_age SET age_range = :age_range WHERE age_id = :age_id");
-            $stmt->execute([
-                ':age_range' => $this->cleanInput($ageData['age_range']),
-                ':age_id' => $ageId
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            error_log($e->getMessage());
-            return false;
-        }
+        $cleanedAgeRange = $this->cleanInput($ageData['age_range']);
+        $stmt = $this->pdo->prepare("UPDATE table_age SET age_range = :age_range WHERE age_id = :age_id");
+        $stmt->bindParam(':age_range', $cleanedAgeRange, PDO::PARAM_STR);
+        $stmt->bindParam(':age_id', $ageId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
     
     public function updateCategory($categoryId, $categoryData) {
-        try {
-            $stmt = $this->pdo->prepare("UPDATE table_category SET category_name = :category_name WHERE category_id = :category_id");
-            $stmt->execute([
-                ':category_name' => $this->cleanInput($categoryData['category_name']),
-                ':category_id' => $categoryId
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            error_log($e->getMessage());
-            return false;
-        }
+        $cleanedCategoryName = $this->cleanInput($categoryData['category_name']);
+        $stmt = $this->pdo->prepare("UPDATE table_category SET category_name = :category_name WHERE category_id = :category_id");
+        $stmt->bindParam(':category_name', $cleanedCategoryName, PDO::PARAM_STR);
+        $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
     
     public function updatePublisher($publisherId, $publisherData) {
-        try {
-            $stmt = $this->pdo->prepare("UPDATE table_publishers SET publisher_name = :publisher_name WHERE publisher_id = :publisher_id");
-            $stmt->execute([
-                ':publisher_name' => $this->cleanInput($publisherData['publisher_name']),
-                ':publisher_id' => $publisherId
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            error_log($e->getMessage());
-            return false;
-        }
+        $cleanedPublisherName = $this->cleanInput($publisherData['publisher_name']);
+        $stmt = $this->pdo->prepare("UPDATE table_publishers SET publisher_name = :publisher_name WHERE publisher_id = :publisher_id");
+        $stmt->bindParam(':publisher_name', $cleanedPublisherName, PDO::PARAM_STR);
+        $stmt->bindParam(':publisher_id', $publisherId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
     
     public function updateStatus($statusId, $statusData) {
-        try {
-            $stmt = $this->pdo->prepare("UPDATE table_status SET s_name = :s_name WHERE s_id = :status_id");
-            $stmt->execute([
-                ':s_name' => $this->cleanInput($statusData['s_name']),
-                ':status_id' => $statusId
-            ]);
-            return true;
-        } catch (PDOException $e) {
-            $this->errorState = 1;
-            error_log($e->getMessage());
-            return false;
-        }
+        $cleanedStatusName = $this->cleanInput($statusData['s_name']);
+        $stmt = $this->pdo->prepare("UPDATE table_status SET s_name = :s_name WHERE s_id = :status_id");
+        $stmt->bindParam(':s_name', $cleanedStatusName, PDO::PARAM_STR);
+        $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
+        return $stmt->execute();
     }
     
     public function getSeriesById($seriesId) {

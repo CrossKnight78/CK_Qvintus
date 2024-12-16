@@ -125,7 +125,7 @@ if (isset($_POST['admin-edit-user-submit'])) {
         </form>
 
         <div class="text-center mt-4">
-            <a class="btn btn-danger" href="confirm-delete.php?type=user&id=<?php echo htmlspecialchars($_GET['uid'], ENT_QUOTES, 'UTF-8'); ?>">Delete this user</a>
+            <a class="btn btn-danger my-3 p-2" href="confirm-delete.php?type=user&id=<?php echo htmlspecialchars($_GET['uid'], ENT_QUOTES, 'UTF-8'); ?>">Delete this user</a>
         </div>
     </div>
 </div>

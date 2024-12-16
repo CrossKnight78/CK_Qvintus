@@ -125,15 +125,15 @@ class Admin {
         }
     
         // Get password and current email of the user
-        $stmt_getUserDetails = $this->pdo->prepare('SELECT u_password, u_email FROM table_users WHERE u_id = :uid');
+        $stmt_getUserDetails = $this->pdo->prepare('SELECT u_pass, u_email FROM table_users WHERE u_id = :uid');
         $stmt_getUserDetails->bindParam(':uid', $uid, PDO::PARAM_INT);
         $stmt_getUserDetails->execute();
         $userDetails = $stmt_getUserDetails->fetch();
-        
+    
         // If user edits their own data (legacy)
         if (isset($_POST['edit-user-submit'])) {
             // Check if entered password is correct
-            if (!password_verify($upassold, $userDetails['u_password'])) {
+            if (!password_verify($upassold, $userDetails['u_pass'])) {
                 array_push($this->errorMessages, "Password is not valid!");
                 return $this->errorMessages;    
             }
@@ -141,10 +141,10 @@ class Admin {
     
         // Update fields
         $hashedPassword = password_hash($upassnew, PASSWORD_DEFAULT);
-        
+    
         // Update password if new password field isn't empty
         if (!empty($upassnew)) {
-            $updatePassword = "u_password = :upassnew, ";
+            $updatePassword = "u_pass = :upassnew, ";
         } else {
             $updatePassword = "";
         }
@@ -158,27 +158,27 @@ class Admin {
             $updateEmail
             WHERE u_id = :uid
         ");
-        
+    
         // Bind parameters
         if (!empty($upassnew)) {
             $stmt_editUserInfo->bindParam(':upassnew', $hashedPassword, PDO::PARAM_STR);
         }
-
+    
         if ($updateEmail) {
             $stmt_editUserInfo->bindParam(':umail', $umail, PDO::PARAM_STR);
         }
-        
+    
         $stmt_editUserInfo->bindParam(':role', $role, PDO::PARAM_INT);
         $stmt_editUserInfo->bindParam(':status', $status, PDO::PARAM_INT);
         $stmt_editUserInfo->bindParam(':ufname', $cleanedFname, PDO::PARAM_STR); // Use cleaned name
         $stmt_editUserInfo->bindParam(':ulname', $cleanedLname, PDO::PARAM_STR); // Use cleaned name
         $stmt_editUserInfo->bindParam(':uid', $uid, PDO::PARAM_INT);
-        
+    
         // Execute the statement
         if ($stmt_editUserInfo->execute() && $uid == $_SESSION['user_id']) {
             $_SESSION['user_email'] = $umail; // Update session email if changed
         }
-
+    
         if ($this->errorState == 1) {
             return $this->errorMessages;
         } else {

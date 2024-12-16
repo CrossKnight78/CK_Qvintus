@@ -38,7 +38,7 @@ if(isset($_POST['register-submit'])) {
                         User has been created.
                     </div>
                     <div class='text-center'>
-                        <a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
+                        <a href='admin-workerlist.php' class='btn btn-primary'>Go to worker list</a>
                     </div>
                 </div>";
         }
@@ -51,7 +51,7 @@ if(isset($_POST['register-submit'])) {
             echo "</div>";
         }
         echo "<div class='text-center'>
-                <a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
+                <a href='admin-workerlist.php' class='btn btn-primary'>Go to worker list</a>
             </div>";
         echo "</div>";
     }
@@ -61,27 +61,27 @@ if(isset($_POST['register-submit'])) {
 
 <div class="container">
     <div class="mw-500 mx-auto">
-        <h1 class="my-5">Skapa ny användare</h1>
+        <h1 class="my-5">Create New User</h1>
         <form action="" method="post" class="">
-            <label class="form-label" for="uname">Användarnamn</label><br>
+            <label class="form-label" for="uname">Username</label><br>
             <input class="form-control" type="text" name="uname" id="uname" required="required"><br>
 
-            <label class="form-label" for="umail">E-post</label><br>
+            <label class="form-label" for="umail">Email</label><br>
             <input class="form-control" type="email" name="umail" id="umail" required="required"><br>
 
-            <label class="form-label" for="upass">Lösenord</label><br>
-            <input class="form-control 2" type="password" name="upass" id="upass" required="required"><br>
+            <label class="form-label" for="upass">Password</label><br>
+            <input class="form-control" type="password" name="upass" id="upass" required="required"><br>
 
-            <label class="form-label" for="upassrepeat">Upprepa lösenord</label><br>
-            <input class="form-control " type="password" name="upassrepeat" id="upassrepeat" required="required"><br><br>
+            <label class="form-label" for="upassrepeat">Repeat Password</label><br>
+            <input class="form-control" type="password" name="upassrepeat" id="upassrepeat" required="required"><br><br>
 
-            <label class="form-label" for="ufname">Förnamn</label><br>
-            <input class="form-control " type="text" name="ufname" id="ufname" required="required"><br>
+            <label class="form-label" for="ufname">First Name</label><br>
+            <input class="form-control" type="text" name="ufname" id="ufname" required="required"><br>
 
-            <label class="form-label" for="ulname">Efternamn</label><br>
-            <input class="form-control " type="text" name="ulname" id="ulname" required="required"><br>
+            <label class="form-label" for="ulname">Last Name</label><br>
+            <input class="form-control" type="text" name="ulname" id="ulname" required="required"><br>
 
-            <input class="btn btn-primary py-2" type="submit" name="register-submit" value="Skapa ny användare">
+            <input class="btn btn-primary py-2" type="submit" name="register-submit" value="Create New User">
         </form>
     </div>
 </div>
