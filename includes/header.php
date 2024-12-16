@@ -4,7 +4,6 @@ require_once 'includes/functions.php';
 require_once 'includes/class.user.php';
 require_once 'includes/class.admin.php';
 require_once 'includes/class.book.php';
-require_once 'includes/class.utility.php';
 $user = new User($pdo);
 
 if(isset($_GET['logout'])) {
@@ -56,6 +55,9 @@ $adminMenuLinks = array(
             </li>
             <li class="nav-item">
             <a class="nav-link" href="contact.php">Contact</a>
+            </li>
+            <li>
+            <a class="nav-link" href="review.php">Leave a Review</a> 
             </li>
             <li class="nav-item">
             <a class="nav-link" href="company.php">Company</a>

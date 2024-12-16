@@ -35,21 +35,39 @@ if (isset($_GET['id'])) {
             <img src="<?= htmlspecialchars($book['img_url']); ?>" class="card-img-top" alt="<?= htmlspecialchars($book['book_title']); ?>" style="width: 300px; height: 300px;">
             <div class="card-body">
                 <h5 class="card-title"><?= htmlspecialchars($book['book_title']); ?></h5>
-                <p class="card-text"><strong>Description:</strong> <?= htmlspecialchars($book['book_desc']); ?></p>
-                <p class="card-text"><strong>Language:</strong> <?= htmlspecialchars($book['book_language']); ?></p>
-                <p class="card-text"><strong>Release Date:</strong> <?= htmlspecialchars($book['book_release_date']); ?></p>
-                <p class="card-text"><strong>Pages:</strong> <?= htmlspecialchars($book['book_pages']); ?></p>
-                <p class="card-text"><strong>Price:</strong> $<?= htmlspecialchars($book['books_price']); ?></p>
-                <p class="card-text"><strong>Genres:</strong> <?= htmlspecialchars($book['genres']); ?></p>
-                <p class="card-text"><strong>Authors:</strong> <?= htmlspecialchars($book['authors']); ?></p>
-                <p class="card-text"><strong>Illustrators:</strong> <?= htmlspecialchars($book['illustrators']); ?></p>
-                <p class="card-text"><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher_name']); ?></p>
-                <p class="card-text"><strong>Category:</strong> <?= htmlspecialchars($book['category_name']); ?></p>
-                <p class="card-text"><strong>Age Recommendation:</strong> <?= htmlspecialchars($book['age_range']); ?></p>
-                <p class="card-text"><strong>Series:</strong> <?= htmlspecialchars($book['serie_name']); ?></p>
+
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs mb-3" id="bookTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="description-tab" data-bs-toggle="tab" data-bs-target="#description" type="button" role="tab" aria-controls="description" aria-selected="true">Description</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="info-tab" data-bs-toggle="tab" data-bs-target="#info" type="button" role="tab" aria-controls="info" aria-selected="false">Info</button>
+                    </li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                        <p class="card-text"><strong>Description:</strong> <?= htmlspecialchars($book['book_desc']); ?></p>
+                    </div>
+                    <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+                        <p class="card-text"><strong>Language:</strong> <?= htmlspecialchars($book['book_language']); ?></p>
+                        <p class="card-text"><strong>Release Date:</strong> <?= htmlspecialchars($book['book_release_date']); ?></p>
+                        <p class="card-text"><strong>Pages:</strong> <?= htmlspecialchars($book['book_pages']); ?></p>
+                        <p class="card-text"><strong>Price:</strong> $<?= htmlspecialchars($book['books_price']); ?></p>
+                        <p class="card-text"><strong>Genres:</strong> <?= htmlspecialchars($book['genres']); ?></p>
+                        <p class="card-text"><strong>Authors:</strong> <?= htmlspecialchars($book['authors']); ?></p>
+                        <p class="card-text"><strong>Illustrators:</strong> <?= htmlspecialchars($book['illustrators']); ?></p>
+                        <p class="card-text"><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher_name']); ?></p>
+                        <p class="card-text"><strong>Category:</strong> <?= htmlspecialchars($book['category_name']); ?></p>
+                        <p class="card-text"><strong>Age Recommendation:</strong> <?= htmlspecialchars($book['age_range']); ?></p>
+                        <p class="card-text"><strong>Series:</strong> <?= htmlspecialchars($book['serie_name']); ?></p>
+                    </div>
+                </div>
 
                 <?php if ($userId == $bookCreatorId || $userRole >= 50): ?>
-                    <a href="editbook.php?id=<?= $bookId ?>" class="btn btn-warning">Edit Book</a>
+                    <a href="editbook.php?id=<?= $bookId ?>" class="btn btn-warning p-2 my-2">Edit Book</a>
                 <?php endif; ?>
             </div>
         </div>

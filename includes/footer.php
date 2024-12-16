@@ -33,7 +33,7 @@
   </div>
 
   <!-- Copyright -->
-  <div class="text-center p-4 border-top border-dark">
+  <div class="text-center pb-3">
     © 2024 Copyright:
     <a class="text-reset fw-bold" href="">Marcus Lundström</a>
   </div>
