@@ -35,8 +35,8 @@ $adminMenuLinks = array(
 
 <body>
 <div class="wrapper d-flex flex-column min-vh-100">
-<header class="container-fluid bg-dark mb-5 px-0">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark px-2 ps-lg-4" data-bs-theme="dark">
+<header class="container-fluid mb-5 px-0 fixed-top" style="background-color: saddlebrown;">
+    <nav class="navbar navbar-expand-lg navbar-dark px-2 ps-lg-4" data-bs-theme="dark">
     <div class="container-fluid px-2 px-sm-4">
         <a class="navbar-brand" href="index.php">Qvintus</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -98,5 +98,4 @@ $adminMenuLinks = array(
         </div>
     </div>
     </nav>
-
 </header>

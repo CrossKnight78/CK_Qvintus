@@ -20,15 +20,21 @@ if (!$authorData) {
 ?>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Edit Author</h2>
-    <form action="update-author.php" method="post">
-        <input type="hidden" name="author_id" value="<?= htmlspecialchars($authorData['author_id']) ?>">
-        <div class="mb-3">
-            <label for="authorName" class="form-label">Author Name</label>
-            <input type="text" class="form-control" id="authorName" name="author_name" value="<?= htmlspecialchars($authorData['author_name']) ?>" required>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h2 class="text-center mb-4">Edit Author</h2>
+            <form action="update-author.php" method="post">
+                <input type="hidden" name="author_id" value="<?= htmlspecialchars($authorData['author_id']) ?>">
+                <div class="mb-3">
+                    <label for="authorName" class="form-label">Author Name</label>
+                    <input type="text" class="form-control" id="authorName" name="author_name" value="<?= htmlspecialchars($authorData['author_name']) ?>" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Update Author</button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Update Author</button>
-    </form>
+    </div>
 </div>
 
 <?php

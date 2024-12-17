@@ -1,14 +1,47 @@
 html, body {
     height: 100%; /* Ensures the height covers the full viewport */
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden; 
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* Use a Google Font or any other font of your choice */
+    padding-top: 70px; /* Adjust based on the height of your header */
+}
+
+header {
+    background-color: saddlebrown !important; /* Set the header background color */
+}
+
+header .navbar-nav .nav-link {
+    color: white !important; /* Set the nav link text color */
+}
+
+header .navbar-brand {
+    color: white !important; /* Set the brand text color */
+}
+
+footer {
+    background-color: saddlebrown !important; /* Set the footer background color */
+    color: white !important; /* Set the footer text color */
+    text-align: center; /* Center everything */
+}
+
+footer a {
+    color: inherit; /* Make links inherit the normal text color */
+    text-decoration: none; /* Remove underline from links */
+}
+
+footer a:hover {
+    text-decoration: underline; /* Add underline on hover */
 }
 
 .wrapper {
     min-height: 100vh; /* Full viewport height */
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Use flexbox */
+    flex-direction: column; /* Stack the children vertically */
 }
 
 .content {
@@ -16,41 +49,41 @@ html, body {
 }
 
 .search-container {
-    position: relative;
-    width: 100%;
+    position: relative; /* Position the container relative to the parent */
+    width: 100%; /* Full width */
 }
 
 #searchResults {
-    position: absolute;
+    position: absolute; /* Position the results absolutely */
     top: 100%;  /* Position the results directly below the input field */
-    left: 0;
-    right: 0;
-    background-color: white;
-    border: 1px solid #ccc;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-    max-height: 300px;
-    overflow-y: auto;
+    left: 0; /* Align the results with the input field */
+    right: 0; /* Align the results with the input field */
+    background-color: white; /* Set the background color */
+    border: 1px solid #ccc; /* Add a border */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a shadow */
+    z-index: 10; /* Ensure the results are on top */
+    max-height: 300px; /* Limit the height of the results */
+    overflow-y: auto; /* Add a scrollbar if needed */
     display: none; /* Hidden by default */
 }
 
 #searchResults .result-item {
-    padding: 10px;
-    cursor: pointer;
+    padding: 10px; /* Add padding */
+    cursor: pointer; /* Add a pointer cursor */
 }
 
 #searchResults .result-item:hover {
-    background-color: #f5f5f5;
+    background-color: #f5f5f5; /* Change background color on hover */
 }
 
 #searchResults .loading {
-    padding: 10px;
-    text-align: center;
+    padding: 10px; /* Add padding */
+    text-align: center; /* Center the text */
 }
 
 .result-item-link {
-    text-decoration: none;
-    color:  black !important;
+    text-decoration: none; /* Remove underline */
+    color:  black !important; /* Set the text color */
 }
 
 .carousel-control-prev-icon,
@@ -68,7 +101,77 @@ html, body {
 }
 
 .thumbnail-img {
-    width: 200px;
-    height: 200px;
-    object-fit: contain;
+    width: 200px; /* Adjust the width as needed */
+    height: 200px; /* Adjust the height as needed */
+    object-fit: contain; /* Ensure the image fits the area */
+}
+
+.genre-card {
+    max-width: 150px; /* Adjust the max width as needed */
+    margin: 0 auto; /* Center the card */
+    background-color: burlywood !important; /* Set the background color */
+}
+
+.card {
+    background-color: burlywood !important; /* Set the card background color */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a small shadow under the cards */
+    transition: transform 0.2s, box-shadow 0.2s; /* Smooth transition for hover effects */
+}
+
+.card:hover {
+    transform: translateY(-5px); /* Move the card up slightly on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increase the shadow on hover */
+}
+
+.genre-card .card-img-top {
+    width: 100px; /* Thumbnail size */
+    height: 100px; /* Thumbnail size */
+    object-fit: cover; /* Ensure the image covers the area */
+    margin: 0 auto; /* Center the image */
+}
+
+.about-img {
+    width: auto; /* Adjust the size as needed */
+    max-height: 300px; /* Adjust the size as needed */
+}
+
+.btn-primary {
+    background-color: saddlebrown !important; /* Set the primary button color */
+    border-color: saddlebrown !important; /* Set the primary button border color */
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color:  rgba(75, 42, 21, 1) !important; /* Optional: Add a darker shade for hover, focus, and active states */
+    border-color:  rgba(75, 42, 21, 1) !important; /* Optional: Add a darker shade for hover, focus, and active states */
+    box-shadow: 0 4px 8px  rgba(75, 42, 21, 1) !important; /* Add shadow on hover */
+}
+
+.btn-secondary {
+    background-color: beige !important; /* Set the primary button color */
+    border-color: beige !important; /* Set the primary button border color */
+    color: black !important; /* Set the text color */
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    background-color:  rgb(185, 102, 51) !important; /* Optional: Add a darker shade for hover, focus, and active states */
+    border-color:  rgb(185, 102, 51) !important; /* Optional: Add a darker shade for hover, focus, and active states */
+    box-shadow: 0 4px 8px  rgb(185, 102, 51) !important; /* Add shadow on hover */
+}
+
+.btn-danger {
+    background-color: brown; /* Set the primary button color */
+    border-color: brown !important; /* Set the primary button border color */
+    color: black !important; /* Set the text color */
+}
+
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    background-color:  crimson !important; /* Optional: Add a darker shade for hover, focus, and active states */
+    border-color:  crimson !important; /* Optional: Add a darker shade for hover, focus, and active states */
+    box-shadow: 0 4px 8px  crimson !important; /* Add shadow on hover */
 }

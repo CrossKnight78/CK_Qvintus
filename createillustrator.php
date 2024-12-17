@@ -11,7 +11,6 @@ if (!isset($_SESSION['user_id'])) {
 
 $source = isset($_GET['source']) ? $_GET['source'] : '';
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $illustratorName = $_POST['illustrator_name'];
     if ($book->createIllustrator($illustratorName)) {
@@ -32,20 +31,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Add New Illustrator</h2>
-    <form method="POST" action="">
-        <div class="mb-3">
-            <label for="illustrator_name" class="form-label">Illustrator Name</label>
-            <input type="text" class="form-control" id="illustrator_name" name="illustrator_name" required>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h2 class="text-center mb-4">Add New Illustrator</h2>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="illustrator_name" class="form-label">Illustrator Name</label>
+                    <input type="text" class="form-control" id="illustrator_name" name="illustrator_name" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Create Illustrator</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <?php if ($source === 'createbook'): ?>
+                    <a href="createbook.php" class="btn btn-secondary">Resume Book Creation</a>
+                <?php else: ?>
+                    <a href="book-management.php" class="btn btn-secondary">Go to Book Management</a>
+                <?php endif; ?>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Create Illustrator</button>
-    </form>
-    <div class="text-center mt-3">
-        <?php if ($source === 'createbook'): ?>
-            <a href="createbook.php" class="btn btn-secondary">Resume Book Creation</a>
-        <?php else: ?>
-            <a href="book-management.php" class="btn btn-secondary">Go to Book Management</a>
-        <?php endif; ?>
     </div>
 </div>
 

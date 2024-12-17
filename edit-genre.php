@@ -43,29 +43,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="container mt-5" style="max-width: 600px;">
-    <h2 class="text-center mb-4">Edit Genre</h2>
-    <form action="edit-genre.php?id=<?= htmlspecialchars($genreId) ?>" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="genre_name" class="form-label">Genre Name</label>
-            <input type="text" class="form-control" id="genre_name" name="genre_name" value="<?= htmlspecialchars($genre['genre_name']) ?>" required>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h2 class="text-center mb-4">Edit Genre</h2>
+            <form action="edit-genre.php?id=<?= htmlspecialchars($genreId) ?>" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="genre_name" class="form-label">Genre Name</label>
+                    <input type="text" class="form-control" id="genre_name" name="genre_name" value="<?= htmlspecialchars($genre['genre_name']) ?>" required>
+                </div>
+                <div class="mb-3">
+                    <label for="genre_status" class="form-label">Genre Status</label>
+                    <select class="form-select" id="genre_status" name="genre_status" required>
+                        <option value="1" <?= $genre['genre_status'] == 1 ? 'selected' : '' ?>>Popular</option>
+                        <option value="0" <?= $genre['genre_status'] == 0 ? 'selected' : '' ?>>Not Popular</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="genre_img" class="form-label">Genre Image</label>
+                    <input type="file" class="form-control" id="genre_img" name="genre_img">
+                    <?php if (!empty($genre['genre_img'])): ?>
+                        <img src="<?= htmlspecialchars($genre['genre_img']) ?>" alt="Genre Image" class="img-thumbnail mt-2" style="max-width: 200px;">
+                    <?php endif; ?>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Update Genre</button>
+                </div>
+            </form>
         </div>
-        <div class="mb-3">
-            <label for="genre_status" class="form-label">Genre Status</label>
-            <select class="form-select" id="genre_status" name="genre_status" required>
-                <option value="1" <?= $genre['genre_status'] == 1 ? 'selected' : '' ?>>Popular</option>
-                <option value="0" <?= $genre['genre_status'] == 0 ? 'selected' : '' ?>>Not Popular</option>
-            </select>
-        </div>
-        <div class="mb-3">
-            <label for="genre_img" class="form-label">Genre Image</label>
-            <input type="file" class="form-control" id="genre_img" name="genre_img">
-            <?php if (!empty($genre['genre_img'])): ?>
-                <img src="<?= htmlspecialchars($genre['genre_img']) ?>" alt="Genre Image" class="img-thumbnail mt-2" style="max-width: 200px;">
-            <?php endif; ?>
-        </div>
-        <button type="submit" class="btn btn-primary">Update Genre</button>
-    </form>
+    </div>
 </div>
 
 <?php

@@ -32,20 +32,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Add New Publisher</h2>
-    <form method="POST" action="">
-        <div class="mb-3">
-            <label for="publisher_name" class="form-label">Publisher Name</label>
-            <input type="text" class="form-control" id="publisher_name" name="publisher_name" required>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h2 class="text-center mb-4">Add New Publisher</h2>
+            <form method="POST" action="">
+                <div class="mb-3">
+                    <label for="publisher_name" class="form-label">Publisher Name</label>
+                    <input type="text" class="form-control" id="publisher_name" name="publisher_name" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Create Publisher</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <?php if ($source === 'createbook'): ?>
+                    <a href="createbook.php" class="btn btn-secondary">Resume Book Creation</a>
+                <?php else: ?>
+                    <a href="book-management.php" class="btn btn-secondary">Go to Book Management</a>
+                <?php endif; ?>
+            </div>
         </div>
-        <button type="submit" class="btn btn-primary">Create Publisher</button>
-    </form>
-    <div class="text-center mt-3">
-        <?php if ($source === 'createbook'): ?>
-            <a href="createbook.php" class="btn btn-secondary">Resume Book Creation</a>
-        <?php else: ?>
-            <a href="book-management.php" class="btn btn-secondary">Go to Book Management</a>
-        <?php endif; ?>
     </div>
 </div>
 

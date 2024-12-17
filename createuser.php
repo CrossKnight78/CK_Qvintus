@@ -58,31 +58,40 @@ if(isset($_POST['register-submit'])) {
 }
 ?>
 
-
-<div class="container">
-    <div class="mw-500 mx-auto">
-        <h1 class="my-5">Create New User</h1>
-        <form action="" method="post" class="">
-            <label class="form-label" for="uname">Username</label><br>
-            <input class="form-control" type="text" name="uname" id="uname" required="required"><br>
-
-            <label class="form-label" for="umail">Email</label><br>
-            <input class="form-control" type="email" name="umail" id="umail" required="required"><br>
-
-            <label class="form-label" for="upass">Password</label><br>
-            <input class="form-control" type="password" name="upass" id="upass" required="required"><br>
-
-            <label class="form-label" for="upassrepeat">Repeat Password</label><br>
-            <input class="form-control" type="password" name="upassrepeat" id="upassrepeat" required="required"><br><br>
-
-            <label class="form-label" for="ufname">First Name</label><br>
-            <input class="form-control" type="text" name="ufname" id="ufname" required="required"><br>
-
-            <label class="form-label" for="ulname">Last Name</label><br>
-            <input class="form-control" type="text" name="ulname" id="ulname" required="required"><br>
-
-            <input class="btn btn-primary py-2" type="submit" name="register-submit" value="Create New User">
-        </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h1 class="text-center mb-4">Create New User</h1>
+            <form action="" method="post">
+                <div class="mb-3">
+                    <label class="form-label" for="uname">Username</label>
+                    <input class="form-control" type="text" name="uname" id="uname" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="umail">Email</label>
+                    <input class="form-control" type="email" name="umail" id="umail" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="upass">Password</label>
+                    <input class="form-control" type="password" name="upass" id="upass" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="upassrepeat">Repeat Password</label>
+                    <input class="form-control" type="password" name="upassrepeat" id="upassrepeat" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ufname">First Name</label>
+                    <input class="form-control" type="text" name="ufname" id="ufname" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="ulname">Last Name</label>
+                    <input class="form-control" type="text" name="ulname" id="ulname" required>
+                </div>
+                <div class="d-grid">
+                    <input class="btn btn-primary py-2" type="submit" name="register-submit" value="Create New User">
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

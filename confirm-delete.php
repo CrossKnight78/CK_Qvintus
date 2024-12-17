@@ -68,17 +68,17 @@ if (isset($_POST['delete-submit'])) {
 }
 ?>
 
-<div class="container justify-content-center text-center">
+<div class="container justify-content-center text-center mt-5">
 <?php
 if (!isset($deleteFeedback)) {
     echo "<h2 class='mb-5'>Are you sure you want to delete this item?</h2>";
 
     echo "
     <div class='row flex-column justify-content-center'>
-        <div class='col-4 mb-3 mx-auto'>
+        <div class='col-12 col-md-6 col-lg-4 mb-3 mx-auto'>
             <a class='btn btn-warning w-100' href='book-management.php'>No, take me back!</a>
         </div>
-        <div class='col-4 mx-auto'>
+        <div class='col-12 col-md-6 col-lg-4 mx-auto'>
             <form action='' method='post'>
                 <input type='submit' name='delete-submit' value='Delete' class='btn btn-danger w-100'>
             </form>
@@ -89,7 +89,7 @@ if (!isset($deleteFeedback)) {
 
     echo " 
     <div class='row flex-column justify-content-center'>
-        <div class='col-4 mb-3 mx-auto'>
+        <div class='col-12 col-md-6 col-lg-4 mb-3 mx-auto'>
             <a class='btn btn-secondary w-100' href='book-management.php'>Return to Book Management</a>
         </div>
     </div>";
