@@ -64,6 +64,8 @@ class Book {
 
     public function displayAllBooks() {
         $books = $this->selectAllBooks();
+        $defaultImageUrl = '../images/default.webp'; // Define the path to your default image
+    
         if ($this->errorState === 1) {
             echo '<div class="alert alert-danger">Error retrieving books:</div>';
             foreach ($this->errorMessages as $error) {
@@ -77,9 +79,10 @@ class Book {
         }
         echo '<div class="row">';
         foreach ($books as $book) {
+            $bookImageUrl = !empty($book['img_url']) ? htmlspecialchars($book['img_url'], ENT_QUOTES, 'UTF-8') : $defaultImageUrl;
             echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center">';
             echo '<div class="card text-center h-100" style="width: 100%;">';
-            echo '<img src="' . htmlspecialchars($book['img_url'], ENT_QUOTES, 'UTF-8') . '" class="card-img-top thumbnail-img mx-auto d-block" alt="' . htmlspecialchars($book['book_title'], ENT_QUOTES, 'UTF-8') . '">';
+            echo '<img src="' . $bookImageUrl . '" class="card-img-top thumbnail-img mx-auto d-block" alt="' . htmlspecialchars($book['book_title'], ENT_QUOTES, 'UTF-8') . '">';
             echo '<div class="card-body d-flex flex-column">';
             echo '<h5 class="card-title">' . htmlspecialchars($book['book_title'], ENT_QUOTES, 'UTF-8') . '</h5>';
             echo '<p class="card-text"><strong>Price:</strong> $' . htmlspecialchars($book['books_price'], ENT_QUOTES, 'UTF-8') . '</p>';
@@ -88,6 +91,7 @@ class Book {
         }
         echo '</div>';
     }
+    
 
     public function searchBooks(STRING $query) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_title LIKE :query");

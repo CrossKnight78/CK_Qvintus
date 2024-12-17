@@ -139,7 +139,7 @@ $reviews = $book->fetchCustomerReviews();
             <p>Welcome to my book site. Here you will find everything from classics to exclusive pieces. My shop is in Tampere, Finland. So if you find what you want or need, come on by and shop.</p>
         </div>
         <div class="col-md-6 d-flex justify-content-center align-items-center">
-            <img src="images/qvintus.webp" alt="About Us" class="img-fluid">
+            <img src="images/qvintus.webp" alt="About Us" class="img-fluid about-img">
         </div>
     </div>
 </div>
