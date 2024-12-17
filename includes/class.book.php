@@ -45,9 +45,14 @@ class Book {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function selectAllBooks() {
+    public function selectAllBooks($userId = null) {
         try {
-            $stmt_selectAllBooks = $this->pdo->prepare('SELECT * FROM table_books');
+            if ($userId) {
+                $stmt_selectAllBooks = $this->pdo->prepare('SELECT * FROM table_books WHERE created_by_fk = :user_id');
+                $stmt_selectAllBooks->bindParam(':user_id', $userId, PDO::PARAM_INT);
+            } else {
+                $stmt_selectAllBooks = $this->pdo->prepare('SELECT * FROM table_books');
+            }
             $stmt_selectAllBooks->execute();
             return $stmt_selectAllBooks->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
