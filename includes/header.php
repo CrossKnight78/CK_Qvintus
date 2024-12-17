@@ -31,17 +31,12 @@ $adminMenuLinks = array(
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <style>
-        body {
-            padding-top: 70px; /* Adjust based on the height of your header */
-        }
-    </style>
 </head>
 
 <body>
 <div class="wrapper d-flex flex-column min-vh-100">
-<header class="container-fluid bg-dark mb-5 px-0 fixed-top">
-    <nav class="navbar navbar-expand-lg bg-body-tertiary navbar-dark bg-dark px-2 ps-lg-4" data-bs-theme="dark">
+<header class="container-fluid mb-5 px-0 fixed-top" style="background-color: saddlebrown;">
+    <nav class="navbar navbar-expand-lg navbar-dark px-2 ps-lg-4" data-bs-theme="dark">
     <div class="container-fluid px-2 px-sm-4">
         <a class="navbar-brand" href="index.php">Qvintus</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -103,6 +98,4 @@ $adminMenuLinks = array(
         </div>
     </div>
     </nav>
-
 </header>
-

@@ -58,8 +58,8 @@ if ($user->checkUserRole(50)) {
                 <?php endforeach; ?>
             </select>
             <div class="mt-2 d-flex justify-content-around">
-                <a href="createbook.php" class="btn btn-success btn-sm">Add</a>
-                <a href="editbook.php?id=" class="btn btn-warning btn-sm edit-book">Edit</a>
+                <a href="createbook.php" class="btn btn-primary btn-sm">Add</a>
+                <a href="editbook.php?id=" class="btn btn-secondary btn-sm edit-book">Edit</a>
                 <a href="confirm-delete.php?type=book&id=" class="btn btn-danger btn-sm delete-book">Delete</a>
             </div>
         </div>
@@ -74,8 +74,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createauthor.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-author.php?id=" class="btn btn-warning btn-sm edit-author">Edit</a>
+                    <a href="createauthor.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-author.php?id=" class="btn btn-secondary btn-sm edit-author">Edit</a>
                     <a href="confirm-delete.php?type=author&id=" class="btn btn-danger btn-sm delete-author">Delete</a>
                 </div>
             </div>
@@ -89,8 +89,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createillustrator.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-illustrator.php?id=" class="btn btn-warning btn-sm edit-illustrator">Edit</a>
+                    <a href="createillustrator.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-illustrator.php?id=" class="btn btn-secondary btn-sm edit-illustrator">Edit</a>
                     <a href="confirm-delete.php?type=illustrator&id=" class="btn btn-danger btn-sm delete-illustrator">Delete</a>
                 </div>
             </div>
@@ -104,8 +104,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="creategenre.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-genre.php?id=" class="btn btn-warning btn-sm edit-genre">Edit</a>
+                    <a href="creategenre.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-genre.php?id=" class="btn btn-secondary btn-sm edit-genre">Edit</a>
                     <a href="confirm-delete.php?type=genre&id=" class="btn btn-danger btn-sm delete-genre">Delete</a>
                 </div>
             </div>
@@ -119,8 +119,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createseries.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-series.php?id=" class="btn btn-warning btn-sm edit-series">Edit</a>
+                    <a href="createseries.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-series.php?id=" class="btn btn-secondary btn-sm edit-series">Edit</a>
                     <a href="confirm-delete.php?type=series&id=" class="btn btn-danger btn-sm delete-series">Delete</a>
                 </div>
             </div>
@@ -134,8 +134,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createage.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-age.php?id=" class="btn btn-warning btn-sm edit-age">Edit</a>
+                    <a href="createage.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-age.php?id=" class="btn btn-secondary btn-sm edit-age">Edit</a>
                     <a href="confirm-delete.php?type=age&id=" class="btn btn-danger btn-sm delete-age">Delete</a>
                 </div>
             </div>
@@ -149,8 +149,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createcategory.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-category.php?id=" class="btn btn-warning btn-sm edit-category">Edit</a>
+                    <a href="createcategory.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-category.php?id=" class="btn btn-secondary btn-sm edit-category">Edit</a>
                     <a href="confirm-delete.php?type=category&id=" class="btn btn-danger btn-sm delete-category">Delete</a>
                 </div>
             </div>
@@ -164,8 +164,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createpublisher.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-publisher.php?id=" class="btn btn-warning btn-sm edit-publisher">Edit</a>
+                    <a href="createpublisher.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-publisher.php?id=" class="btn btn-secondary btn-sm edit-publisher">Edit</a>
                     <a href="confirm-delete.php?type=publisher&id=" class="btn btn-danger btn-sm delete-publisher">Delete</a>
                 </div>
             </div>
@@ -179,8 +179,8 @@ if ($user->checkUserRole(50)) {
                     <?php endforeach; ?>
                 </select>
                 <div class="mt-2 d-flex justify-content-around">
-                    <a href="createstatus.php?source=book-management" class="btn btn-success btn-sm">Add</a>
-                    <a href="edit-status.php?id=" class="btn btn-warning btn-sm edit-status">Edit</a>
+                    <a href="createstatus.php?source=book-management" class="btn btn-primary btn-sm">Add</a>
+                    <a href="edit-status.php?id=" class="btn btn-secondary btn-sm edit-status">Edit</a>
                     <a href="confirm-delete.php?type=status&id=" class="btn btn-danger btn-sm delete-status">Delete</a>
                 </div>
             </div>

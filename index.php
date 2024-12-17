@@ -90,8 +90,8 @@ $reviews = $book->fetchCustomerReviews();
         <?php
         // Loop through each popular genre and generate the HTML
         foreach ($popularGenres as $genre) {
-            echo '<div class="col-6 col-md-4 col-lg-2 mb-4">';
-            echo '  <div class="card text-center h-100">';
+            echo '<div class="col-6 col-md-3 col-lg-2 mb-4">'; // Adjusted column sizes
+            echo '  <div class="card text-center h-100 genre-card">'; // Added class for custom styling
             echo '    <img src="' . htmlspecialchars($genre['genre_img']) . '" alt="Genre Image" class="card-img-top">';
             echo '    <div class="card-body">';
             echo '      <h5 class="card-title">' . htmlspecialchars($genre['genre_name']) . '</h5>';
@@ -102,7 +102,6 @@ $reviews = $book->fetchCustomerReviews();
         ?>
     </div>
 </div>
-
 <div id="popular-section" class="container my-5">
     <h2 class="text-center mb-4">Most Popular Books</h2>
     <div class="row g-3">
