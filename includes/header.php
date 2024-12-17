@@ -4,7 +4,6 @@ require_once 'includes/functions.php';
 require_once 'includes/class.user.php';
 require_once 'includes/class.admin.php';
 require_once 'includes/class.book.php';
-require_once 'includes/class.utility.php';
 $user = new User($pdo);
 
 if(isset($_GET['logout'])) {
@@ -13,7 +12,7 @@ if(isset($_GET['logout'])) {
 
 $adminMenuLinks = array(
     array(
-        "title" => "Administratör",
+        "title" => "Admin",
         "url" => "admin.php"
     ),
 );
@@ -57,6 +56,9 @@ $adminMenuLinks = array(
             <li class="nav-item">
             <a class="nav-link" href="contact.php">Contact</a>
             </li>
+            <li>
+            <a class="nav-link" href="review.php">Leave a Review</a> 
+            </li>
             <li class="nav-item">
             <a class="nav-link" href="company.php">Company</a>
             </li>
@@ -77,13 +79,13 @@ $adminMenuLinks = array(
                         <a class='nav-link' href='{$menuItem['url']}'>{$menuItem['title']}</a>
                         </li>";
                     }
-                }
-
-                // Check if user has role level 1 or 50
-                if ($user->checkUserRole(1) || $user->checkUserRole(50)) {
-                    echo "<li class='nav-item'>
-                    <a class='nav-link' href='book-management.php'>Book Management</a>
-                    </li>";
+                } else {
+                    // Check if user has role level 1 (worker) or 50 (store manager)
+                    if ($user->checkUserRole(1) || $user->checkUserRole(50)) {
+                        echo "<li class='nav-item'>
+                        <a class='nav-link' href='book-management.php'>Book Management</a>
+                        </li>";
+                    }
                 }
 
                 echo "

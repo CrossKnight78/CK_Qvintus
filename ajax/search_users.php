@@ -1,9 +1,9 @@
 <?php
 include_once '../includes/config.php';
-include_once '../includes/class.user.php';
-$user = new User($pdo);
+include_once '../includes/class.admin.php';
+$admin = new Admin($pdo);
 
-if( isset($_GET["q"])) {
+if (isset($_GET["q"])) {
     $search = $_GET["q"];
 } else {
     $search = " ";
@@ -12,7 +12,7 @@ if( isset($_GET["q"])) {
 // Retrieve checkbox status
 $includeInactive = isset($_GET['includeInactive']) && $_GET['includeInactive'] == '1';
 
-$usersArray = $user->searchUsers($search, $includeInactive);
+$usersArray = $admin->searchUsers($search, $includeInactive);
 
-$user->populateUserField($usersArray);
+$admin->populateUserField($usersArray);
 ?>

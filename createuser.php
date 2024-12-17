@@ -1,5 +1,8 @@
-<?php	
+<?php    
 include_once 'includes/header.php';
+include_once 'includes/class.admin.php';
+
+$admin = new Admin($pdo);
 
 // Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -9,78 +12,78 @@ if (!isset($_SESSION['user_id'])) {
 
 if ($user->checkLoginStatus()) {
     if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
+        header("Location: index.php");
     }
 }
 
 if(isset($_POST['register-submit'])) {
-	$feedbackMessages = $user->checkUserRegisterInput(
-		cleanInput($_POST['uname']), 
-		cleanInput($_POST['umail']), 
-		cleanInput($_POST['upass']), 
-		cleanInput($_POST['upassrepeat'])
-	);
+    $feedbackMessages = $admin->checkUserRegisterInput(
+        $admin->cleanInput($_POST['uname']), 
+        $admin->cleanInput($_POST['umail']), 
+        $admin->cleanInput($_POST['upass']), 
+        $admin->cleanInput($_POST['upassrepeat'])
+    );
 
     if($feedbackMessages === 1) {
-        $signUpFeedback = $user->register(
-			cleanInput($_POST['uname']), 
-			cleanInput($_POST['umail']), 
-			cleanInput($_POST['upass']), 
-			cleanInput($_POST['ufname']), 
-			cleanInput($_POST['ulname'])
-		);
-		if($signUpFeedback === 1) {
-			echo "<div class='container'>
-					<div class='alert alert-success text-center' role='alert'>
-						Användaren har skapats.
-					</div>
-					<div class='text-center'>
-						<a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
-					</div>
-				</div>";
-		}
+        $signUpFeedback = $admin->register(
+            $admin->cleanInput($_POST['uname']), 
+            $admin->cleanInput($_POST['umail']), 
+            $admin->cleanInput($_POST['upass']), 
+            $admin->cleanInput($_POST['ufname']), 
+            $admin->cleanInput($_POST['ulname'])
+        );
+        if($signUpFeedback === 1) {
+            echo "<div class='container'>
+                    <div class='alert alert-success text-center' role='alert'>
+                        User has been created.
+                    </div>
+                    <div class='text-center'>
+                        <a href='admin-workerlist.php' class='btn btn-primary'>Go to worker list</a>
+                    </div>
+                </div>";
+        }
 
     } else {
-		echo "<div class='container'>";
-		foreach($feedbackMessages as $message) {
-			echo "<div class='alert alert-danger text-center' role='alert'>";
-			echo 	$message;
-			echo "</div>";
-		}
-		echo "<div class='text-center'>
-				<a href='book-management.php' class='btn btn-primary'>Go to Book Management</a>
-			</div>";
-		echo "</div>";
+        echo "<div class='container'>";
+        foreach($feedbackMessages as $message) {
+            echo "<div class='alert alert-danger text-center' role='alert'>";
+            echo    $message;
+            echo "</div>";
+        }
+        echo "<div class='text-center'>
+                <a href='admin-workerlist.php' class='btn btn-primary'>Go to worker list</a>
+            </div>";
+        echo "</div>";
     }
 }
 ?>
 
 
 <div class="container">
-	<div class="mw-500 mx-auto">
-		<h1 class="my-5">Skapa ny användare</h1>
-		<form action="" method="post" class="">
-			<label class="form-label" for="uname">Användarnamn</label><br>
-			<input class="form-control" type="text" name="uname" id="uname" required="required"><br>
+    <div class="mw-500 mx-auto">
+        <h1 class="my-5">Create New User</h1>
+        <form action="" method="post" class="">
+            <label class="form-label" for="uname">Username</label><br>
+            <input class="form-control" type="text" name="uname" id="uname" required="required"><br>
 
-			<label class="form-label" for="umail">E-post</label><br>
-			<input class="form-control" type="email" name="umail" id="umail" required="required"><br>
+            <label class="form-label" for="umail">Email</label><br>
+            <input class="form-control" type="email" name="umail" id="umail" required="required"><br>
 
-			<label class="form-label" for="upass">Lösenord</label><br>
-			<input class="form-control 2" type="password" name="upass" id="upass" required="required"><br>
+            <label class="form-label" for="upass">Password</label><br>
+            <input class="form-control" type="password" name="upass" id="upass" required="required"><br>
 
-			<label class="form-label" for="upassrepeat">Upprepa lösenord</label><br>
-			<input class="form-control " type="password" name="upassrepeat" id="upassrepeat" required="required"><br><br>
+            <label class="form-label" for="upassrepeat">Repeat Password</label><br>
+            <input class="form-control" type="password" name="upassrepeat" id="upassrepeat" required="required"><br><br>
 
-			<label class="form-label" for="ufname">Förnamn</label><br>
-			<input class="form-control " type="text" name="ufname" id="ufname" required="required"><br>
+            <label class="form-label" for="ufname">First Name</label><br>
+            <input class="form-control" type="text" name="ufname" id="ufname" required="required"><br>
 
-			<label class="form-label" for="ulname">Efternamn</label><br>
-			<input class="form-control " type="text" name="ulname" id="ulname" required="required"><br>
+            <label class="form-label" for="ulname">Last Name</label><br>
+            <input class="form-control" type="text" name="ulname" id="ulname" required="required"><br>
 
-			<input class="btn btn-primary py-2" type="submit" name="register-submit" value="Skapa ny användare">
-		</form>
-	</div>
+            <input class="btn btn-primary py-2" type="submit" name="register-submit" value="Create New User">
+        </form>
+    </div>
 </div>
 
 <?php
