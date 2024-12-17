@@ -869,5 +869,84 @@ class Book {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    
+    public function filterBooks($query, $author, $illustrator, $genre, $series, $age, $category, $publisher, $status) {
+        $sql = "SELECT DISTINCT b.* FROM table_books b
+                LEFT JOIN books_authors ba ON b.book_id = ba.books_id
+                LEFT JOIN table_authors a ON ba.book_author_id = a.author_id
+                LEFT JOIN books_illustrators bi ON b.book_id = bi.books_id
+                LEFT JOIN table_illustrators i ON bi.book_illustrator_id = i.illustrator_id
+                LEFT JOIN books_genres bg ON b.book_id = bg.books_id
+                LEFT JOIN table_genres g ON bg.book_genre_id = g.genre_id
+                LEFT JOIN table_series s ON b.book_series_fk = s.serie_id
+                LEFT JOIN table_age ar ON b.age_recommendation_fk = ar.age_id
+                LEFT JOIN table_category c ON b.category_fk = c.category_id
+                LEFT JOIN table_publishers p ON b.publisher_fk = p.publisher_id
+                LEFT JOIN table_status st ON b.status_fk = st.s_id
+                WHERE 1=1";
+    
+        if (!empty($query)) {
+            $sql .= " AND b.book_title LIKE :query";
+        }
+        if (!empty($author)) {
+            $sql .= " AND a.author_id = :author";
+        }
+        if (!empty($illustrator)) {
+            $sql .= " AND i.illustrator_id = :illustrator";
+        }
+        if (!empty($genre)) {
+            $sql .= " AND g.genre_id = :genre";
+        }
+        if (!empty($series)) {
+            $sql .= " AND s.serie_id = :series";
+        }
+        if (!empty($age)) {
+            $sql .= " AND ar.age_id = :age";
+        }
+        if (!empty($category)) {
+            $sql .= " AND c.category_id = :category";
+        }
+        if (!empty($publisher)) {
+            $sql .= " AND p.publisher_id = :publisher";
+        }
+        if (!empty($status)) {
+            $sql .= " AND st.s_id = :status";
+        }
+    
+        $stmt = $this->pdo->prepare($sql);
+    
+        if (!empty($query)) {
+            $searchQuery = '%' . $this->cleanInput($query) . '%';
+            $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
+        }
+        if (!empty($author)) {
+            $stmt->bindParam(':author', $author, PDO::PARAM_INT);
+        }
+        if (!empty($illustrator)) {
+            $stmt->bindParam(':illustrator', $illustrator, PDO::PARAM_INT);
+        }
+        if (!empty($genre)) {
+            $stmt->bindParam(':genre', $genre, PDO::PARAM_INT);
+        }
+        if (!empty($series)) {
+            $stmt->bindParam(':series', $series, PDO::PARAM_INT);
+        }
+        if (!empty($age)) {
+            $stmt->bindParam(':age', $age, PDO::PARAM_INT);
+        }
+        if (!empty($category)) {
+            $stmt->bindParam(':category', $category, PDO::PARAM_INT);
+        }
+        if (!empty($publisher)) {
+            $stmt->bindParam(':publisher', $publisher, PDO::PARAM_INT);
+        }
+        if (!empty($status)) {
+            $stmt->bindParam(':status', $status, PDO::PARAM_INT);
+        }
+    
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
 ?>
