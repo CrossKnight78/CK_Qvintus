@@ -21,15 +21,21 @@ if (!$age) {
 ?>
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Edit Age Recommendation</h2>
-    <form method="post" action="update-age.php">
-        <input type="hidden" name="age_id" value="<?= htmlspecialchars($age['age_id']) ?>">
-        <div class="mb-3">
-            <label for="age_range" class="form-label">Age Range</label>
-            <input type="text" class="form-control" id="age_range" name="age_range" value="<?= htmlspecialchars($age['age_range']) ?>" required>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <h2 class="text-center mb-4">Edit Age Recommendation</h2>
+            <form method="post" action="update-age.php">
+                <input type="hidden" name="age_id" value="<?= htmlspecialchars($age['age_id']) ?>">
+                <div class="mb-3">
+                    <label for="age_range" class="form-label">Age Range</label>
+                    <input type="text" class="form-control" id="age_range" name="age_range" value="<?= htmlspecialchars($age['age_range']) ?>" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Update Age Recommendation</button>
+                </div>
+            </form>
         </div>
-        <button type="submit" class="btn btn-primary">Update Age Recommendation</button>
-    </form>
+    </div>
 </div>
 
 <?php

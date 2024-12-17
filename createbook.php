@@ -66,111 +66,120 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     ?>
     <form method="POST" action="createbook.php" enctype="multipart/form-data" id="createBookForm">
-        <div class="mb-3">
-            <label for="book_title" class="form-label">Book Title</label>
-            <input type="text" class="form-control" id="book_title" name="book_title" required>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="book_title" class="form-label">Book Title</label>
+                <input type="text" class="form-control" id="book_title" name="book_title" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="book-img" class="form-label">Book Image</label>
+                <input type="file" class="form-control" id="book-img" name="book-img" accept="image/*">
+            </div>
         </div>
         <div class="mb-3">
             <label for="book_desc" class="form-label">Description</label>
             <textarea class="form-control" id="book_desc" name="book_desc" rows="4"></textarea>
         </div>
-        <div class="mb-3">
-            <label for="book_language" class="form-label">Language</label>
-            <input type="text" class="form-control" id="book_language" name="book_language" required>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="book_language" class="form-label">Language</label>
+                <input type="text" class="form-control" id="book_language" name="book_language" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="book_release_date" class="form-label">Release Date</label>
+                <input type="date" class="form-control" id="book_release_date" name="book_release_date" required>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="book_release_date" class="form-label">Release Date</label>
-            <input type="date" class="form-control" id="book_release_date" name="book_release_date" required>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="book_pages" class="form-label">Pages</label>
+                <input type="number" class="form-control" id="book_pages" name="book_pages" required>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="books_price" class="form-label">Price</label>
+                <input type="number" class="form-control" id="books_price" name="books_price" step="0.01" required>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="book_pages" class="form-label">Pages</label>
-            <input type="number" class="form-control" id="book_pages" name="book_pages" required>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="book_series_fk" class="form-label">Series</label>
+                <select class="form-control" id="book_series_fk" name="book_series_fk">
+                    <?php foreach ($series as $serie): ?>
+                        <option value="<?= $serie['serie_id'] ?>"><?= htmlspecialchars($serie['serie_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createseries.php?source=createbook" class="btn btn-secondary mt-2">Add New Series</a>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="age_recommendation_fk" class="form-label">Age Recommendation</label>
+                <select class="form-control" id="age_recommendation_fk" name="age_recommendation_fk">
+                    <?php foreach ($ageRecommendations as $age): ?>
+                        <option value="<?= $age['age_id'] ?>"><?= htmlspecialchars($age['age_range']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createage.php?source=createbook" class="btn btn-secondary mt-2">Add New Age Recommendation</a>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="books_price" class="form-label">Price</label>
-            <input type="number" class="form-control" id="books_price" name="books_price" step="0.01" required>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="category_fk" class="form-label">Category</label>
+                <select class="form-control" id="category_fk" name="category_fk">
+                    <?php foreach ($categories as $category): ?>
+                        <option value="<?= $category['category_id'] ?>"><?= htmlspecialchars($category['category_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createcategory.php?source=createbook" class="btn btn-secondary mt-2">Add New Category</a>
+            </div>
+            <div class="col-12 col-md-6">
+                <label for="publisher_fk" class="form-label">Publisher</label>
+                <select class="form-control" id="publisher_fk" name="publisher_fk">
+                    <?php foreach ($publishers as $publisher): ?>
+                        <option value="<?= $publisher['publisher_id'] ?>"><?= htmlspecialchars($publisher['publisher_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createpublisher.php?source=createbook" class="btn btn-secondary mt-2">Add New Publisher</a>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="book_series_fk" class="form-label">Series</label>
-            <select class="form-control" id="book_series_fk" name="book_series_fk">
-                <?php foreach ($series as $serie): ?>
-                    <option value="<?= $serie['serie_id'] ?>"><?= htmlspecialchars($serie['serie_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createseries.php?source=createbook" class="btn btn-secondary mt-2">Add New Series</a>
+        <div class="row mb-3">
+            <div class="col-12 col-md-6">
+                <label for="status_fk" class="form-label">Status</label>
+                <select class="form-control" id="status_fk" name="status_fk">
+                    <?php foreach ($statuses as $status): ?>
+                        <option value="<?= $status['s_id'] ?>"><?= htmlspecialchars($status['s_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createstatus.php?source=createbook" class="btn btn-secondary mt-2">Add New Status</a>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="age_recommendation_fk" class="form-label">Age Recommendation</label>
-            <select class="form-control" id="age_recommendation_fk" name="age_recommendation_fk">
-                <?php foreach ($ageRecommendations as $age): ?>
-                    <option value="<?= $age['age_id'] ?>"><?= htmlspecialchars($age['age_range']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createage.php?source=createbook" class="btn btn-secondary mt-2">Add New Age Recommendation</a>
+        <div class="row mb-3">
+            <div class="col-12 col-md-4">
+                <label for="authors" class="form-label">Authors</label>
+                <select class="form-control select2" id="authors" name="authors[]" multiple>
+                    <?php foreach ($authors as $author): ?>
+                        <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createauthor.php?source=createbook" class="btn btn-secondary mt-2">Add New Author</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="illustrators" class="form-label">Illustrators</label>
+                <select class="form-control select2" id="illustrators" name="illustrators[]" multiple>
+                    <?php foreach ($illustrators as $illustrator): ?>
+                        <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="createillustrator.php?source=createbook" class="btn btn-secondary mt-2">Add New Illustrator</a>
+            </div>
+            <div class="col-12 col-md-4">
+                <label for="genres" class="form-label">Genres</label>
+                <select class="form-control select2" id="genres" name="genres[]" multiple>
+                    <?php foreach ($genres as $genre): ?>
+                        <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <a href="creategenre.php?source=createbook" class="btn btn-secondary mt-2">Add New Genre</a>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="category_fk" class="form-label">Category</label>
-            <select class="form-control" id="category_fk" name="category_fk">
-                <?php foreach ($categories as $category): ?>
-                    <option value="<?= $category['category_id'] ?>"><?= htmlspecialchars($category['category_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createcategory.php?source=createbook" class="btn btn-secondary mt-2">Add New Category</a>
-        </div>
-        <div class="mb-3">
-            <label for="publisher_fk" class="form-label">Publisher</label>
-            <select class="form-control" id="publisher_fk" name="publisher_fk">
-                <?php foreach ($publishers as $publisher): ?>
-                    <option value="<?= $publisher['publisher_id'] ?>"><?= htmlspecialchars($publisher['publisher_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createpublisher.php?source=createbook" class="btn btn-secondary mt-2">Add New Publisher</a>
-        </div>
-        <div class="mb-3">
-            <label for="status_fk" class="form-label">Status</label>
-            <select class="form-control" id="status_fk" name="status_fk">
-                <?php foreach ($statuses as $status): ?>
-                    <option value="<?= $status['s_id'] ?>"><?= htmlspecialchars($status['s_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createstatus.php?source=createbook" class="btn btn-secondary mt-2">Add New Status</a>
-        </div>
-        
-        <div class="mb-3">
-            <label for="authors" class="form-label">Authors</label>
-            <select class="form-control" id="authors" name="authors[]" multiple>
-                <?php foreach ($authors as $author): ?>
-                    <option value="<?= $author['author_id'] ?>"><?= htmlspecialchars($author['author_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createauthor.php?source=createbook" class="btn btn-secondary mt-2">Add New Author</a>
-        </div>
-
-        <div class="mb-3">
-            <label for="illustrators" class="form-label">Illustrators</label>
-            <select class="form-control" id="illustrators" name="illustrators[]" multiple>
-                <?php foreach ($illustrators as $illustrator): ?>
-                    <option value="<?= $illustrator['illustrator_id'] ?>"><?= htmlspecialchars($illustrator['illustrator_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="createillustrator.php?source=createbook" class="btn btn-secondary mt-2">Add New Illustrator</a>
-        </div>
-
-        <div class="mb-3">
-            <label for="genres" class="form-label">Genres</label>
-            <select class="form-control" id="genres" name="genres[]" multiple>
-                <?php foreach ($genres as $genre): ?>
-                    <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
-                <?php endforeach; ?>
-            </select>
-            <a href="creategenre.php?source=createbook" class="btn btn-secondary mt-2">Add New Genre</a>
-        </div>
-
-        <div class="mb-3">
-            <label for="book-img" class="form-label">Book Image</label>
-            <input type="file" class="form-control" id="book-img" name="book-img" accept="image/*">
-        </div>
-
         <button type="submit" class="btn btn-primary my-3">Create Book</button>
     </form>
 </div>

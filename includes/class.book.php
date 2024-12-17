@@ -72,13 +72,13 @@ class Book {
         }
         echo '<div class="row">';
         foreach ($books as $book) {
-            echo '<div class="col-md-4 mb-4 d-flex justify-content-center">';
-            echo '<div class="card text-center" style="width: 16rem; padding: 10px;">';
+            echo '<div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 d-flex justify-content-center">';
+            echo '<div class="card text-center h-100" style="width: 100%;">';
             echo '<img src="' . htmlspecialchars($book['img_url'], ENT_QUOTES, 'UTF-8') . '" class="card-img-top thumbnail-img mx-auto d-block" alt="' . htmlspecialchars($book['book_title'], ENT_QUOTES, 'UTF-8') . '">';
-            echo '<div class="card-body">';
+            echo '<div class="card-body d-flex flex-column">';
             echo '<h5 class="card-title">' . htmlspecialchars($book['book_title'], ENT_QUOTES, 'UTF-8') . '</h5>';
             echo '<p class="card-text"><strong>Price:</strong> $' . htmlspecialchars($book['books_price'], ENT_QUOTES, 'UTF-8') . '</p>';
-            echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id'], ENT_QUOTES, 'UTF-8') . '" class="btn btn-primary">View Details</a>';
+            echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id'], ENT_QUOTES, 'UTF-8') . '" class="btn btn-primary mt-auto">View Details</a>';
             echo '</div></div></div>';
         }
         echo '</div>';

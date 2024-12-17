@@ -1,6 +1,6 @@
 <!-- Footer -->
 <footer class="mt-auto" style="background-color: rgba(0, 0, 0, 0.05);">
-  <div class="container">
+  <div class="container pt-3">
     <div class="row">
       <!-- Contact Information -->
       <div class="col-md-4">
