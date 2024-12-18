@@ -5,10 +5,12 @@ class Book {
     private $errorMessages = [];
     private $errorState = 0;
 
+    // Constructor to initialize PDO object
     function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
+    // Function to clean input data
     public function cleanInput($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -16,6 +18,7 @@ class Book {
         return $data;
     }
 
+    // Function to get book details by book ID
     public function getBookById(INT $bookId) {
         $stmt = $this->pdo->prepare("
             SELECT b.*, 
@@ -45,6 +48,7 @@ class Book {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Function to select all books, optionally filtered by user ID
     public function selectAllBooks($userId = null) {
         try {
             if ($userId) {
@@ -62,6 +66,7 @@ class Book {
         }
     }
 
+    // Function to display all books
     public function displayAllBooks() {
         $books = $this->selectAllBooks();
         $defaultImageUrl = '../images/default.webp'; // Define the path to your default image
@@ -91,8 +96,8 @@ class Book {
         }
         echo '</div>';
     }
-    
 
+    // Function to search books based on a query
     public function searchBooks(STRING $query) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_title LIKE :query");
         $searchQuery = '%' . $this->cleanInput($query) . '%';
@@ -101,12 +106,14 @@ class Book {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Function to get popular genres
     public function getPopularGenres() {
         $stmt = $this->pdo->prepare("SELECT genre_name, genre_img FROM table_genres WHERE genre_status = 1");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Function to get popular books
     public function getPopularBooks() {
         try {
             $stmt = $this->pdo->prepare('SELECT * FROM table_books WHERE status_fk = 5');
@@ -119,6 +126,7 @@ class Book {
         }
     }
 
+    // Function to get exclusive books based on status
     public function getExclusiveBooks(INT $status) {
         try {
             $stmt = $this->pdo->prepare('SELECT * FROM table_books WHERE status_fk = :status');
@@ -132,6 +140,7 @@ class Book {
         }
     }
 
+    // Function to get books by author, excluding the current book
     public function getBooksByAuthor(STRING $authors, INT $currentBookId) {
         $cleanedAuthors = $this->cleanInput($authors); // Clean the input first
         $authorList = explode(', ', $cleanedAuthors); // Split authors string into an array
@@ -164,7 +173,8 @@ class Book {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to get books by genre, excluding the current book
     public function getBooksByGenre(STRING $genres, INT $currentBookId) {
         $cleanedGenres = $this->cleanInput($genres); // Clean the input first
         $genreList = explode(', ', $cleanedGenres); // Split genres string into an array
@@ -197,7 +207,8 @@ class Book {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to fetch customer reviews
     public function fetchCustomerReviews() {
         try {
             $sql = "SELECT * FROM customer_review";
@@ -215,6 +226,7 @@ class Book {
         }
     }
 
+    // Function to create a new book
     public function createBook($bookData, $authors, $illustrators, $genres) {
         try {
             // Begin a transaction
@@ -299,6 +311,7 @@ class Book {
         }
     }
 
+    // Function to validate book data
     public function validateBookData($bookData) {
         $requiredFields = [
             'book_title', 'book_desc', 'book_language', 'book_release_date',
@@ -314,6 +327,7 @@ class Book {
         return true;
     }
 
+    // Function to select all authors
     public function selectAllAuthors() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_authors ORDER BY author_name");
@@ -324,7 +338,8 @@ class Book {
             return [];
         }
     }
-    
+
+    // Function to select all illustrators
     public function selectAllIllustrators() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_illustrators ORDER BY illustrator_name");
@@ -335,7 +350,8 @@ class Book {
             return [];
         }
     }
-    
+
+    // Function to select all genres
     public function selectAllGenres() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_genres ORDER BY genre_name");
@@ -346,7 +362,8 @@ class Book {
             return [];
         }
     }
-    
+
+    // Function to select all publishers
     public function selectAllPublishers() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_publishers ORDER BY publisher_name");
@@ -357,8 +374,8 @@ class Book {
             return [];
         }
     }
-    
-    // Select all categories
+
+    // Function to select all categories
     public function selectAllCategories() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_category ORDER BY category_name");
@@ -369,8 +386,8 @@ class Book {
             return [];
         }
     }
-    
-    // Select all age recommendations
+
+    // Function to select all age recommendations
     public function selectAllAgeRecommendations() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_age ORDER BY age_range");
@@ -381,8 +398,8 @@ class Book {
             return [];
         }
     }
-    
-    // Select all series
+
+    // Function to select all series
     public function selectAllSeries() {
         try {
             // Correcting the column names to match the database table
@@ -394,8 +411,8 @@ class Book {
             return [];
         }
     }
-    
-    // Select all statuses
+
+    // Function to select all statuses
     public function selectAllStatuses() {
         try {
             $stmt = $this->pdo->prepare("SELECT * FROM table_status ORDER BY s_name");
@@ -406,14 +423,16 @@ class Book {
             return [];
         }
     }
-    
+
+    // Function to create a new author
     public function createAuthor($authorName) {
         $cleanedAuthorName = $this->cleanInput($authorName);
         $stmt = $this->pdo->prepare("INSERT INTO table_authors (author_name) VALUES (:author_name)");
         $stmt->bindParam(':author_name', $cleanedAuthorName, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to edit an existing author
     public function editAuthor($authorId, $authorName) {
         $cleanedAuthorName = $this->cleanInput($authorName);
         $stmt = $this->pdo->prepare("UPDATE table_authors SET author_name = :author_name WHERE author_id = :author_id");
@@ -421,7 +440,8 @@ class Book {
         $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to delete an author
     public function deleteAuthor($authorId) {
         try {
             // Begin a transaction
@@ -448,7 +468,8 @@ class Book {
             return "Failed to delete author.";
         }
     }
-    
+
+    // Function to create a new genre
     public function createGenre($genreName, $genreStatus, $genreImg) {
         $cleanedGenreName = $this->cleanInput($genreName);
         
@@ -458,7 +479,8 @@ class Book {
         $stmt->bindParam(':genre_img', $genreImg, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to edit an existing genre
     public function editGenre($genreId, $genreName, $genreImg) {
         $cleanedGenreName = $this->cleanInput($genreName);
         
@@ -468,7 +490,8 @@ class Book {
         $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to delete a genre
     public function deleteGenre($genreId) {
         try {
             // Begin a transaction
@@ -495,14 +518,16 @@ class Book {
             return "Failed to delete genre.";
         }
     }
-    
+
+    // Function to create a new illustrator
     public function createIllustrator($illustratorName) {
         $cleanedIllustratorName = $this->cleanInput($illustratorName);
         $stmt = $this->pdo->prepare("INSERT INTO table_illustrators (illustrator_name) VALUES (:illustrator_name)");
         $stmt->bindParam(':illustrator_name', $cleanedIllustratorName, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to edit an existing illustrator
     public function editIllustrator($illustratorId, $illustratorName) {
         $cleanedIllustratorName = $this->cleanInput($illustratorName);
         $stmt = $this->pdo->prepare("UPDATE table_illustrators SET illustrator_name = :illustrator_name WHERE illustrator_id = :illustrator_id");
@@ -510,7 +535,8 @@ class Book {
         $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to delete an illustrator
     public function deleteIllustrator($illustratorId) {
         try {
             // Begin a transaction
@@ -537,7 +563,8 @@ class Book {
             return "Failed to delete illustrator.";
         }
     }
-    
+
+    // Function to delete a book
     public function deleteBook($bookId) {
         try {
             // Begin a transaction
@@ -572,7 +599,8 @@ class Book {
             return "Failed to delete book.";
         }
     }
-    
+
+    // Function to update book details
     public function updateBook($bookId, $bookData) {
         try {
             $stmt = $this->pdo->prepare("
@@ -615,7 +643,8 @@ class Book {
             return false;
         }
     }
-    
+
+    // Function to get author details by author ID
     public function getAuthorById($authorId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_authors WHERE author_id = :author_id");
         $stmt->bindParam(':author_id', $authorId, PDO::PARAM_INT);
@@ -623,6 +652,7 @@ class Book {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Function to update author details
     public function updateAuthor($authorId, $authorData) {
         try {
             $stmt = $this->pdo->prepare("UPDATE table_authors SET author_name = :author_name WHERE author_id = :author_id");
@@ -637,14 +667,16 @@ class Book {
             return false;
         }
     }
-    
+
+    // Function to get illustrator details by illustrator ID
     public function getIllustratorById($illustratorId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_illustrators WHERE illustrator_id = :illustrator_id");
         $stmt->bindParam(':illustrator_id', $illustratorId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to update illustrator details
     public function updateIllustrator($illustratorId, $illustratorData) {
         try {
             $stmt = $this->pdo->prepare("UPDATE table_illustrators SET illustrator_name = :illustrator_name WHERE illustrator_id = :illustrator_id");
@@ -659,14 +691,16 @@ class Book {
             return false;
         }
     }
-    
+
+    // Function to get genre details by genre ID
     public function getGenreById($genreId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_genres WHERE genre_id = :genre_id");
         $stmt->bindParam(':genre_id', $genreId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to update genre details
     public function updateGenre($genreId, $genreData) {
         try {
             $stmt = $this->pdo->prepare("UPDATE table_genres SET genre_name = :genre_name, genre_img = :genre_img, genre_status = :genre_status WHERE genre_id = :genre_id");
@@ -683,42 +717,48 @@ class Book {
             return false;
         }
     }
-    
+
+    // Function to create a new series
     public function createSeries($seriesName) {
         $cleanedSeriesName = $this->cleanInput($seriesName);
         $stmt = $this->pdo->prepare("INSERT INTO table_series (serie_name) VALUES (:serie_name)");
         $stmt->bindParam(':serie_name', $cleanedSeriesName, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to create a new age recommendation
     public function createAgeRecommendation($ageRange) {
         $cleanedAgeRange = $this->cleanInput($ageRange);
         $stmt = $this->pdo->prepare("INSERT INTO table_age (age_range) VALUES (:age_range)");
         $stmt->bindParam(':age_range', $cleanedAgeRange, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to create a new category
     public function createCategory($categoryName) {
         $cleanedCategoryName = $this->cleanInput($categoryName);
         $stmt = $this->pdo->prepare("INSERT INTO table_category (category_name) VALUES (:category_name)");
         $stmt->bindParam(':category_name', $cleanedCategoryName, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to create a new publisher
     public function createPublisher($publisherName) {
         $cleanedPublisherName = $this->cleanInput($publisherName);
         $stmt = $this->pdo->prepare("INSERT INTO table_publishers (publisher_name) VALUES (:publisher_name)");
         $stmt->bindParam(':publisher_name', $cleanedPublisherName, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to create a new status
     public function createStatus($statusName) {
         $cleanedStatusName = $this->cleanInput($statusName);
         $stmt = $this->pdo->prepare("INSERT INTO table_status (s_name) VALUES (:s_name)");
         $stmt->bindParam(':s_name', $cleanedStatusName, PDO::PARAM_STR);
         return $stmt->execute();
     }
-    
+
+    // Function to delete a series
     public function deleteSeries($seriesId) {
         try {
             $this->pdo->beginTransaction();
@@ -733,7 +773,8 @@ class Book {
             return "Failed to delete series.";
         }
     }
-    
+
+    // Function to delete an age recommendation
     public function deleteAgeRecommendation($ageId) {
         try {
             $this->pdo->beginTransaction();
@@ -748,7 +789,8 @@ class Book {
             return "Failed to delete age recommendation.";
         }
     }
-    
+
+    // Function to delete a category
     public function deleteCategory($categoryId) {
         try {
             $this->pdo->beginTransaction();
@@ -763,7 +805,8 @@ class Book {
             return "Failed to delete category.";
         }
     }
-    
+
+    // Function to delete a publisher
     public function deletePublisher($publisherId) {
         try {
             $this->pdo->beginTransaction();
@@ -778,7 +821,8 @@ class Book {
             return "Failed to delete publisher.";
         }
     }
-    
+
+    // Function to delete a status
     public function deleteStatus($statusId) {
         try {
             $this->pdo->beginTransaction();
@@ -793,8 +837,8 @@ class Book {
             return "Failed to delete status.";
         }
     }
-    
 
+    // Function to update series details
     public function updateSeries($seriesId, $seriesData) {
         $cleanedSeriesName = $this->cleanInput($seriesData['serie_name']);
         $stmt = $this->pdo->prepare("UPDATE table_series SET serie_name = :serie_name WHERE serie_id = :serie_id");
@@ -802,7 +846,8 @@ class Book {
         $stmt->bindParam(':serie_id', $seriesId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to update age recommendation details
     public function updateAgeRecommendation($ageId, $ageData) {
         $cleanedAgeRange = $this->cleanInput($ageData['age_range']);
         $stmt = $this->pdo->prepare("UPDATE table_age SET age_range = :age_range WHERE age_id = :age_id");
@@ -810,7 +855,8 @@ class Book {
         $stmt->bindParam(':age_id', $ageId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to update category details
     public function updateCategory($categoryId, $categoryData) {
         $cleanedCategoryName = $this->cleanInput($categoryData['category_name']);
         $stmt = $this->pdo->prepare("UPDATE table_category SET category_name = :category_name WHERE category_id = :category_id");
@@ -818,7 +864,8 @@ class Book {
         $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to update publisher details
     public function updatePublisher($publisherId, $publisherData) {
         $cleanedPublisherName = $this->cleanInput($publisherData['publisher_name']);
         $stmt = $this->pdo->prepare("UPDATE table_publishers SET publisher_name = :publisher_name WHERE publisher_id = :publisher_id");
@@ -826,7 +873,8 @@ class Book {
         $stmt->bindParam(':publisher_id', $publisherId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to update status details
     public function updateStatus($statusId, $statusData) {
         $cleanedStatusName = $this->cleanInput($statusData['s_name']);
         $stmt = $this->pdo->prepare("UPDATE table_status SET s_name = :s_name WHERE s_id = :status_id");
@@ -834,35 +882,40 @@ class Book {
         $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
         return $stmt->execute();
     }
-    
+
+    // Function to get series details by series ID
     public function getSeriesById($seriesId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_series WHERE serie_id = :serie_id");
         $stmt->bindParam(':serie_id', $seriesId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to get age recommendation details by age ID
     public function getAgeById($ageId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_age WHERE age_id = :age_id");
         $stmt->bindParam(':age_id', $ageId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to get category details by category ID
     public function getCategoryById($categoryId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_category WHERE category_id = :category_id");
         $stmt->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to get publisher details by publisher ID
     public function getPublisherById($publisherId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_publishers WHERE publisher_id = :publisher_id");
         $stmt->bindParam(':publisher_id', $publisherId, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
-    
+
+    // Function to get status details by status ID
     public function getStatusById($statusId) {
         $stmt = $this->pdo->prepare("SELECT * FROM table_status WHERE s_id = :status_id");
         $stmt->bindParam(':status_id', $statusId, PDO::PARAM_INT);
@@ -870,7 +923,7 @@ class Book {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    
+    // Function to filter books based on various criteria
     public function filterBooks($query, $author, $illustrator, $genre, $series, $age, $category, $publisher, $status) {
         $sql = "SELECT DISTINCT b.* FROM table_books b
                 LEFT JOIN books_authors ba ON b.book_id = ba.books_id

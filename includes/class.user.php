@@ -9,12 +9,14 @@ class User {
     private $errorMessages = [];
     private $errorState = 0;
 
+    // Constructor to initialize default values and PDO object
     function __construct($pdo) {
         $this->role = 4;
         $this->username = "RandomGuest123";
         $this->pdo = $pdo;
     }
 
+    // Function to clean input data
     public function cleanInput($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -22,6 +24,7 @@ class User {
         return $data;
     }
 
+    // Function to handle user login
     public function login(string $unamemail, string $upass) {
         // Sanitize inputs
         $unamemail = $this->cleanInput($unamemail);
@@ -75,7 +78,7 @@ class User {
         }
     }
 
-    
+    // Function to check if the user is logged in
     public function checkLoginStatus() {
         if(isset($_SESSION['user_id'])) {
             return TRUE;
@@ -85,8 +88,8 @@ class User {
         }
     }
 
+    // Function to check if the user has the required role level
     public function checkUserRole(int $requiredValue) {
-        
         $stmt_checkUserRole = $this->pdo->prepare(
             'SELECT r_level FROM table_roles WHERE r_id = :rid');
         $stmt_checkUserRole->bindParam(':rid', $_SESSION['user_role'], PDO::PARAM_INT);
@@ -99,9 +102,9 @@ class User {
         } else {
             return FALSE;
         }
-
     }
 
+    // Function to log out the user
     public function logout() {
         session_unset();
         session_destroy();

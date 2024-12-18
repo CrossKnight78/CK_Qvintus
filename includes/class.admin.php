@@ -7,10 +7,12 @@ class Admin {
     private $errorMessages = [];
     private $errorState = 0;
 
+    // Constructor to initialize PDO object
     function __construct($pdo) {
         $this->pdo = $pdo;
     }
 
+    // Function to clean input data
     public function cleanInput($data) {
         $data = trim($data);
         $data = stripslashes($data);
@@ -18,8 +20,9 @@ class Admin {
         return $data;
     }
 
+    // Function to check user registration input
     public function checkUserRegisterInput(string $uuser, string $umail, string $upass, string $upassrepeat, int $uid = null) {
-        // START Check if user-entered username or email exists in the database
+        // Check if user-entered username or email exists in the database
         if (isset($_POST['register-submit'])) {
             $this->errorState = 0;
             $stmt_checkUsername = $this->pdo->prepare('SELECT * FROM table_users WHERE u_name = :uuser OR u_email = :email');
@@ -51,9 +54,7 @@ class Admin {
                 $this->errorState = 1;
             }
         }
-        // END Check if user-entered username or email exists in the database
-    
-        // START Conditionally check passwords if they are provided
+        // Conditionally check passwords if they are provided
         if (isset($_POST['register-submit']) || (!empty($upass) || !empty($upassrepeat))) {
             // Check if passwords match
             if ($upass !== $upassrepeat) {
@@ -67,14 +68,11 @@ class Admin {
                 }
             }
         }
-        // END Conditionally check passwords if they are provided
-    
-        // START Check if user-entered email is a proper email address
+        // Check if user-entered email is a proper email address
         if (!filter_var($umail, FILTER_VALIDATE_EMAIL)) {
             array_push($this->errorMessages, "Email address is not in the correct format!");
             $this->errorState = 1;
         }
-        // END Check if user-entered email is a proper email address
     
         if ($this->errorState == 1) {
             return $this->errorMessages;
@@ -83,6 +81,7 @@ class Admin {
         }
     }
 
+    // Function to register a new user
     public function register(string $uuser, string $umail, string $upass, string $fname, string $lname) {
         // Hash password and clean inputs
         $hashedPassword = password_hash($upass, PASSWORD_DEFAULT);
@@ -109,6 +108,7 @@ class Admin {
         }
     }
 
+    // Function to edit user information
     public function editUserInfo(string $umail, string $upassold, string $upassnew, int $uid, int $role, string $ufname, string $ulname, int $status) {
         // Clean and validate first name
         $cleanedFname = $this->cleanInput($ufname);
@@ -186,6 +186,7 @@ class Admin {
         }
     }
 
+    // Function to search users based on input
     public function searchUsers(string $input, int $includeInactive) {
         $input = $this->cleanInput($input);
 
@@ -218,6 +219,7 @@ class Admin {
         return $usersList;
     }
 
+    // Function to populate user field in the table
     public function populateUserField(array $usersArray) {
         foreach ($usersArray as $user) {
             echo "
@@ -230,6 +232,7 @@ class Admin {
         }
     }
 
+    // Function to get user information based on user ID
     public function getUserInfo(int $uid) {
         $stmt_selectUserData = $this->pdo->prepare('SELECT * FROM table_users WHERE u_id = :uid');
         $stmt_selectUserData->bindParam(':uid', $uid, PDO::PARAM_INT);
@@ -238,6 +241,7 @@ class Admin {
         return $userInfo;
     }
 
+    // Function to delete a user based on user ID
     public function deleteUser(int $uid) {
         $stmt_deleteUser = $this->pdo->prepare('DELETE FROM table_users WHERE u_id = :uid');
         $stmt_deleteUser->bindParam(':uid', $uid, PDO::PARAM_INT);

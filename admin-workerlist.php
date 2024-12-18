@@ -12,10 +12,11 @@ if (!$user->checkLoginStatus()) {
 
 // Check if the user has the admin role
 if (!$user->checkUserRole(200)) {
-    header("Location: home.php");
+    header("Location: index.php");
     exit();
 }
 
+// Handle user search form submission
 if (isset($_POST['search-users-submit']) && !empty($_POST['search'])) {
     $usersArray = $admin->searchUsers($_POST['search'], isset($_POST['include-inactive']) ? 1 : 0);
 }
