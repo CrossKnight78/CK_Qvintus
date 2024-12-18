@@ -101,9 +101,9 @@ if (isset($_GET['id'])) {
                             $isActive = false; // Only the first item should be active
                             echo '<div class="row g-3">';
                             foreach ($chunk as $book) {
-                                echo '<div class="col-md-4">';
+                                echo '<div class="col-4 col-sm-3 col-md-2">';
                                 echo '<div class="card h-100">';
-                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top thumbnail-img" alt="' . htmlspecialchars($book['book_title']) . '">';
                                 echo '<div class="card-body d-flex flex-column">';
                                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                                 echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary mt-auto">View Details</a>';
@@ -143,9 +143,9 @@ if (isset($_GET['id'])) {
                             $isActive = false; // Only the first item should be active
                             echo '<div class="row g-3">';
                             foreach ($chunk as $book) {
-                                echo '<div class="col-md-4">';
+                                echo '<div class="col-4 col-sm-3 col-md-2">';
                                 echo '<div class="card h-100">';
-                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top" alt="' . htmlspecialchars($book['book_title']) . '">';
+                                echo '<img src="' . htmlspecialchars($book['img_url']) . '" class="card-img-top thumbnail-img" alt="' . htmlspecialchars($book['book_title']) . '">';
                                 echo '<div class="card-body d-flex flex-column">';
                                 echo '<h5 class="card-title">' . htmlspecialchars($book['book_title']) . '</h5>';
                                 echo '<a href="singlebook.php?id=' . htmlspecialchars($book['book_id']) . '" class="btn btn-primary mt-auto">View Details</a>';
