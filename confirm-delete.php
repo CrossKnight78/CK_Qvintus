@@ -68,7 +68,7 @@ if (isset($_POST['delete-submit'])) {
 }
 ?>
 
-<div class="container justify-content-center text-center mt-5">
+<div class="container justify-content-center text-center mt-5 mb-5">
 <?php
 if (!isset($deleteFeedback)) {
     echo "<h2 class='mb-5'>Are you sure you want to delete this item?</h2>";
