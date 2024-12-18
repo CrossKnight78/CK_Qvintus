@@ -11,7 +11,7 @@ include_once 'includes/header.php';
             <a href="contact.php" class="btn btn-primary">Contact Us</a>
         </div>
         <div class="col-12 col-md-6">
-            <img src="images/qvituns-store.jpg" class="img-fluid rounded" alt="Bookstore Image">
+            <img src="images/qvituns-store.webp" class="img-fluid rounded" alt="Bookstore Image">
         </div>
     </div>
 </div>

@@ -58,7 +58,7 @@ if(isset($_POST['register-submit'])) {
 }
 ?>
 
-<div class="container mt-5">
+<div class="container mt-5" style="margin-top: 50px; margin-bottom: 50px;">
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
             <h1 class="text-center mb-4">Create New User</h1>

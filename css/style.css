@@ -175,3 +175,8 @@ footer a:hover {
     border-color:  crimson !important; /* Optional: Add a darker shade for hover, focus, and active states */
     box-shadow: 0 4px 8px  crimson !important; /* Add shadow on hover */
 }
+
+.text-dark {
+    text-decoration: none; /* Remove underline */
+    color: black !important; /* Inherit the color from the parent element and use !important to override other styles */
+}
