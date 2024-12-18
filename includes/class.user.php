@@ -50,11 +50,18 @@ class User {
                 return $this->errorMessages;
             }
     
+            // Fetch the role level from the table_roles
+            $stmt_checkRoleLevel = $this->pdo->prepare('SELECT r_level FROM table_roles WHERE r_id = :rid');
+            $stmt_checkRoleLevel->bindParam(':rid', $userData['u_role_fk'], PDO::PARAM_INT);
+            $stmt_checkRoleLevel->execute();
+            $roleData = $stmt_checkRoleLevel->fetch();
+    
             // Set session variables
             $_SESSION['user_id'] = $userData['u_id'];
             $_SESSION['user_name'] = $userData['u_name'];
             $_SESSION['user_email'] = $userData['u_email'];
-            $_SESSION['user_role'] = $userData['u_role_fk']; // Ensure this is set correctly
+            $_SESSION['user_role'] = $userData['u_role_fk']; // Role ID
+            $_SESSION['user_level'] = $roleData['r_level']; // Role Level
     
             // Regenerate session ID for security
             session_regenerate_id(true);
@@ -68,6 +75,7 @@ class User {
         }
     }
 
+    
     public function checkLoginStatus() {
         if(isset($_SESSION['user_id'])) {
             return TRUE;

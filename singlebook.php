@@ -18,14 +18,16 @@ if (isset($_GET['id'])) {
     $genreBooks = $bookClass->getBooksByGenre($book['genres'], $currentBookId);
 
     // Check if user is logged in
-    if (isset($_SESSION['user_role']) && isset($_SESSION['user_id'])) {
-        $userRole = $_SESSION['user_role'];
+    if (isset($_SESSION['user_level']) && isset($_SESSION['user_id'])) {
+        $userLevel = $_SESSION['user_level'];
         $userId = $_SESSION['user_id'];
     } else {
         // Default values for non-logged-in users
-        $userRole = 0;
+        $userLevel = 0;
         $userId = 0;
     }
+
+    print_r($userLevel);
 }
 ?>
 
@@ -52,31 +54,31 @@ if (isset($_GET['id'])) {
 
                         <!-- Tab panes -->
                         <div class="tab-content">
-                        <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-                            <p class="card-text"><strong>Description:</strong> <?= htmlspecialchars($book['book_desc']); ?></p>
-                        </div>
-                        <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <p class="card-text"><strong>Language:</strong> <?= htmlspecialchars($book['book_language']); ?></p>
-                                    <p class="card-text"><strong>Release Date:</strong> <?= htmlspecialchars($book['book_release_date']); ?></p>
-                                    <p class="card-text"><strong>Pages:</strong> <?= htmlspecialchars($book['book_pages']); ?></p>
-                                    <p class="card-text"><strong>Price:</strong> $<?= htmlspecialchars($book['books_price']); ?></p>
-                                    <p class="card-text"><strong>Genres:</strong> <?= htmlspecialchars($book['genres']); ?></p>
-                                    <p class="card-text"><strong>Authors:</strong> <?= htmlspecialchars($book['authors']); ?></p>
-                                </div>
-                                <div class="col-md-6">
-                                    <p class="card-text"><strong>Illustrators:</strong> <?= htmlspecialchars($book['illustrators']); ?></p>
-                                    <p class="card-text"><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher_name']); ?></p>
-                                    <p class="card-text"><strong>Category:</strong> <?= htmlspecialchars($book['category_name']); ?></p>
-                                    <p class="card-text"><strong>Age Recommendation:</strong> <?= htmlspecialchars($book['age_range']); ?></p>
-                                    <p class="card-text"><strong>Series:</strong> <?= htmlspecialchars($book['serie_name']); ?></p>
+                            <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
+                                <p class="card-text"><strong>Description:</strong> <?= htmlspecialchars($book['book_desc']); ?></p>
+                            </div>
+                            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <p class="card-text"><strong>Language:</strong> <?= htmlspecialchars($book['book_language']); ?></p>
+                                        <p class="card-text"><strong>Release Date:</strong> <?= htmlspecialchars($book['book_release_date']); ?></p>
+                                        <p class="card-text"><strong>Pages:</strong> <?= htmlspecialchars($book['book_pages']); ?></p>
+                                        <p class="card-text"><strong>Price:</strong> $<?= htmlspecialchars($book['books_price']); ?></p>
+                                        <p class="card-text"><strong>Genres:</strong> <?= htmlspecialchars($book['genres']); ?></p>
+                                        <p class="card-text"><strong>Authors:</strong> <?= htmlspecialchars($book['authors']); ?></p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <p class="card-text"><strong>Illustrators:</strong> <?= htmlspecialchars($book['illustrators']); ?></p>
+                                        <p class="card-text"><strong>Publisher:</strong> <?= htmlspecialchars($book['publisher_name']); ?></p>
+                                        <p class="card-text"><strong>Category:</strong> <?= htmlspecialchars($book['category_name']); ?></p>
+                                        <p class="card-text"><strong>Age Recommendation:</strong> <?= htmlspecialchars($book['age_range']); ?></p>
+                                        <p class="card-text"><strong>Series:</strong> <?= htmlspecialchars($book['serie_name']); ?></p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                        <?php if ($userId == $bookCreatorId || $userRole >= 50): ?>
+                        <?php if ($userId == $bookCreatorId || $userLevel >= 50): ?>
                             <a href="editbook.php?id=<?= $bookId ?>" class="btn btn-warning p-2 my-2">Edit Book</a>
                         <?php endif; ?>
                     </div>
