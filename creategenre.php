@@ -9,7 +9,6 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     include 'uploadgenre.php';
 
@@ -42,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="row justify-content-center">
         <div class="col-12 col-md-8 col-lg-6">
             <h2 class="text-center mb-4">Add New Genre</h2>
-            <form method="POST" action="creategenre.php" enctype="multipart/form-data">
+            <form method="POST" action="creategenre.php?source=<?= htmlspecialchars($source) ?>" enctype="multipart/form-data">
                 <div class="mb-3">
                     <label for="genre_name" class="form-label">Genre Name</label>
                     <input type="text" class="form-control" id="genre_name" name="genre_name" required>
