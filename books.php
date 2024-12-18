@@ -12,6 +12,9 @@ $ageRecommendations = $bookClass->selectAllAgeRecommendations();
 $categories = $bookClass->selectAllCategories();
 $publishers = $bookClass->selectAllPublishers();
 $statuses = $bookClass->selectAllStatuses();
+
+// Get the selected genre from the URL parameter
+$selectedGenre = isset($_GET['genre']) ? $_GET['genre'] : '';
 ?>
 
 <div class="container my-5">
@@ -54,7 +57,7 @@ $statuses = $bookClass->selectAllStatuses();
                 <select id="genreFilter" class="form-select" onchange="searchBooks()">
                     <option value="">All Genres</option>
                     <?php foreach ($genres as $genre): ?>
-                        <option value="<?= $genre['genre_id'] ?>"><?= htmlspecialchars($genre['genre_name']) ?></option>
+                        <option value="<?= $genre['genre_id'] ?>" <?= $selectedGenre == $genre['genre_name'] ? 'selected' : '' ?>><?= htmlspecialchars($genre['genre_name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -154,6 +157,14 @@ function searchBooks() {
     // Send the request
     xhr.send();
 }
+
+// Trigger searchBooks function on page load if a genre is selected
+document.addEventListener('DOMContentLoaded', function() {
+    const selectedGenre = "<?= $selectedGenre ?>";
+    if (selectedGenre) {
+        searchBooks();
+    }
+});
 </script>
 
 <?php

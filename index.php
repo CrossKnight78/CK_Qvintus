@@ -88,20 +88,22 @@ $reviews = $book->fetchCustomerReviews();
     <h2 class="text-center mb-4">Most Popular Genres</h2>
     <div class="row text-center g-3">
         <?php
-        // Loop through each popular genre and generate the HTML
         foreach ($popularGenres as $genre) {
-            echo '<div class="col-6 col-md-3 col-lg-2 mb-4">'; // Adjusted column sizes
-            echo '  <div class="card text-center h-100 genre-card">'; // Added class for custom styling
-            echo '    <img src="' . htmlspecialchars($genre['genre_img']) . '" alt="Genre Image" class="card-img-top">';
-            echo '    <div class="card-body">';
-            echo '      <h5 class="card-title">' . htmlspecialchars($genre['genre_name']) . '</h5>';
-            echo '    </div>';
+            echo '<div class="col-6 col-md-3 col-lg-2 mb-4">';
+            echo '  <div class="card text-center h-100 genre-card">';
+            echo '    <a href="books.php?genre=' . urlencode($genre['genre_name']) . '">';
+            echo '      <img src="' . htmlspecialchars($genre['genre_img']) . '" alt="Genre Image" class="card-img-top">';
+            echo '      <div class="card-body">';
+            echo '        <h5 class="card-title text-dark">' . htmlspecialchars($genre['genre_name']) . '</h5>';
+            echo '      </div>';
+            echo '    </a>';
             echo '  </div>';
             echo '</div>';
         }
         ?>
     </div>
 </div>
+
 <div id="popular-section" class="container my-5">
     <h2 class="text-center mb-4">Most Popular Books</h2>
     <div class="row g-3">
