@@ -55,10 +55,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Sorry, your file was not uploaded.";
     } else {
         // Generate a unique filename to avoid collisions
-        $uniqueFileName = $target_dir . uniqid($bookTitle . "_", true) . '.' . $imageFileType;
+        $uniqueFileName = $target_dir . uniqid($bookTitle . "_", true) . '.webp';
 
-        if (move_uploaded_file($_FILES["book-img"]["tmp_name"], $uniqueFileName)) {
-            echo "The file " . htmlspecialchars(basename($_FILES["book-img"]["name"])) . " has been uploaded.";
+        // Convert the image to WebP format
+        switch ($imageFileType) {
+            case 'jpg':
+            case 'jpeg':
+                $image = imagecreatefromjpeg($_FILES["book-img"]["tmp_name"]);
+                break;
+            case 'png':
+                $image = imagecreatefrompng($_FILES["book-img"]["tmp_name"]);
+                break;
+            case 'gif':
+                $image = imagecreatefromgif($_FILES["book-img"]["tmp_name"]);
+                break;
+            case 'webp':
+                $image = imagecreatefromwebp($_FILES["book-img"]["tmp_name"]);
+                break;
+            default:
+                $image = false;
+                break;
+        }
+
+        if ($image && imagewebp($image, $uniqueFileName)) {
+            imagedestroy($image);
+            echo "The file " . htmlspecialchars(basename($_FILES["book-img"]["name"])) . " has been uploaded and converted to WebP.";
             $_SESSION['uploaded_image'] = $uniqueFileName;
         } else {
             echo "Sorry, there was an error uploading your file.";
