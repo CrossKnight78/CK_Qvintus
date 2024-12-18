@@ -27,7 +27,6 @@ if (isset($_GET['id'])) {
         $userId = 0;
     }
 
-    print_r($userLevel);
 }
 ?>
 
