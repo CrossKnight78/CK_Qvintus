@@ -99,16 +99,22 @@ class Book {
 
     // Function to search books based on a query
     public function searchBooks(STRING $query) {
-        $stmt = $this->pdo->prepare("SELECT * FROM table_books WHERE book_title LIKE :query");
         $searchQuery = '%' . $this->cleanInput($query) . '%';
-        $stmt->bindParam(':query', $searchQuery, PDO::PARAM_STR);
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        $sql = "
+            SELECT DISTINCT b.*
+            FROM table_books b
+            LEFT JOIN books_authors ba ON b.book_id = ba.books_id
+            LEFT JOIN table_authors a ON ba.book_author_id = a.author_id
+            LEFT JOIN table_series s ON b.book_series_fk = s.serie_id
+            WHERE b.book_title LIKE :query1
+            OR a.author_name LIKE :query2
+            OR s.serie_name LIKE :query3
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':query1', $searchQuery, PDO::PARAM_STR);
+        $stmt->bindValue(':query2', $searchQuery, PDO::PARAM_STR);
+        $stmt->bindValue(':query3', $searchQuery, PDO::PARAM_STR);
 
-    // Function to get popular genres
-    public function getPopularGenres() {
-        $stmt = $this->pdo->prepare("SELECT genre_name, genre_img FROM table_genres WHERE genre_status = 1");
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -121,6 +127,26 @@ class Book {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             $this->errorState = 1;
+            error_log($e->getMessage());
+            return [];
+        }
+    }
+
+    // Function to get popular genres
+    public function getPopularGenres() {
+        try {
+            $stmt = $this->pdo->prepare("
+                SELECT g.genre_name, g.genre_img
+                FROM table_genres g
+                JOIN books_genres bg ON g.genre_id = bg.book_genre_id
+                JOIN table_books b ON bg.books_id = b.book_id
+                GROUP BY g.genre_id
+                ORDER BY COUNT(b.book_id) DESC
+                LIMIT 10
+            ");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
             error_log($e->getMessage());
             return [];
         }
