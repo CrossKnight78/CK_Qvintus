@@ -4,16 +4,19 @@ include_once 'includes/class.admin.php';
 
 $admin = new Admin($pdo);
 
+// Check if the user is logged in and has admin role
 if ($user->checkLoginStatus()) {
     if(!$user->checkUserRole(200)) {
-        header("Location: home.php");
+        header("Location: index.php");
         exit();
     }
 }
 
+// Get user information and roles
 $userInfoArray = $admin->getUserInfo($_GET['uid']);
 $roleArray = $pdo->query("SELECT * FROM table_roles")->fetchAll();
 
+// Handle form submission for editing user information
 if (isset($_POST['admin-edit-user-submit'])) {
     $uStatus = isset($_POST['is-disabled']) ? 0 : 1;
     $feedback = $admin->checkUserRegisterInput(

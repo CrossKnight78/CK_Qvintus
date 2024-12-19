@@ -10,7 +10,7 @@ include_once 'includes/header.php';
             <p>Qvintus Bookstore has everything from timeless classics to the most exclusive items for collectors. Whether you're looking for the latest bestseller or a rare first edition, you'll find it here.</p>
             <a href="contact.php" class="btn btn-primary">Contact Us</a>
         </div>
-        <div class="col-12 col-md-6">
+        <div class="col-12 col-md-6 mb-4">
             <img src="images/qvituns-store.webp" class="img-fluid rounded" alt="Bookstore Image">
         </div>
     </div>

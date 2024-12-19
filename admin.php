@@ -1,8 +1,23 @@
 <?php
+// Include the header file
 include_once 'includes/header.php';
+
+// Check if the user is logged in
+if (!$user->checkLoginStatus()) {
+    // Redirect to login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
+// Check if the user has the admin role
+if (!$user->checkUserRole(200)) {
+    // Redirect to home page if not an admin
+    header("Location: index.php");
+    exit();
+}
 ?>
 
-<div class="container text-center">
+<div class="container mt-2 mb-5 text-center">
     <h1 class="my-5">Admin</h1>
     <div class="row justify-content-center">
         <!-- Card 1: Worker List -->
@@ -29,5 +44,6 @@ include_once 'includes/header.php';
 </div>
 
 <?php
+// Include the footer file
 include_once 'includes/footer.php';
 ?>

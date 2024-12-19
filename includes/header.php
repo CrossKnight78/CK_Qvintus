@@ -6,10 +6,12 @@ require_once 'includes/class.admin.php';
 require_once 'includes/class.book.php';
 $user = new User($pdo);
 
+// Handle logout request
 if(isset($_GET['logout'])) {
     $user->logout();
 }
 
+// Define admin menu links
 $adminMenuLinks = array(
     array(
         "title" => "Admin",

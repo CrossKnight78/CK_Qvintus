@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
     <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
         <div class="alert alert-<?= $alertType ?> text-center" role="alert">
             <?= $message ?>
